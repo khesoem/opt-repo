@@ -2,9 +2,10 @@ import time
 import re
 import tiktoken
 
-from src.llm.gpt import *
+from src.llm.openai import *
 from src.llm.invocation import Prompt
 import src.config as conf
+import src.constants as cons
 from github import Github
 from github import Auth
 from github.GithubException import UnknownObjectException
@@ -13,14 +14,39 @@ from github.Commit import Commit
 import logging
 from datetime import datetime, timedelta, timezone
 
+with open("logs/logging_2025-08-04-20-44.log", "r") as file:
+    seen = {}
+    PATTERN = re.compile(
+        r'\bCommit\b\s+([0-9a-fA-F]{7,40})\s+in\s+([A-Za-z0-9._-]+/[A-Za-z0-9._-]+)(?=[^\w/]|$)',
+        re.IGNORECASE,
+    )
+    PATTERN_REPO = re.compile(
+        r'\bProcessing\s+repository\b\s+([A-Za-z0-9._-]+/[A-Za-z0-9._-]+)(?=[^\w/]|$)',
+        re.IGNORECASE,
+    )
+    for line in file:
+        m = re.search(PATTERN_REPO, line)
+        if m:
+            repo = m.group(1)
+            if repo in seen.values():
+                continue
+            seen[repo] = repo
+        m = re.search(PATTERN, line)
+        if not m:
+            continue
+        sha, repo = m.group(1), m.group(2)
+        if sha == 'a254a784c4c3bf7513b2fe55c06d3e0f46189dc5':
+            break
+        if not sha in seen:
+            seen[sha] = repo
 
 class CommitCollector:
     def __init__(self):
         access_token = conf.github['access-token']
         auth = Auth.Token(access_token)
         self.g = Github(auth=auth)
-        self.gpt4 = GPT4_1_Nano()
-        self.o4 = O4_Mini_High()
+        self.gpt4 = GPT4_1_Nano(read_from_cache=True, save_to_cache=True)
+        self.o4 = O4_Mini_High(read_from_cache=True, save_to_cache=True)
 
     def get_popular_repos(self):
         query = "pushed:>2025-01-01 language:Java stars:>1000 archived:false"
@@ -39,7 +65,7 @@ class CommitCollector:
     def is_performance_commit(self, repo, commit: Commit) -> bool:
         # First stage, ask Gpt4.1
         p = Prompt([Prompt.Message("user",
-                                  f"The following is the message of a commit in the {repo.full_name} repository:\n\n{commit.commit.message}"
+                                  f"The following is the message of a commit in the {repo.full_name} repository:\n\n###Message Start###{commit.commit.message}\n###Message End###"
                                   + f"\n\nHow likely is it for this commit to be a performance improving commit in terms of execution time? Answer by only writing the likelihood in the following format:\nLikelihood: x%"
                                   )])
         res = self.gpt4.get_response(p)
@@ -62,9 +88,9 @@ class CommitCollector:
 
         # Second stage, ask O4
         p = Prompt([Prompt.Message("user",
-                                   f"The following is the message of a commit in the {repo.full_name} repository:\n\n{commit.commit.message}"
-                                   + f"\n\nThe diff of the commit is:\n\n{diff}"
-                                   + f"\n\nIs this commit related to performance improvements in terms of execution time? Answer with 'YES' or 'NO'."
+                                   f"The following is the message of a commit in the {repo.full_name} repository:\n\n###Message Start###{commit.commit.message}\n###Message End###"
+                                   + f"\n\nThe diff of the commit is:\n\n###Diff Start###{diff}\n###Diff End###"
+                                   + f"\n\nIs this commit a performance improving commit in terms of execution time? Answer with 'YES' or 'NO'."
                                    )])
 
         tokens_cnt = len(tiktoken.encoding_for_model("o3").encode(p.messages[0].content))
@@ -90,7 +116,11 @@ class CommitCollector:
         perf_commits = []
         fetched_commits = repo.get_commits(since=since)
         logging.info(f"Fetched {fetched_commits.totalCount} commits for {repo.full_name} since {since.isoformat()}")
+
         for commit in fetched_commits:
+            if commit.sha in seen:
+                logging.info(f"Skipping already seen commit {commit.sha} in {repo.full_name}.")
+                continue
             if commit.files.totalCount > conf.perf_commit['max-files']:
                 logging.info(f"Skipping commit {commit.sha} in {repo.full_name} due to too many files ({commit.files.totalCount}).")
                 continue
@@ -119,6 +149,10 @@ class CommitCollector:
         repos = self.get_popular_repos()
         # Iterate and print repository info
         for repo in repos:
+            if repo.full_name in seen.values() and repo.full_name != 'redis/lettuce':
+                logging.info(f"Skipping already processed repository {repo.full_name}.")
+                continue
+
             logging.info(f"Processing repository {repo.full_name} with {repo.stargazers_count} stars.")
 
             if not self.is_maven(repo):
