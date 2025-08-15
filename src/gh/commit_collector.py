@@ -5,7 +5,6 @@ import tiktoken
 from src.llm.openai import *
 from src.llm.invocation import Prompt
 import src.config as conf
-import src.constants as cons
 from github import Github
 from github import Auth
 from github.GithubException import UnknownObjectException

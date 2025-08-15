@@ -145,7 +145,7 @@ def parse_diff(diff_text: str):
 
     return added_lines, after_removed
 
-def get_commit_line_changes(commit: str, repo: str = "repo"):
+def get_commit_line_changes(commit: str, repo: str):
     diff_text = run_git_show(repo, commit)
     return parse_diff(diff_text)  # -> (added_lines, after_removed)
 
