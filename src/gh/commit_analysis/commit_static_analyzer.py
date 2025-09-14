@@ -1,5 +1,7 @@
 import sys
-from src.gh.commit_analysis.utils.utils import run_cmd
+import subprocess
+import re
+from src.utils import run_cmd
 from typing import Set, Dict
 from pathlib import Path
 
@@ -40,15 +42,43 @@ class RepoAnalyzer:
 
     def is_java_src_path(self, p: str) -> bool:
         return p.lower().endswith(".java") and not 'test' in p.lower() and not 'generated' in p.lower()
+    
+    def is_java_test_path(self, p: str) -> bool:
+        return p.lower().endswith(".java") and '/test/' in p.lower() and not 'generated' in p.lower()
 
-    def get_changed_java_files(self, commit: str) -> Set[str]:
+    def get_changed_java_test_files(self, commit: str) -> Set[str]:
+        out = run_cmd(
+            cmd=["git", "diff-tree", "-r", "--no-commit-id", "--name-status", "-M", "-C", "-m", commit],
+            path=str(self.repo_path)
+        )
+        
+        entries = set()
+        for line in out.splitlines():
+            rec = self.parse_name_status(line)
+            if not rec:
+                continue
+
+            if rec.get('old_path') != rec.get('new_path'):
+                # We only care about changes, not renames/copies
+                continue
+
+            path = rec.get("old_path")
+
+            # Keep if it is a .java src file
+            if not (self.is_java_test_path(path)):
+                continue
+
+            entries.add(path)
+        
+        return entries
+
+    def get_changed_java_src_files(self, commit: str) -> Set[str]:
         # Use diff-tree to get paths changed by exactly this commit.
         # -r: recurse, --no-commit-id: don’t show commit id,
         # -M/-C: detect renames/copies, -m: handle merges (per-parent); we’ll dedupe.
         out = run_cmd(
-            cmd="git",
-            path=str(self.repo_path),
-            args=["diff-tree", "-r", "--no-commit-id", "--name-status", "-M", "-C", "-m", commit]
+            cmd=["git", "diff-tree", "-r", "--no-commit-id", "--name-status", "-M", "-C", "-m", commit],
+            path=str(self.repo_path)
         )
 
         entries = set()
@@ -59,18 +89,91 @@ class RepoAnalyzer:
 
             if rec.get('old_path') != rec.get('new_path'):
                 # We only care about changes, not renames/copies
-                print(rec.get('old_path'), rec.get('new_path'), file=sys.stderr)
                 continue
 
             path = rec.get("old_path")
 
-            # Keep if either old or new side is a .java src file
+            # Keep if it is a .java src file
             if not (self.is_java_src_path(path)):
                 continue
 
             entries.add(path)
 
         return entries
+
+    def get_commit_line_changes(self, commit: str) -> Dict[str, Dict[str, list[int]]]:
+        """
+        Get line changes for Java source files in a commit.
+        
+        Args:
+            commit: The commit hash to analyze
+            
+        Returns:
+            Dictionary mapping file paths to dictionaries with 'original' and 'patched' keys
+            containing lists of line numbers
+        """
+        changed_files = self.get_changed_java_src_files(commit)
+        line_changes = {}
+        
+        for file_path in changed_files:
+            try:
+                # Get the diff for this specific file in the commit
+                diff_output = run_cmd(
+                    cmd=["git", "show", "--format=", "--no-merges", commit, "--", file_path],
+                    path=str(self.repo_path)
+                )
+                
+                removed_lines, added_lines = self._parse_diff_lines(diff_output)
+                line_changes[file_path] = {
+                    "original": sorted(list(removed_lines)),
+                    "patched": sorted(list(added_lines))
+                }
+                
+            except subprocess.CalledProcessError as e:
+                # File might not exist in the commit or other git issues
+                raise RuntimeError(f"Could not get diff for {file_path}: {e}") from e
+        
+        return line_changes
+    
+    def _parse_diff_lines(self, diff_output: str) -> tuple[Set[int], Set[int]]:
+        """
+        Parse git diff output to extract removed and added line numbers.
+        
+        Args:
+            diff_output: The raw diff output from git
+            
+        Returns:
+            Tuple of (removed_lines, added_lines) as sets of line numbers
+        """
+        removed_lines = set()
+        added_lines = set()
+        
+        lines = diff_output.splitlines()
+        old_line_num = 0
+        new_line_num = 0
+        
+        for line in lines:
+            if line.startswith('@@'):
+                # Parse the hunk header: @@ -old_start,old_count +new_start,new_count @@
+                match = re.match(r'@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@', line)
+                if match:
+                    old_line_num = int(match.group(1))
+                    new_line_num = int(match.group(3))
+            elif line.startswith('-') and not line.startswith('---'):
+                # Removed line
+                removed_lines.add(old_line_num)
+                old_line_num += 1
+            elif line.startswith('+') and not line.startswith('+++'):
+                # Added line
+                added_lines.add(new_line_num)
+                new_line_num += 1
+            elif line.startswith(' '):
+                # Context line (unchanged)
+                old_line_num += 1
+                new_line_num += 1
+            # Skip other lines like file headers
+        
+        return removed_lines, added_lines
 
     def get_modules_for_java_files(self, java_files: Set[str]) -> Set[str]:
         """
@@ -84,9 +187,10 @@ class RepoAnalyzer:
                 cur_path = cur_path.parent
 
             if (cur_path / "pom.xml").exists():
-                modules.add(cur_path.relative_to(self.repo_path).name)
+                modules.add(str(cur_path.relative_to(self.repo_path)))
 
         return modules
+
 
 def main():
     RepoAnalyzer("/home/khesoem/postdoc-eth/projects/optimization-dataset/code/tmp/quarkus").get_modules_for_java_files({"independent-projects/qute/core/src/main/java/io/quarkus/qute/JsonEscaper.java", "t"})
