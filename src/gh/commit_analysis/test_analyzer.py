@@ -17,7 +17,7 @@ class CommitPerfImprovementAnalyzer:
             self.covered_lines = covered_lines
 
     class AnalysisResult:
-        def __init__(self, repo: str, commit: str, image_name: str, original_exec_time: float, patched_exec_time: float, covering_test_results: dict['TestResult']):
+        def __init__(self, repo: str, commit: str, image_name: str, original_exec_time: float, patched_exec_time: float, covering_test_results: dict[str, 'TestResult']):
             self.repo = repo
             self.commit = commit
             self.image_name = image_name
