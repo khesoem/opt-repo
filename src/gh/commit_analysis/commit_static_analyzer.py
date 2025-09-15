@@ -113,7 +113,7 @@ class RepoAnalyzer:
             containing lists of line numbers
         """
         changed_files = self.get_changed_java_src_files(commit)
-        line_changes = {}
+        line_changes = {'original': {}, 'patched': {}}
         
         for file_path in changed_files:
             try:
@@ -124,10 +124,8 @@ class RepoAnalyzer:
                 )
                 
                 removed_lines, added_lines = self._parse_diff_lines(diff_output)
-                line_changes[file_path] = {
-                    "original": sorted(list(removed_lines)),
-                    "patched": sorted(list(added_lines))
-                }
+                line_changes['original'][file_path] = sorted(list(removed_lines))
+                line_changes['patched'][file_path] = sorted(list(added_lines))
                 
             except subprocess.CalledProcessError as e:
                 # File might not exist in the commit or other git issues

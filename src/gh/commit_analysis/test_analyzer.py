@@ -6,22 +6,31 @@ from src.gh.commit_analysis.commit_static_analyzer import RepoAnalyzer
 from src.gh.commit_analysis.utils.pom_manipulator import add_tia_to_pom
 from src.reproducibility.dockerizer import CommitDockerizer
 import logging
+import src.config as conf
 
 class CommitPerfImprovementAnalyzer:
-    class AnalysisResult:
-        def __init__(self, repo: str, commit: str, docker_image_path: str, original_exec_time: float, patched_exec_time: float):
-            self.repo = repo
-            self.commit = commit
-            self.docker_image_path = docker_image_path
-            self.original_exec_time = original_exec_time
-            self.patched_exec_time = patched_exec_time
-    
     class TestResult:
         def __init__(self, test_path: str, passed: bool, duration: float, covered_lines: dict[str, list[int]]):
             self.test_path = test_path
             self.passed = passed
             self.duration = duration
             self.covered_lines = covered_lines
+
+    class AnalysisResult:
+        def __init__(self, repo: str, commit: str, image_name: str, original_exec_time: float, patched_exec_time: float, covering_test_results: dict['TestResult']):
+            self.repo = repo
+            self.commit = commit
+            self.image_name = image_name
+            self.original_exec_time = original_exec_time
+            self.patched_exec_time = patched_exec_time
+
+            self.covering_tests_performance = {}
+            for test_path, test_result in covering_test_results.items():
+                self.covering_tests_performance[test_path] = {'original': test_result['original'].duration, 'patched': test_result['patched'].duration}
+
+        @property
+        def is_improvement_commit(self) -> bool:
+            return self.patched_exec_time < self.original_exec_time * (1 - conf.perf_commit['min-exec-time-improvement'])
     
     def __init__(self, repo: str, commit: str, working_dir: str):
         self.repo = repo
@@ -128,9 +137,12 @@ class CommitPerfImprovementAnalyzer:
             List of TestResult objects with parsed coverage information
         """
         try:
-            report_data = json.loads(test_wise_report)
+            f = open(test_wise_report, "r")
+            report_data = json.load(f)
         except json.JSONDecodeError as e:
             raise ValueError(f"Invalid JSON in test-wise report: {e}")
+        finally:
+            f.close()
         
         test_results = []
         
@@ -159,7 +171,7 @@ class CommitPerfImprovementAnalyzer:
                         covered_lines[full_file_path] = parsed_lines
             
             test_result = self.TestResult(
-                test_path=test_path,
+                test_path=f"{module_name}/src/test/java/{test_path}",
                 passed=passed,
                 duration=duration,
                 covered_lines=covered_lines
@@ -200,49 +212,6 @@ class CommitPerfImprovementAnalyzer:
         
         return sorted(list(lines))
 
-    def run_analysis(self) -> AnalysisResult:
-        # clone the repo & checkout the commit & before commit
-        patched_clone_path = self._clone_and_checkout_repo()
-        original_clone_path = self._clone_and_checkout_original_commit(patched_clone_path)
-
-
-        # add testwise plugin to modified modules
-        modified_modules = self._add_testwise_plugin_to_modified_modules(patched_clone_path, original_clone_path)
-
-
-        # build docker image containing the modified repos and run tests in docker
-        dockerizer = CommitDockerizer(self.working_dir, self.repo, self.commit, patched_clone_path, original_clone_path, modified_modules)
-        dockerizer.build_commit_docker_image()
-
-
-        # get the results of executing maven
-        mvnw_exec_logs = dockerizer.get_mvnw_exec_logs()
- 
-
-        # check if maven runs successfully on both versions
-        patched_success = self._check_maven_success(mvnw_exec_logs.patched_mvnw_log_path)
-        original_success = self._check_maven_success(mvnw_exec_logs.original_mvnw_log_path)
-        if not patched_success or not original_success:
-            logging.error(f"Maven execution failed - Patched: {patched_success}, Original: {original_success}")
-            raise Exception("Maven execution failed")
-        logging.info(f"Maven execution successful on both versions")
-
-
-        # get changed lines of java src files
-        repo_analyzer = RepoAnalyzer(patched_clone_path)
-        line_changes = repo_analyzer.get_commit_line_changes(self.commit)
-        
-        # get result of patch covering tests
-        patch_covering_test_results = self._get_patch_covering_test_results(line_changes, mvnw_exec_logs.module_to_test_res_path['original'], mvnw_exec_logs.module_to_test_res_path['patched'])
-
-        # ignore tests that are modified in the commit
-        patch_covering_test_results = self._ignore_modified_tests(patch_covering_test_results, repo_analyzer.get_changed_java_test_files(self.commit))
-
-
-        # if execution time difference is significant, return the docker image
-        pass
-    
-
     def _ignore_modified_tests(self, patch_covering_test_results: dict[str, dict[str, TestResult]], modified_test_files: set[str]) -> dict[str, dict[str, TestResult]]:
         """
         Ignore tests that are modified in the commit.
@@ -274,9 +243,9 @@ class CommitPerfImprovementAnalyzer:
                     raise Exception(f"Test {test_result.test_path} failed")
                 
                 covered_lines = test_result.covered_lines
-                for filename, line_changes in line_changes[version].items():
+                for filename, changed_lines in line_changes[version].items():
                     if filename in covered_lines:
-                        if set(line_changes) & set(covered_lines[filename]):
+                        if set(changed_lines) & set(covered_lines[filename]):
                             patch_covering_tests.add(test_result.test_path)
         
         return patch_covering_tests
@@ -301,14 +270,16 @@ class CommitPerfImprovementAnalyzer:
 
         patch_covering_test_results = {}
         for module_name, test_res_path in original_module_to_test_res_path.items():
-            test_res = self._test_wise_report_to_test_results(module_name, test_res_path)
-            if test_res.test_path in patch_covering_tests:
-                patch_covering_test_results[test_res.test_path] = {'original': test_res}
+            test_results = self._test_wise_report_to_test_results(module_name, test_res_path)
+            for test_result in test_results:
+                if test_result.test_path in patch_covering_tests:
+                    patch_covering_test_results[test_result.test_path] = {'original': test_result}
         
         for module_name, test_res_path in patched_module_to_test_res_path.items():
-            test_res = self._test_wise_report_to_test_results(module_name, test_res_path)
-            if test_res.test_path in patch_covering_tests:
-                patch_covering_test_results[test_res.test_path]['patched'] = test_res
+            test_results = self._test_wise_report_to_test_results(module_name, test_res_path)
+            for test_result in test_results:
+                if test_result.test_path in patch_covering_tests:
+                    patch_covering_test_results[test_result.test_path]['patched'] = test_result
 
         # ensure for each covering test, both original and patched results are present
         for test_path in patch_covering_tests:
@@ -318,3 +289,53 @@ class CommitPerfImprovementAnalyzer:
                 raise Exception(f"Test {test_path} not found in patch covering test results")
 
         return patch_covering_test_results
+
+    def _calculate_exec_times(self, patch_covering_test_results: dict[str, dict[str, TestResult]]) -> tuple[float, float]:
+        original_exec_time, patched_exec_time = 0.0, 0.0
+        for _, test_results in patch_covering_test_results.items():
+            original_exec_time += test_results['original'].duration
+            patched_exec_time += test_results['patched'].duration
+        return original_exec_time, patched_exec_time
+
+    def run_analysis(self) -> AnalysisResult:
+        # clone the repo & checkout the commit & before commit
+        patched_clone_path = self._clone_and_checkout_repo()
+        original_clone_path = self._clone_and_checkout_original_commit(patched_clone_path)
+
+
+        # add testwise plugin to modified modules
+        modified_modules = self._add_testwise_plugin_to_modified_modules(patched_clone_path, original_clone_path)
+
+
+        # build docker image containing the modified repos and run tests in docker
+        dockerizer = CommitDockerizer(self.working_dir, self.repo, self.commit, patched_clone_path, original_clone_path, modified_modules)
+        # dockerizer.build_commit_docker_image()
+
+
+        # get the results of executing maven
+        mvnw_exec_logs = dockerizer.get_mvnw_exec_logs()
+ 
+
+        # check if maven runs successfully on both versions
+        patched_success = self._check_maven_success(mvnw_exec_logs.patched_mvnw_log_path)
+        original_success = self._check_maven_success(mvnw_exec_logs.original_mvnw_log_path)
+        if not patched_success or not original_success:
+            logging.error(f"Maven execution failed - Patched: {patched_success}, Original: {original_success}")
+            raise Exception("Maven execution failed")
+        logging.info(f"Maven execution successful on both versions")
+
+
+        # get changed lines of java src files
+        repo_analyzer = RepoAnalyzer(patched_clone_path)
+        line_changes = repo_analyzer.get_commit_line_changes(self.commit)
+        
+        # get result of patch covering tests
+        patch_covering_test_results = self._get_patch_covering_test_results(line_changes, mvnw_exec_logs.module_to_test_res_path['original'], mvnw_exec_logs.module_to_test_res_path['patched'])
+
+        # ignore tests that are modified in the commit
+        patch_covering_test_results = self._ignore_modified_tests(patch_covering_test_results, repo_analyzer.get_changed_java_test_files(self.commit))
+
+        # compute exec times
+        original_exec_time, patched_exec_time = self._calculate_exec_times(patch_covering_test_results)
+
+        return self.AnalysisResult(self.repo, self.commit, dockerizer.image_name, original_exec_time, patched_exec_time, patch_covering_test_results)
