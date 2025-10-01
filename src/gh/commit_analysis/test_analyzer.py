@@ -217,19 +217,18 @@ class CommitPerfImprovementAnalyzer:
         Ignore tests that are modified in the commit.
         """
         for test_path in patch_covering_test_results.keys():
-            if '/'.join(test_path.split('/')[:-1]) in modified_test_files:
+            if '/'.join(test_path.split('/')[:-1]) + '.java' in modified_test_files:
                 del patch_covering_test_results[test_path]
 
         return patch_covering_test_results
 
-    def _get_patch_covering_tests(self, line_changes: dict[str, dict[str, list[int]]], module_to_test_res_path: dict[str, str], version: str) -> set[str]:
+    def _get_patch_covering_tests(self, line_changes: dict[str, list[int]], module_to_test_res_path: dict[str, str]) -> set[str]:
         """
         Get the patch covering tests for the original and patched versions.
 
         Args:
-            line_changes: The line changes for the commit
+            line_changes: The line changes for the commit, a dictionary from filename to changed lines
             module_to_test_res_path: The module to test result path
-            version: The version to get the patch covering tests for
 
         Returns:
             A set of test paths
@@ -243,7 +242,7 @@ class CommitPerfImprovementAnalyzer:
                     raise Exception(f"Test {test_result.test_path} failed")
                 
                 covered_lines = test_result.covered_lines
-                for filename, changed_lines in line_changes[version].items():
+                for filename, changed_lines in line_changes.items():
                     if filename in covered_lines:
                         if set(changed_lines) & set(covered_lines[filename]):
                             patch_covering_tests.add(test_result.test_path)
@@ -265,8 +264,8 @@ class CommitPerfImprovementAnalyzer:
         """
 
 
-        patch_covering_tests = self._get_patch_covering_tests(line_changes, original_module_to_test_res_path, 'original')
-        patch_covering_tests.update(self._get_patch_covering_tests(line_changes, patched_module_to_test_res_path, 'patched'))
+        patch_covering_tests = self._get_patch_covering_tests(line_changes['original'], original_module_to_test_res_path)
+        patch_covering_tests.update(self._get_patch_covering_tests(line_changes['patched'], patched_module_to_test_res_path))
 
         patch_covering_test_results = {}
         for module_name, test_res_path in original_module_to_test_res_path.items():
@@ -309,16 +308,16 @@ class CommitPerfImprovementAnalyzer:
 
         # build docker image containing the modified repos and run tests in docker
         dockerizer = CommitDockerizer(self.working_dir, self.repo, self.commit, patched_clone_path, original_clone_path, modified_modules)
-        # dockerizer.build_commit_docker_image()
+        dockerizer.build_commit_docker_image()
 
 
         # get the results of executing maven
-        mvnw_exec_logs = dockerizer.get_mvnw_exec_logs()
+        mvnw_exec_results = dockerizer.get_mvnw_exec_results()
  
 
         # check if maven runs successfully on both versions
-        patched_success = self._check_maven_success(mvnw_exec_logs.patched_mvnw_log_path)
-        original_success = self._check_maven_success(mvnw_exec_logs.original_mvnw_log_path)
+        patched_success = self._check_maven_success(mvnw_exec_results.patched_mvnw_log_path)
+        original_success = self._check_maven_success(mvnw_exec_results.original_mvnw_log_path)
         if not patched_success or not original_success:
             logging.error(f"Maven execution failed - Patched: {patched_success}, Original: {original_success}")
             raise Exception("Maven execution failed")
@@ -330,7 +329,7 @@ class CommitPerfImprovementAnalyzer:
         line_changes = repo_analyzer.get_commit_line_changes(self.commit)
         
         # get result of patch covering tests
-        patch_covering_test_results = self._get_patch_covering_test_results(line_changes, mvnw_exec_logs.module_to_test_res_path['original'], mvnw_exec_logs.module_to_test_res_path['patched'])
+        patch_covering_test_results = self._get_patch_covering_test_results(line_changes, mvnw_exec_results.module_to_test_res_path['original'], mvnw_exec_results.module_to_test_res_path['patched'])
 
         # ignore tests that are modified in the commit
         patch_covering_test_results = self._ignore_modified_tests(patch_covering_test_results, repo_analyzer.get_changed_java_test_files(self.commit))

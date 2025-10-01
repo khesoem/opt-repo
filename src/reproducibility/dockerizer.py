@@ -9,7 +9,7 @@ import os
 logger = logging.getLogger(__name__)
 
 class CommitDockerizer:
-    class MvnwExecLogs:
+    class MvnwExecResults:
         def __init__(self, patched_mvnw_log_path: str, original_mvnw_log_path: str, module_to_test_res_path: dict[str, dict[str, str]]):
             self.patched_mvnw_log_path = patched_mvnw_log_path
             self.original_mvnw_log_path = original_mvnw_log_path
@@ -65,7 +65,7 @@ class CommitDockerizer:
             logger.error(f"Unexpected error: {e}")
             raise
     
-    def get_mvnw_exec_logs(self) -> MvnwExecLogs:
+    def get_mvnw_exec_results(self) -> MvnwExecResults:
         run_cmd(['mkdir', '-p', f'{self.tmp_dir}'], self.working_dir)
         run_cmd(['docker', 'create', '--name', f'{self.container_name}', f'{self.image_name}'], self.working_dir)
 
@@ -89,7 +89,7 @@ class CommitDockerizer:
                 module_to_coverage_path['original'][module_name] = local_original_coverage_path
                 module_to_coverage_path['patched'][module_name] = local_patched_coverage_path
 
-            return self.MvnwExecLogs(original_mvnw_log_path, patched_mvnw_log_path, module_to_coverage_path)
+            return self.MvnwExecResults(original_mvnw_log_path, patched_mvnw_log_path, module_to_coverage_path)
         finally:
             # Ensure container is always removed, even if an exception occurs
             run_cmd(['docker', 'rm', f'{self.container_name}'], self.working_dir)
