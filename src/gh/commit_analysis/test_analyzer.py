@@ -27,9 +27,10 @@ class CommitPerfImprovementAnalyzer:
             self.covering_tests_performance = {}
             for test_path, test_result in covering_test_results.items():
                 self.covering_tests_performance[test_path] = {'original': test_result['original'].duration, 'patched': test_result['patched'].duration}
+            
+            self.is_improvement_commit = self.is_commit_improved()
 
-        @property
-        def is_improvement_commit(self) -> bool:
+        def is_commit_improved(self) -> bool:
             return self.patched_exec_time < self.original_exec_time * (1 - conf.perf_commit['min-exec-time-improvement'])
     
     def __init__(self, repo: str, commit: str, working_dir: str):
@@ -38,7 +39,7 @@ class CommitPerfImprovementAnalyzer:
         self.working_dir = working_dir
 
     def _clone_and_checkout_repo(self) -> str:
-        repo_dir = self.repo.replace('/', '__') + "_" + self.commit
+        repo_dir = self.repo.replace('/', '__') + "_" + self.commit + '_patched'
         clone_path = os.path.join(self.working_dir, repo_dir)
         repo_url = f"git@github.com:{self.repo}.git"
 
@@ -49,7 +50,7 @@ class CommitPerfImprovementAnalyzer:
         return clone_path
 
     def _clone_and_checkout_original_commit(self, clone_path: str) -> str:
-        original_clone_path = clone_path + "_original"
+        original_clone_path = clone_path.replace('_patched', '_original')
         if not os.path.exists(original_clone_path):
             run_cmd(["cp", "-r", clone_path, original_clone_path], self.working_dir)
 
@@ -120,10 +121,10 @@ class CommitPerfImprovementAnalyzer:
                 return True
             
         except FileNotFoundError:
-            logging.error(f"Maven log file not found: {log_path}")
+            logging.error(f"{self.repo} - {self.commit} - Maven log file not found: {log_path}")
             return False
         except Exception as e:
-            logging.error(f"Error reading Maven log file {log_path}: {e}")
+            logging.error(f"{self.repo} - {self.commit} - Error reading Maven log file {log_path}: {e}")
             return False
 
     def _test_wise_report_to_test_results(self, module_name: str, test_wise_report: str) -> list[TestResult]:
@@ -140,10 +141,12 @@ class CommitPerfImprovementAnalyzer:
             f = open(test_wise_report, "r")
             report_data = json.load(f)
         except json.JSONDecodeError as e:
-            raise ValueError(f"Invalid JSON in test-wise report: {e}")
+            raise ValueError(f"{self.repo} - {self.commit} - Invalid JSON in test-wise report: {e}")
         finally:
             f.close()
         
+        module_path_prefix = module_name + '/' if module_name != '.' else ''
+
         test_results = []
         
         for test in report_data.get("tests", []):
@@ -165,13 +168,13 @@ class CommitPerfImprovementAnalyzer:
                         parsed_lines = self._parse_test_wise_covered_lines(covered_lines_str)
                         # Use full path as the key, handle empty path case
                         if path:
-                            full_file_path = f"{module_name}/src/main/java/{path}/{file_name}"
+                            full_file_path = f"{module_path_prefix}src/main/java/{path}/{file_name}"
                         else:
-                            full_file_path = f"{module_name}/src/main/java/{file_name}"
+                            full_file_path = f"{module_path_prefix}src/main/java/{file_name}"
                         covered_lines[full_file_path] = parsed_lines
             
             test_result = self.TestResult(
-                test_path=f"{module_name}/src/test/java/{test_path}",
+                test_path=f"{module_path_prefix}src/test/java/{test_path}",
                 passed=passed,
                 duration=duration,
                 covered_lines=covered_lines
@@ -239,7 +242,7 @@ class CommitPerfImprovementAnalyzer:
             test_res = self._test_wise_report_to_test_results(module_name, test_res_path)
             for test_result in test_res:
                 if not test_result.passed:
-                    raise Exception(f"Test {test_result.test_path} failed")
+                    raise Exception(f"{self.repo} - {self.commit} - Test {test_result.test_path} failed")
                 
                 covered_lines = test_result.covered_lines
                 for filename, changed_lines in line_changes.items():
@@ -283,9 +286,9 @@ class CommitPerfImprovementAnalyzer:
         # ensure for each covering test, both original and patched results are present
         for test_path in patch_covering_tests:
             if test_path not in patch_covering_test_results:
-                raise Exception(f"Test {test_path} not found in patch covering test results")
+                raise Exception(f"{self.repo} - {self.commit} - Test {test_path} not found in patch covering test results")
             if 'original' not in patch_covering_test_results[test_path] or 'patched' not in patch_covering_test_results[test_path]:
-                raise Exception(f"Test {test_path} not found in patch covering test results")
+                raise Exception(f"{self.repo} - {self.commit} - Test {test_path} not found in patch covering test results")
 
         return patch_covering_test_results
 
@@ -296,45 +299,59 @@ class CommitPerfImprovementAnalyzer:
             patched_exec_time += test_results['patched'].duration
         return original_exec_time, patched_exec_time
 
+    def clean_tmp_dirs(self) -> None:
+        self.dockerizer.clean_tmp_dirs()
+        run_cmd(["rm", "-rf", self.repo.replace('/', '__') + "_" + self.commit + '_patched'], self.working_dir)
+        run_cmd(["rm", "-rf", self.repo.replace('/', '__') + "_" + self.commit + '_original'], self.working_dir)
+
     def run_analysis(self) -> AnalysisResult:
         # clone the repo & checkout the commit & before commit
+        logging.info(f"{self.repo} - {self.commit} - Cloning and checking out the repo")
         patched_clone_path = self._clone_and_checkout_repo()
         original_clone_path = self._clone_and_checkout_original_commit(patched_clone_path)
+        logging.info(f"{self.repo} - {self.commit} - Cloned and checked out the repo")
 
 
         # add testwise plugin to modified modules
         modified_modules = self._add_testwise_plugin_to_modified_modules(patched_clone_path, original_clone_path)
-
+        logging.info(f"{self.repo} - {self.commit} - Added testwise plugin to modified modules")
 
         # build docker image containing the modified repos and run tests in docker
-        dockerizer = CommitDockerizer(self.working_dir, self.repo, self.commit, patched_clone_path, original_clone_path, modified_modules)
-        dockerizer.build_commit_docker_image()
+        self.dockerizer = CommitDockerizer(self.working_dir, self.repo, self.commit, patched_clone_path, original_clone_path, modified_modules)
+        self.dockerizer.build_commit_docker_image()
+        logging.info(f"{self.repo} - {self.commit} - Built docker image")
 
 
         # get the results of executing maven
-        mvnw_exec_results = dockerizer.get_mvnw_exec_results()
- 
+        mvnw_exec_results = self.dockerizer.get_mvnw_exec_results()
+        logging.info(f"{self.repo} - {self.commit} - Got the results of executing maven")
 
         # check if maven runs successfully on both versions
         patched_success = self._check_maven_success(mvnw_exec_results.patched_mvnw_log_path)
         original_success = self._check_maven_success(mvnw_exec_results.original_mvnw_log_path)
         if not patched_success or not original_success:
-            logging.error(f"Maven execution failed - Patched: {patched_success}, Original: {original_success}")
-            raise Exception("Maven execution failed")
-        logging.info(f"Maven execution successful on both versions")
+            logging.error(f"{self.repo} - {self.commit} - Maven execution failed - Patched: {patched_success}, Original: {original_success}")
+            raise Exception(f"{self.repo} - {self.commit} - Maven execution failed")
+        logging.info(f"{self.repo} - {self.commit} - Maven execution successful on both versions")
 
 
         # get changed lines of java src files
         repo_analyzer = RepoAnalyzer(patched_clone_path)
         line_changes = repo_analyzer.get_commit_line_changes(self.commit)
-        
+        logging.info(f"{self.repo} - {self.commit} - Got the changed lines of java src files")
+
         # get result of patch covering tests
         patch_covering_test_results = self._get_patch_covering_test_results(line_changes, mvnw_exec_results.module_to_test_res_path['original'], mvnw_exec_results.module_to_test_res_path['patched'])
+        logging.info(f"{self.repo} - {self.commit} - Got the results of patch covering tests")
 
         # ignore tests that are modified in the commit
         patch_covering_test_results = self._ignore_modified_tests(patch_covering_test_results, repo_analyzer.get_changed_java_test_files(self.commit))
+        logging.info(f"{self.repo} - {self.commit} - Ignored tests that are modified in the commit")
 
         # compute exec times
         original_exec_time, patched_exec_time = self._calculate_exec_times(patch_covering_test_results)
+        logging.info(f"{self.repo} - {self.commit} - Computed exec times")
+        
 
-        return self.AnalysisResult(self.repo, self.commit, dockerizer.image_name, original_exec_time, patched_exec_time, patch_covering_test_results)
+        logging.info(f"{self.repo} - {self.commit} - Running analysis complete")
+        return self.AnalysisResult(self.repo, self.commit, self.dockerizer.image_name, original_exec_time, patched_exec_time, patch_covering_test_results)

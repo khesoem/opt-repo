@@ -2,12 +2,12 @@ import subprocess
 import sys
 from typing import List
 
-def run_cmd(cmd: List[str], path: str) -> str:
+def run_cmd(cmd: List[str], path: str, capture_output: bool = True) -> str:
     try:
         result = subprocess.run(
             cmd,
             cwd=path,
-            capture_output=True,
+            capture_output=capture_output,
             text=True,
             check=True,
         )

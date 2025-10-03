@@ -25,7 +25,7 @@ class CommitDockerizer:
 
     @property
     def image_name(self):
-        return f"{config.docker['image-name-prefix']}-{self.repo}-{self.commit}"
+        return f"{config.docker['image-name-prefix']}-{self.repo}-{self.commit}".lower()
     
     @property
     def tmp_dir(self):
@@ -43,6 +43,9 @@ class CommitDockerizer:
             
             if not dockerfile_path.exists():
                 raise FileNotFoundError(f"Dockerfile not found at {dockerfile_path}")
+
+            original_repo_path = self.original_repo_path.replace(self.working_dir, '')
+            patched_repo_path = self.patched_repo_path.replace(self.working_dir, '')
             
             # Build the Docker image
             run_cmd([
@@ -50,10 +53,10 @@ class CommitDockerizer:
                 "-f", str(dockerfile_path),
                 "-t", self.image_name,
                 str(Path(self.working_dir)),
-                "--build-arg", f"PATCHED_REPO_DIR={self.patched_repo_path}",
-                "--build-arg", f"ORIGINAL_REPO_DIR={self.original_repo_path}",
+                "--build-arg", f"PATCHED_REPO_DIR={patched_repo_path}",
+                "--build-arg", f"ORIGINAL_REPO_DIR={original_repo_path}",
                 "--build-arg", f"MODULE_NAMES={','.join(self.module_names)}"
-            ], self.working_dir)
+            ], self.working_dir, capture_output=False)
             
             logger.info(f"Successfully built Docker image: {self.image_name}")
             return self.image_name
@@ -93,3 +96,6 @@ class CommitDockerizer:
         finally:
             # Ensure container is always removed, even if an exception occurs
             run_cmd(['docker', 'rm', f'{self.container_name}'], self.working_dir)
+
+    def clean_tmp_dirs(self) -> None:
+        run_cmd(["rm", "-rf", self.tmp_dir], self.working_dir)

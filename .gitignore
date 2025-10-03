@@ -23,3 +23,6 @@ logs/
 #generated_tests/
 htmlcov/
 tmp*.py
+tmp_**
+err.err
+log.log

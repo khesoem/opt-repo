@@ -26,8 +26,8 @@ docker = {
     'dockerfile': 'docker/Dockerfile',
     'image-name-prefix': 'optds',
     'mvnw-log-path': '/logs',
-    'original-repo-path': '/app/repo_before',
-    'patched-repo-path': '/app/repo',
-    'original-mvnw-log-file': 'logs/repo_before_mvnw.log',
-    'patched-mvnw-log-file': 'logs/repo_mvnw.log',
+    'original-repo-path': '/app/original_repo',
+    'patched-repo-path': '/app/patched_repo',
+    'original-mvnw-log-file': 'logs/original_repo_mvnw.log',
+    'patched-mvnw-log-file': 'logs/patched_repo_mvnw.log',
 }

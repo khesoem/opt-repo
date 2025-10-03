@@ -57,7 +57,7 @@ def remove_existing_profile(profiles: ET.Element, ns: str, profile_id: str) -> N
         if pid is not None and (pid.text or "").strip() == profile_id:
             profiles.remove(prof)
 
-def add_tia_profile(profiles: ET.Element, ns: str, includes_pattern: str) -> None:
+def add_tia_profile(profiles: ET.Element, ns: str) -> None:
     profile = ET.SubElement(profiles, qname(ns, "profile"))
     ET.SubElement(profile, qname(ns, "id")).text = PROFILE_ID
 
@@ -104,9 +104,6 @@ def add_tia_profile(profiles: ET.Element, ns: str, includes_pattern: str) -> Non
     ET.SubElement(cfg_ts, qname(ns, "propertyName")).text = "surefireArgLine"
     ET.SubElement(cfg_ts, qname(ns, "runImpacted")).text = "false"
     ET.SubElement(cfg_ts, qname(ns, "runAllTests")).text = "true"
-    if includes_pattern:
-        includes = ET.SubElement(cfg_ts, qname(ns, "includes"))
-        ET.SubElement(includes, qname(ns, "include")).text = includes_pattern
 
 # ------ Dependency handling ------
 
@@ -172,24 +169,20 @@ def add_tia_to_pom(pom_path: str) -> None:
     ns = detect_namespace(root)
 
     group_id = resolve_group_id(root, ns)
-    if group_id:
-        includes_pattern = f"**{group_id}**"
-    else:
-        includes_pattern = None
 
     # Profiles
     profiles_el = get_or_create_profiles(root, ns)
     remove_existing_profile(profiles_el, ns, PROFILE_ID)
-    add_tia_profile(profiles_el, ns, includes_pattern)
+    add_tia_profile(profiles_el, ns)
 
     # Dependencies
-    ensure_dependency(
-        root, ns,
-        group_id="org.junit.jupiter",
-        artifact_id="junit-jupiter",
-        version=None,
-        scope="test",
-    )
+    # ensure_dependency(
+    #     root, ns,
+    #     group_id="org.junit.jupiter",
+    #     artifact_id="junit-jupiter",
+    #     version=None,
+    #     scope="test",
+    # )
     ensure_dependency(
         root, ns,
         group_id="com.teamscale",
