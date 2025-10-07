@@ -5,6 +5,7 @@ from pathlib import Path
 from src import config
 from src.utils import run_cmd
 import os
+from src.gh.commit_analysis.utils.java_detector import get_java_version
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,8 @@ class CommitDockerizer:
             if not dockerfile_path.exists():
                 raise FileNotFoundError(f"Dockerfile not found at {dockerfile_path}")
 
+            java_version = get_java_version(Path(self.patched_repo_path))
+
             original_repo_path = self.original_repo_path.replace(self.working_dir, '')
             patched_repo_path = self.patched_repo_path.replace(self.working_dir, '')
             
@@ -55,7 +58,8 @@ class CommitDockerizer:
                 str(Path(self.working_dir)),
                 "--build-arg", f"PATCHED_REPO_DIR={patched_repo_path}",
                 "--build-arg", f"ORIGINAL_REPO_DIR={original_repo_path}",
-                "--build-arg", f"MODULE_NAMES={','.join(self.module_names)}"
+                "--build-arg", f"MODULE_NAMES={','.join(self.module_names)}",
+                "--build-arg", f"JAVA_VERSION={java_version}"
             ], self.working_dir, capture_output=False)
             
             logger.info(f"Successfully built Docker image: {self.image_name}")

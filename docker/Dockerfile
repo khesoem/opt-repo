@@ -1,4 +1,9 @@
-FROM eclipse-temurin:17-jdk
+ARG JAVA_VERSION
+
+FROM eclipse-temurin:${JAVA_VERSION}-jdk
+
+# Set JAVA_HOME environment variable
+ENV JAVA_HOME=/opt/java/openjdk
 
 WORKDIR /app
 
