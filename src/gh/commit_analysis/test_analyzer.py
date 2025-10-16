@@ -17,26 +17,22 @@ class CommitPerfImprovementAnalyzer:
             self.covered_lines = covered_lines
 
     class AnalysisResult:
-        def __init__(self, repo: str, commit: str, image_name: str, original_exec_time: float, patched_exec_time: float, covering_test_results: dict[str, 'TestResult']):
+        def __init__(self, repo: str, commit: str, image_name: str, original_exec_times: list[float], patched_exec_times: list[float]):
             self.repo = repo
             self.commit = commit
             self.image_name = image_name
-            self.original_exec_time = original_exec_time
-            self.patched_exec_time = patched_exec_time
-
-            self.covering_tests_performance = {}
-            for test_path, test_result in covering_test_results.items():
-                self.covering_tests_performance[test_path] = {'original': test_result['original'].duration, 'patched': test_result['patched'].duration}
-            
+            self.original_exec_times = original_exec_times
+            self.patched_exec_times = patched_exec_times
             self.is_improvement_commit = self.is_commit_improved()
 
         def is_commit_improved(self) -> bool:
-            return self.patched_exec_time < self.original_exec_time * (1 - conf.perf_commit['min-exec-time-improvement'])
+            return sum(self.patched_exec_times[1:]) < sum(self.original_exec_times[1:]) * (1 - conf.perf_commit['min-exec-time-improvement'])
     
-    def __init__(self, repo: str, commit: str, working_dir: str):
+    def __init__(self, repo: str, commit: str, working_dir: str, builder_name: str):
         self.repo = repo
         self.commit = commit
         self.working_dir = working_dir
+        self.builder_name = builder_name
 
     def _clone_and_checkout_repo(self) -> str:
         repo_dir = self.repo.replace('/', '__') + "_" + self.commit + '_patched'
@@ -59,10 +55,14 @@ class CommitPerfImprovementAnalyzer:
 
         return original_clone_path
 
-    def _add_testwise_plugin_to_modified_modules(self, clone_path: str, original_clone_path: str) -> None:
+    def _get_modified_modules(self, clone_path: str) -> set[str]:
         analyzer = RepoAnalyzer(clone_path)
         changed_java_files = analyzer.get_changed_java_src_files(self.commit)
         modified_modules = analyzer.get_modules_for_java_files(changed_java_files)
+        return modified_modules
+
+    def _add_testwise_plugin_to_modified_modules(self, clone_path: str, original_clone_path: str) -> None:
+        modified_modules = self._get_modified_modules(clone_path)
 
         for module in modified_modules:
             pom_path = os.path.join(clone_path, module, "pom.xml")
@@ -75,57 +75,112 @@ class CommitPerfImprovementAnalyzer:
 
         return modified_modules
 
-    def _check_maven_success(self, log_path: str) -> bool:
+    def _check_maven_success(self, mvnw_exec_results: CommitDockerizer.MvnwExecResults) -> bool:
         """
         Check if Maven execution was successful by examining the log file.
         
         Args:
-            log_path: Path to the Maven execution log file
+            mvnw_exec_results: The results of executing maven
             
         Returns:
             True if Maven execution was successful, False otherwise
         """
         try:
+            for original_mvnw_log_path, patched_mvnw_log_path in zip(mvnw_exec_results.original_mvnw_log_paths, mvnw_exec_results.patched_mvnw_log_paths):
+                if not os.path.exists(original_mvnw_log_path) or not os.path.exists(patched_mvnw_log_path):
+                    raise FileNotFoundError(f"Mvnw log files not found at {original_mvnw_log_path} or {patched_mvnw_log_path}")
+                
+                with open(original_mvnw_log_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    original_log_content = f.read()
+                if "BUILD FAILURE" in original_log_content or "BUILD ERROR" in original_log_content or not "BUILD SUCCESS" in original_log_content:
+                    return False
+
+                with open(patched_mvnw_log_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    patched_log_content = f.read()
+                if "BUILD FAILURE" in patched_log_content or "BUILD ERROR" in patched_log_content or not "BUILD SUCCESS" in patched_log_content:
+                    return False
+
+            return True
+
+        except Exception as e:
+            logging.error(f"{self.repo} - {self.commit} - Error checking Maven success: {e}")
+            return False
+
+    def _get_maven_total_time(self, log_path: str) -> float:
+        """
+        Extract the total time spent by Maven from the log file.
+        
+        Args:
+            log_path: Path to the Maven execution log file
+            
+        Returns:
+            Total time in seconds as a float
+            
+        Raises:
+            FileNotFoundError: If the log file doesn't exist
+            ValueError: If the total time cannot be parsed from the log
+        """
+        try:
             with open(log_path, 'r', encoding='utf-8', errors='ignore') as f:
                 log_content = f.read()
-            
-            # Check for success indicators
-            success_indicators = [
-                "BUILD SUCCESS",
-                "[INFO] BUILD SUCCESS",
-                "Tests run:",
-                "Tests passed:"
-            ]
-            
-            # Check for failure indicators
-            failure_indicators = [
-                "BUILD FAILURE",
-                "[ERROR] BUILD FAILURE",
-                "Tests run: 0",
-                "There are test failures",
-                "Maven test failed"
-            ]
-            
-            # Look for success indicators
-            has_success = any(indicator in log_content for indicator in success_indicators)
-            
-            # Look for failure indicators
-            has_failure = any(indicator in log_content for indicator in failure_indicators)
-            
-            # If we have explicit failure indicators, it failed
-            if has_failure:
-                return False
-            
-            # If we have success indicators and no failure indicators, it succeeded
-            if has_success:
-                return True
-            
         except FileNotFoundError:
             logging.error(f"{self.repo} - {self.commit} - Maven log file not found: {log_path}")
-            return False
+            raise FileNotFoundError(f"Maven log file not found: {log_path}")
         except Exception as e:
             logging.error(f"{self.repo} - {self.commit} - Error reading Maven log file {log_path}: {e}")
-            return False
+            raise
+        
+        # Search for "Total time:" pattern in the log
+        # Maven outputs in formats like:
+        # [INFO] Total time:  1.234 s
+        # [INFO] Total time:  01:23 min
+        # [INFO] Total time:  1:23:45 h
+        time_pattern = re.compile(r'Total time:\s+([^\n\r]+)', re.IGNORECASE)
+        match = time_pattern.search(log_content)
+        
+        if not match:
+            logging.error(f"{self.repo} - {self.commit} - Could not find 'Total time:' in Maven log")
+            raise ValueError(f"Could not find 'Total time:' in Maven log: {log_path}")
+        
+        time_str = match.group(1).strip()
+        
+        # Parse the time based on the format
+        try:
+            # Format: "X.XXX s" (seconds)
+            if 's' in time_str.lower() and 'min' not in time_str.lower():
+                seconds = float(re.search(r'([\d.]+)', time_str).group(1))
+                return seconds
+            
+            # Format: "MM:SS min" or "MM:SS.SSS min" (minutes:seconds)
+            elif 'min' in time_str.lower():
+                # Extract the time part before 'min'
+                time_part = re.search(r'([\d:.]+)', time_str).group(1)
+                if ':' in time_part:
+                    parts = time_part.split(':')
+                    minutes = float(parts[0])
+                    seconds = float(parts[1])
+                    return minutes * 60 + seconds
+                else:
+                    # Just minutes without seconds
+                    minutes = float(time_part)
+                    return minutes * 60
+            
+            # Format: "H:MM:SS h" or "HH:MM:SS h" (hours:minutes:seconds)
+            elif 'h' in time_str.lower():
+                time_part = re.search(r'([\d:.]+)', time_str).group(1)
+                parts = time_part.split(':')
+                hours = float(parts[0])
+                minutes = float(parts[1]) if len(parts) > 1 else 0
+                seconds = float(parts[2]) if len(parts) > 2 else 0
+                return hours * 3600 + minutes * 60 + seconds
+            
+            else:
+                logging.error(f"{self.repo} - {self.commit} - Unknown time format: {time_str}")
+                raise ValueError(f"Unknown time format: {time_str}")
+                
+        except Exception as e:
+            logging.error(f"{self.repo} - {self.commit} - Error parsing time string '{time_str}': {e}")
+            raise ValueError(f"Error parsing time string '{time_str}': {e}")
 
     def _test_wise_report_to_test_results(self, module_name: str, test_wise_report: str) -> list[TestResult]:
         """
@@ -304,6 +359,15 @@ class CommitPerfImprovementAnalyzer:
         run_cmd(["rm", "-rf", self.repo.replace('/', '__') + "_" + self.commit + '_patched'], self.working_dir)
         run_cmd(["rm", "-rf", self.repo.replace('/', '__') + "_" + self.commit + '_original'], self.working_dir)
 
+    def _get_exec_times(self, mvnw_exec_results: CommitDockerizer.MvnwExecResults) -> tuple[list[float], list[float]]:
+        original_exec_times = []
+        patched_exec_times = []
+        for original_mvnw_log_path, patched_mvnw_log_path in zip(mvnw_exec_results.original_mvnw_log_paths, mvnw_exec_results.patched_mvnw_log_paths):
+            original_exec_times.append(self._get_maven_total_time(original_mvnw_log_path))
+            patched_exec_times.append(self._get_maven_total_time(patched_mvnw_log_path))
+        return original_exec_times, patched_exec_times
+
+
     def run_analysis(self) -> AnalysisResult:
         # clone the repo & checkout the commit & before commit
         logging.info(f"{self.repo} - {self.commit} - Cloning and checking out the repo")
@@ -313,11 +377,11 @@ class CommitPerfImprovementAnalyzer:
 
 
         # add testwise plugin to modified modules
-        modified_modules = self._add_testwise_plugin_to_modified_modules(patched_clone_path, original_clone_path)
-        logging.info(f"{self.repo} - {self.commit} - Added testwise plugin to modified modules")
+        modified_modules = self._get_modified_modules(patched_clone_path)
+        # logging.info(f"{self.repo} - {self.commit} - Added testwise plugin to modified modules")
 
         # build docker image containing the modified repos and run tests in docker
-        self.dockerizer = CommitDockerizer(self.working_dir, self.repo, self.commit, patched_clone_path, original_clone_path, modified_modules)
+        self.dockerizer = CommitDockerizer(self.working_dir, self.repo, self.commit, patched_clone_path, original_clone_path, modified_modules, self.builder_name)
         self.dockerizer.build_commit_docker_image()
         logging.info(f"{self.repo} - {self.commit} - Built docker image")
 
@@ -327,31 +391,16 @@ class CommitPerfImprovementAnalyzer:
         logging.info(f"{self.repo} - {self.commit} - Got the results of executing maven")
 
         # check if maven runs successfully on both versions
-        patched_success = self._check_maven_success(mvnw_exec_results.patched_mvnw_log_path)
-        original_success = self._check_maven_success(mvnw_exec_results.original_mvnw_log_path)
-        if not patched_success or not original_success:
-            logging.error(f"{self.repo} - {self.commit} - Maven execution failed - Patched: {patched_success}, Original: {original_success}")
+        maven_success = self._check_maven_success(mvnw_exec_results)
+        if not maven_success:
+            logging.error(f"{self.repo} - {self.commit} - Maven execution failed")
             raise Exception(f"{self.repo} - {self.commit} - Maven execution failed")
-        logging.info(f"{self.repo} - {self.commit} - Maven execution successful on both versions")
-
-
-        # get changed lines of java src files
-        repo_analyzer = RepoAnalyzer(patched_clone_path)
-        line_changes = repo_analyzer.get_commit_line_changes(self.commit)
-        logging.info(f"{self.repo} - {self.commit} - Got the changed lines of java src files")
-
-        # get result of patch covering tests
-        patch_covering_test_results = self._get_patch_covering_test_results(line_changes, mvnw_exec_results.module_to_test_res_path['original'], mvnw_exec_results.module_to_test_res_path['patched'])
-        logging.info(f"{self.repo} - {self.commit} - Got the results of patch covering tests")
-
-        # ignore tests that are modified in the commit
-        patch_covering_test_results = self._ignore_modified_tests(patch_covering_test_results, repo_analyzer.get_changed_java_test_files(self.commit))
-        logging.info(f"{self.repo} - {self.commit} - Ignored tests that are modified in the commit")
+        logging.info(f"{self.repo} - {self.commit} - Maven execution successful")
 
         # compute exec times
-        original_exec_time, patched_exec_time = self._calculate_exec_times(patch_covering_test_results)
+        original_exec_times, patched_exec_times = self._get_exec_times(mvnw_exec_results)
         logging.info(f"{self.repo} - {self.commit} - Computed exec times")
         
 
         logging.info(f"{self.repo} - {self.commit} - Running analysis complete")
-        return self.AnalysisResult(self.repo, self.commit, self.dockerizer.image_name, original_exec_time, patched_exec_time, patch_covering_test_results)
+        return self.AnalysisResult(self.repo, self.commit, self.dockerizer.image_name, original_exec_times, patched_exec_times)

@@ -1,5 +1,5 @@
 import os
-
+from datetime import datetime
 # llm = {
 #     'llm-invocation-cache-dir': 'cache/llm_invocations',
 #     'api-url': 'https://openrouter.ai/api/v1',
@@ -22,12 +22,24 @@ perf_commit = {
     'min-exec-time-improvement': 0.1,
 }
 
+def get_mvnw_log_file_name(version: str, exec_time: int) -> str:
+    return f'logs/{version}_repo_mvnw_{exec_time}.log'
+
 docker = {
     'dockerfile': 'docker/Dockerfile',
     'image-name-prefix': 'optds',
     'mvnw-log-path': '/logs',
     'original-repo-path': '/app/original_repo',
     'patched-repo-path': '/app/patched_repo',
-    'original-mvnw-log-file': 'logs/original_repo_mvnw.log',
-    'patched-mvnw-log-file': 'logs/patched_repo_mvnw.log',
+    'host-mvnw-log-path': get_mvnw_log_file_name,
+    'exec-times': 4,
+    'cpu-core-per-exec': 4,
+    'memory-per-exec': 2,
+}
+
+run_analysis = {
+    'num-processes': 2,
+    'log-file': 'logs/logging_{:%Y-%m-%d-%H-%M}.log'.format(datetime.now()),
+    'log-format': '%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+    'log-datefmt': '%H:%M:%S',
 }

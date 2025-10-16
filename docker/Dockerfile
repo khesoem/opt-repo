@@ -1,4 +1,4 @@
-ARG JAVA_VERSION
+ARG JAVA_VERSION=21
 
 FROM eclipse-temurin:${JAVA_VERSION}-jdk
 
@@ -10,6 +10,7 @@ WORKDIR /app
 ARG PATCHED_REPO_DIR
 ARG ORIGINAL_REPO_DIR
 ARG MODULE_NAMES
+ARG EXEC_TIMES
 
 # Create logs directory
 RUN mkdir -p /logs
@@ -44,7 +45,9 @@ RUN echo "Current directory: $(pwd)"
 RUN ./mvnw -B dependency:go-offline || echo "Dependency download failed"
 
 # Run tests with better error handling
-RUN ./mvnw -pl $MODULE_NAMES -am -Dtia test verify 2>&1 | tee /logs/patched_repo_mvnw.log || echo "Maven test failed, check logs"
+RUN for i in $(seq 1 $EXEC_TIMES); do \
+      ./mvnw -pl $MODULE_NAMES -am -Dtia test verify 2>&1 | tee /logs/patched_repo_mvnw_$i.log || echo "Maven test failed, check logs"; \
+    done
 
 # Run tests on repo original (before commit)
 WORKDIR /app/original_repo
@@ -57,4 +60,6 @@ RUN echo "Current directory: $(pwd)"
 RUN ./mvnw -B dependency:go-offline || echo "Dependency download failed"
 
 # Run tests with better error handling
-RUN ./mvnw -pl $MODULE_NAMES -am -Dtia test verify 2>&1 | tee /logs/original_repo_mvnw.log || echo "Maven test failed, check logs"
+RUN for i in $(seq 1 $EXEC_TIMES); do \
+      ./mvnw -pl $MODULE_NAMES -am -Dtia test verify 2>&1 | tee /logs/original_repo_mvnw_$i.log || echo "Maven test failed, check logs"; \
+    done
