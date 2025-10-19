@@ -32,9 +32,9 @@ docker = {
     'original-repo-path': '/app/original_repo',
     'patched-repo-path': '/app/patched_repo',
     'host-mvnw-log-path': get_mvnw_log_file_name,
-    'exec-times': 4,
-    'cpu-core-per-exec': 4,
-    'memory-per-exec': 2,
+    'exec-times': 6,
+    'cpu-core-per-exec': 6,
+    'memory-per-exec': 10,
 }
 
 run_analysis = {

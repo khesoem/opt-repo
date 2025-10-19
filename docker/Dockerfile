@@ -5,6 +5,9 @@ FROM eclipse-temurin:${JAVA_VERSION}-jdk
 # Set JAVA_HOME environment variable
 ENV JAVA_HOME=/opt/java/openjdk
 
+# Install git
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 ARG PATCHED_REPO_DIR
@@ -46,7 +49,7 @@ RUN ./mvnw -B dependency:go-offline || echo "Dependency download failed"
 
 # Run tests with better error handling
 RUN for i in $(seq 1 $EXEC_TIMES); do \
-      ./mvnw -pl $MODULE_NAMES -am -Dtia test verify 2>&1 | tee /logs/patched_repo_mvnw_$i.log || echo "Maven test failed, check logs"; \
+      ./mvnw -pl $MODULE_NAMES -am test 2>&1 | tee /logs/patched_repo_mvnw_$i.log || echo "Maven test failed, check logs"; \
     done
 
 # Run tests on repo original (before commit)
@@ -61,5 +64,5 @@ RUN ./mvnw -B dependency:go-offline || echo "Dependency download failed"
 
 # Run tests with better error handling
 RUN for i in $(seq 1 $EXEC_TIMES); do \
-      ./mvnw -pl $MODULE_NAMES -am -Dtia test verify 2>&1 | tee /logs/original_repo_mvnw_$i.log || echo "Maven test failed, check logs"; \
+      ./mvnw -pl $MODULE_NAMES -am test 2>&1 | tee /logs/original_repo_mvnw_$i.log || echo "Maven test failed, check logs"; \
     done

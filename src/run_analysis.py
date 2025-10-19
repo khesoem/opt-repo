@@ -20,7 +20,7 @@ logging.basicConfig(filename=LOG_FILE,
                     level=logging.INFO)
 
 
-def define_builder(builder_index: int, working_dir: str):
+def define_new_builder(builder_index: int, working_dir: str):
     builder_name = f"builder-{builder_index}"
     cpu_core_per_exec = conf.docker['cpu-core-per-exec']
     memory_per_exec = conf.docker['memory-per-exec']
@@ -70,7 +70,7 @@ def run(commits_file: str, working_dir: str):
     
     # Create builders and add them to the queue
     for i in range(NUM_PROCESSES):
-        builder_name = define_builder(i, working_dir)
+        builder_name = define_new_builder(i, working_dir)
         builder_queue.put(builder_name)
         logging.info(f"Created and added builder to queue: {builder_name}")
     

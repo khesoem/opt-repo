@@ -1,198 +1,261 @@
 #!/usr/bin/env python3
-import logging
+"""
+Detect the Java version for a Maven (mvnw) repository.
+
+Heuristics (in priority order):
+1) .mvn/jvm.config      -> --release/--target/--source
+2) pom.xml properties   -> maven.compiler.release / maven.compiler.target / maven.compiler.source / java.version
+3) pom.xml plugin config-> maven-compiler-plugin <configuration><release|target|source>
+4) .java-version        -> e.g., "17.0.8", "temurin-17.0.8", etc.
+5) .sdkmanrc            -> line like: java=17.0.8-tem
+Fallback default: "24"
+
+Returns a major version string like "17" or "24".
+"""
+
+from __future__ import annotations
 import re
+import sys
 from pathlib import Path
 import xml.etree.ElementTree as ET
+from typing import Optional, Dict
 
-DEFAULT_JAVA_VERSION = 24
+DEFAULT_JAVA = "24"
 
-# -------- helpers --------
-INT_RE = re.compile(r"\b([1-9][0-9])\b")  # matches 10..99
+# ------------------------ helpers ------------------------
 
-def first_int(txt):
-    if not txt:
+_DIGITS = re.compile(r"\d+")
+
+def _major_from_version_string(s: str) -> Optional[str]:
+    """
+    Extract the Java *major* version from a string.
+    Examples:
+      "17" -> "17"
+      "17.0.7" -> "17"
+      "1.8" -> "8"
+      "temurin-17.0.9" -> "17"
+      "${java.version}" -> None (caller should expand first)
+    """
+    if not s:
         return None
-    m = INT_RE.search(str(txt))
-    return int(m.group(1)) if m else None
+    s = s.strip()
 
-def parse_range(ver):
-    """Accepts things like [21,), [17,21], (17,] or '21'. Returns the lower bound."""
-    if not ver:
+    # Old "1.8" style
+    if s.startswith("1."):
+        # "1.8", "1.7" -> 8, 7
+        parts = s.split(".")
+        if len(parts) >= 2 and parts[1].isdigit():
+            return parts[1]
+        # fallback to first digits
+    # Generic: take the first integer sequence
+    m = _DIGITS.search(s)
+    if not m:
         return None
-    m = re.match(r"[\[\(]\s*([0-9]+)", ver.strip())
-    if m:
-        return int(m.group(1))
-    return first_int(ver)
+    return m.group(0)
 
-def read_xml(path: Path):
+
+def _read_text_file(path: Path) -> Optional[str]:
     try:
-        return ET.parse(path).getroot()
+        return path.read_text(encoding="utf-8")
     except Exception:
         return None
 
-def nsmap(root):
-    return {"m": root.tag.split("}")[0].strip("{")} if root is not None and root.tag.startswith("{") else {}
 
-def find(root, path, ns):
-    if ns:
-        path = "/".join(f"m:{p}" for p in path.split("/"))
-        return root.find(path, ns)
-    return root.find(path)
+def _expand_properties(value: str, props: Dict[str, str]) -> str:
+    """
+    Expand ${...} placeholders using provided props (one pass).
+    """
+    if not value:
+        return value
 
-def findall(root, path, ns):
-    if ns:
-        path = "/".join(f"m:{p}" for p in path.split("/"))
-        return root.findall(path, ns)
-    return root.findall(path)
+    def repl(m):
+        key = m.group(1)
+        return props.get(key, m.group(0))  # leave unresolved refs as-is
 
-def text(el):
-    return (el.text or "").strip() if el is not None and el.text else None
+    return re.sub(r"\$\{([^}]+)\}", repl, value)
 
-def load_pom_chain(start: Path):
-    """Load current pom and follow <parent><relativePath> (or ../pom.xml by default)."""
-    chain = []
-    seen = set()
-    cur = start
-    while cur and cur.exists():
-        if cur.resolve() in seen:
-            break
-        seen.add(cur.resolve())
-        root = read_xml(cur)
-        if root is None:
-            break
-        chain.append((cur, root))
-        ns = nsmap(root)
-        parent = find(root, "parent", ns)
-        if parent is None:
-            break
-        rel = text(find(parent, "relativePath", ns)) or "../pom.xml"
-        nxt = (cur.parent / rel).resolve()
-        if nxt == cur or not nxt.exists():
-            break
-        cur = nxt
-    return chain  # [ (path, root), child first -> parent last ]
 
-def collect_properties(chain):
-    """Merge <properties> from child to parents (child overrides)."""
-    props = {}
-    for _, root in reversed(chain):  # parents first
-        ns = nsmap(root)
-        props_el = find(root, "properties", ns)
-        if props_el is not None:
-            for p in list(props_el):
-                if p.tag.endswith("}properties"):  # paranoia
-                    continue
-                key = p.tag.split("}", 1)[-1]
-                val = text(p)
-                if val is not None:
-                    props.setdefault(key, val)
-    # finally child-most overrides
-    for _, root in chain:
-        ns = nsmap(root)
-        props_el = find(root, "properties", ns)
-        if props_el is not None:
-            for p in list(props_el):
-                key = p.tag.split("}", 1)[-1]
-                val = text(p)
-                if val is not None:
-                    props[key] = val
+# ------------------------ jvm.config ------------------------
+
+def _from_jvm_config(repo: Path) -> Optional[str]:
+    cfg = repo / ".mvn" / "jvm.config"
+    txt = _read_text_file(cfg)
+    if not txt:
+        return None
+
+    # Look for --release N first, then --target N, then --source N
+    # Accept formats like: --release 17, --release=17
+    patterns = [
+        r"--release(?:\s+|=)(\d+)",
+        r"--target(?:\s+|=)(\d+)",
+        r"--source(?:\s+|=)(\d+)",
+    ]
+    for pat in patterns:
+        m = re.search(pat, txt)
+        if m:
+            return m.group(1)
+    return None
+
+
+# ------------------------ pom.xml parsing ------------------------
+
+def _strip_ns(elem: ET.Element) -> None:
+    """In-place strip XML namespaces for simpler tag access."""
+    for e in elem.iter():
+        if "}" in e.tag:
+            e.tag = e.tag.split("}", 1)[1]
+
+def _collect_properties(pom_root: ET.Element) -> Dict[str, str]:
+    props: Dict[str, str] = {}
+    props_elem = pom_root.find("properties")
+    if props_elem is not None:
+        for child in list(props_elem):
+            # e.g., <java.version>17</java.version>
+            tag = child.tag
+            text = (child.text or "").strip()
+            if tag and text:
+                props[tag] = text
+    # Common Maven implicit props can exist, but we only handle user-defined ones here.
+    # Mirror some common aliases to improve hit rate:
+    for alias, keys in {
+        "maven.compiler.release": ["maven.compiler.release"],
+        "maven.compiler.target":  ["maven.compiler.target"],
+        "maven.compiler.source":  ["maven.compiler.source"],
+        "java.version":           ["java.version"],
+    }.items():
+        for k in keys:
+            if alias not in props and k in props:
+                props[alias] = props[k]
     return props
 
-def resolve_props(val, props, depth=0):
-    if val is None:
-        return None
-    # simple ${prop} substitution (no recursion through parents of parents)
-    out = str(val)
-    # avoid infinite recursion
-    for _ in range(5):
-        changed = False
-        for m in re.findall(r"\$\{([^}]+)\}", out):
-            rep = props.get(m)
-            if rep is not None:
-                out2 = out.replace("${"+m+"}", str(rep))
-                if out2 != out:
-                    out = out2
-                    changed = True
-        if not changed:
-            break
-    return out
-
-def read_enforcer_java(root, props):
-    ns = nsmap(root)
-    for p in findall(root, "build/plugins/plugin", ns):
-        gid = text(find(p, "groupId", ns)) or ""
-        aid = text(find(p, "artifactId", ns)) or ""
-        if gid == "org.apache.maven.plugins" and aid == "maven-enforcer-plugin":
-            # look in both <executions> and direct <configuration>
-            execs = findall(p, "executions/execution", ns)
-            blocks = execs + [p]
-            for b in blocks:
-                rules_parent = find(b, "configuration/rules", ns)
-                if rules_parent is None:
-                    continue
-                for r in list(rules_parent):
-                    if r.tag.endswith("RequireJavaVersion"):
-                        v = resolve_props(text(find(r, "version", ns)), props)
-                        j = parse_range(v)
-                        if j:
-                            return j
-    return None
-
-def read_compiler_java(root, props):
-    ns = nsmap(root)
-    for p in findall(root, "build/plugins/plugin", ns):
-        gid = text(find(p, "groupId", ns)) or ""
-        aid = text(find(p, "artifactId", ns)) or ""
-        if gid == "org.apache.maven.plugins" and aid == "maven-compiler-plugin":
-            rel = resolve_props(text(find(p, "configuration/release", ns)), props)
-            if rel:
-                j = first_int(rel)
-                if j:
-                    return j
-            tgt = resolve_props(text(find(p, "configuration/target", ns)), props)
-            if tgt:
-                j = first_int(tgt)
-                if j:
-                    return j
-    return None
-
-def detect_java_version(pom_path: Path):
-    chain = load_pom_chain(pom_path)
-    if not chain:
-        return None
-    props = collect_properties(chain)
-
-    # 1) enforcer in child→parent order
-    for _, root in chain:
-        j = read_enforcer_java(root, props)
-        if j:
-            return j
-
-    # 2) compiler plugin in child→parent order
-    for _, root in chain:
-        j = read_compiler_java(root, props)
-        if j:
-            return j
-
-    # 3) properties fallback
-    for key in ("maven.compiler.release", "maven.compiler.target"):
-        val = resolve_props(props.get(key), props)
-        j = first_int(val)
-        if j:
-            return j
-
-    return None
-
-def get_java_version(repo_path: Path):
-    pom = repo_path / "pom.xml"
+def _read_pom(repo: Path) -> Optional[ET.Element]:
+    pom = repo / "pom.xml"
     if not pom.exists():
-        logging.error(f"pom.xml not found in {repo_path}")
-        return DEFAULT_JAVA_VERSION
-    j = detect_java_version(pom)
-    if not j:
-        logging.error(f"Could not determine Java version for {repo_path}. Consider adding an enforcer RequireJavaVersion or compiler <release>.")
-        return DEFAULT_JAVA_VERSION
-    return j
+        return None
+    try:
+        root = ET.fromstring(pom.read_text(encoding="utf-8"))
+        _strip_ns(root)
+        return root
+    except Exception:
+        return None
+
+def _resolve_from_pom_properties(root: ET.Element) -> Optional[str]:
+    props = _collect_properties(root)
+    for key in ("maven.compiler.release", "maven.compiler.target", "maven.compiler.source", "java.version"):
+        val = props.get(key)
+        if not val:
+            continue
+        expanded = _expand_properties(val, props)
+        major = _major_from_version_string(expanded)
+        if major:
+            return major
+    return None
+
+def _resolve_from_maven_compiler_plugin(root: ET.Element) -> Optional[str]:
+    build = root.find("build")
+    if build is None:
+        return None
+    plugins_parent = build.find("plugins")
+    if plugins_parent is None:
+        return None
+
+    # Gather properties for placeholder expansion
+    props = _collect_properties(root)
+
+    for plugin in plugins_parent.findall("plugin"):
+        aid = (plugin.findtext("artifactId") or "").strip()
+        gid = (plugin.findtext("groupId") or "org.apache.maven.plugins").strip()  # default
+        if aid == "maven-compiler-plugin" and gid.endswith("maven.plugins"):
+            cfg = plugin.find("configuration")
+            if cfg is None:
+                continue
+            for tag in ("release", "target", "source"):
+                val = cfg.findtext(tag)
+                if val:
+                    expanded = _expand_properties(val.strip(), props)
+                    major = _major_from_version_string(expanded)
+                    if major:
+                        return major
+    return None
+
+
+# ------------------------ other version files ------------------------
+
+def _from_java_version_file(repo: Path) -> Optional[str]:
+    # jenv/asdf/SDKman sometimes drop a ".java-version" file
+    f = repo / ".java-version"
+    txt = _read_text_file(f)
+    if not txt:
+        return None
+    # Take first non-empty token
+    token = txt.strip().split()[0]
+    return _major_from_version_string(token)
+
+def _from_sdkmanrc(repo: Path) -> Optional[str]:
+    f = repo / ".sdkmanrc"
+    txt = _read_text_file(f)
+    if not txt:
+        return None
+    # Format: java=17.0.8-tem (or similar)
+    for line in txt.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("java="):
+            val = line.split("=", 1)[1].strip()
+            return _major_from_version_string(val)
+    return None
+
+
+# ------------------------ public API ------------------------
+
+def get_java_version(repo_path: str | Path) -> str:
+    """
+    Return the project's Java major version as a string (e.g., "17").
+    If undetectable, return the default "24".
+    """
+    repo = Path(repo_path)
+
+    # 1) .mvn/jvm.config
+    v = _from_jvm_config(repo)
+    if v:
+        return v
+
+    # 2) pom.xml props
+    root = _read_pom(repo)
+    if root is not None:
+        v = _resolve_from_pom_properties(root)
+        if v:
+            return v
+
+        # 3) maven-compiler-plugin
+        v = _resolve_from_maven_compiler_plugin(root)
+        if v:
+            return v
+
+    # 4) .java-version
+    v = _from_java_version_file(repo)
+    if v:
+        return v
+
+    # 5) .sdkmanrc
+    v = _from_sdkmanrc(repo)
+    if v:
+        return v
+
+    # Fallback
+    return DEFAULT_JAVA
+
+
+# ------------------------ CLI ------------------------
+
+def main(argv: list[str]) -> int:
+    if len(argv) < 2:
+        print(f"Usage: {argv[0]} /path/to/mvnw-repo")
+        print(DEFAULT_JAVA)
+        return 0
+    print(get_java_version(argv[1]))
+    return 0
 
 if __name__ == "__main__":
-    print(get_java_version(Path("/zdata/ketemadi/projects/opt/tmp/wildfly")))
+    raise SystemExit(main(sys.argv))
