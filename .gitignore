@@ -24,5 +24,7 @@ logs/
 htmlcov/
 tmp*.py
 tmp_**
+tmp*.txt
+tmp*.log
 err.err
 log.log

@@ -1,12 +1,15 @@
 import os
 import json
 import re
+from typing import Sequence
 from src.utils import run_cmd
 from src.gh.commit_analysis.commit_static_analyzer import RepoAnalyzer
 from src.gh.commit_analysis.utils.pom_manipulator import add_tia_to_pom
 from src.reproducibility.dockerizer import CommitDockerizer
 import logging
 import src.config as conf
+import numpy as np
+from scipy import stats
 
 class CommitPerfImprovementAnalyzer:
     class TestResult:
@@ -26,7 +29,22 @@ class CommitPerfImprovementAnalyzer:
             self.is_improvement_commit = self.is_commit_improved()
 
         def is_commit_improved(self) -> bool:
-            return sum(self.patched_exec_times[1:]) < sum(self.original_exec_times[1:]) * (1 - conf.perf_commit['min-exec-time-improvement'])
+            return self._is_exec_time_improvement_significant(self.patched_exec_times, self.original_exec_times)
+
+        def _is_exec_time_improvement_significant(
+            self,
+            v1_times: Sequence[float],
+            v2_times: Sequence[float]
+        ) -> bool:
+            v1 = np.asarray(v1_times, dtype=float)
+            v2 = np.asarray(v2_times, dtype=float)
+
+            c = 1.0 - conf.perf_commit['min-exec-time-improvement']  # we test μ1 < c * μ2
+            v2_scaled = c * v2
+
+            # Welch's t-test, one-sided: H1: mean(v1) < mean(v2_scaled)
+            res = stats.ttest_ind(v1, v2_scaled, equal_var=False, alternative='less')
+            return bool(res.pvalue < conf.perf_commit['min-p-value'])
     
     def __init__(self, repo: str, commit: str, working_dir: str, builder_name: str):
         self.repo = repo
