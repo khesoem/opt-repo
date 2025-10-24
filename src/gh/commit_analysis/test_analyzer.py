@@ -1,7 +1,6 @@
 import os
 import json
 import re
-from typing import Sequence
 from src.utils import run_cmd
 from src.gh.commit_analysis.commit_static_analyzer import RepoAnalyzer
 from src.gh.commit_analysis.utils.pom_manipulator import add_tia_to_pom
@@ -10,6 +9,7 @@ import logging
 import src.config as conf
 import numpy as np
 from scipy import stats
+from src.gh.commit_analysis.utils.mvn_log_analyzer import MvnwExecResults
 
 class CommitPerfImprovementAnalyzer:
     class TestResult:
@@ -20,31 +20,12 @@ class CommitPerfImprovementAnalyzer:
             self.covered_lines = covered_lines
 
     class AnalysisResult:
-        def __init__(self, repo: str, commit: str, image_name: str, original_exec_times: list[float], patched_exec_times: list[float]):
+        def __init__(self, repo: str, commit: str, image_name: str, mvnw_exec_results: MvnwExecResults):
             self.repo = repo
             self.commit = commit
             self.image_name = image_name
-            self.original_exec_times = original_exec_times
-            self.patched_exec_times = patched_exec_times
-            self.is_improvement_commit = self.is_commit_improved()
-
-        def is_commit_improved(self) -> bool:
-            return self._is_exec_time_improvement_significant(self.patched_exec_times, self.original_exec_times)
-
-        def _is_exec_time_improvement_significant(
-            self,
-            v1_times: Sequence[float],
-            v2_times: Sequence[float]
-        ) -> bool:
-            v1 = np.asarray(v1_times, dtype=float)
-            v2 = np.asarray(v2_times, dtype=float)
-
-            c = 1.0 - conf.perf_commit['min-exec-time-improvement']  # we test μ1 < c * μ2
-            v2_scaled = c * v2
-
-            # Welch's t-test, one-sided: H1: mean(v1) < mean(v2_scaled)
-            res = stats.ttest_ind(v1, v2_scaled, equal_var=False, alternative='less')
-            return bool(res.pvalue < conf.perf_commit['min-p-value'])
+            self.original_exec_times, self.patched_exec_times = mvnw_exec_results.get_total_execution_times()
+            self.is_improvement_commit = mvnw_exec_results.is_improvement_commit()
     
     def __init__(self, repo: str, commit: str, working_dir: str, builder_name: str):
         self.repo = repo
@@ -92,37 +73,6 @@ class CommitPerfImprovementAnalyzer:
                 add_tia_to_pom(pom_path)
 
         return modified_modules
-
-    def _check_maven_success(self, mvnw_exec_results: CommitDockerizer.MvnwExecResults) -> bool:
-        """
-        Check if Maven execution was successful by examining the log file.
-        
-        Args:
-            mvnw_exec_results: The results of executing maven
-            
-        Returns:
-            True if Maven execution was successful, False otherwise
-        """
-        try:
-            for original_mvnw_log_path, patched_mvnw_log_path in zip(mvnw_exec_results.original_mvnw_log_paths, mvnw_exec_results.patched_mvnw_log_paths):
-                if not os.path.exists(original_mvnw_log_path) or not os.path.exists(patched_mvnw_log_path):
-                    raise FileNotFoundError(f"Mvnw log files not found at {original_mvnw_log_path} or {patched_mvnw_log_path}")
-                
-                with open(original_mvnw_log_path, 'r', encoding='utf-8', errors='ignore') as f:
-                    original_log_content = f.read()
-                if "BUILD FAILURE" in original_log_content or "BUILD ERROR" in original_log_content or not "BUILD SUCCESS" in original_log_content:
-                    return False
-
-                with open(patched_mvnw_log_path, 'r', encoding='utf-8', errors='ignore') as f:
-                    patched_log_content = f.read()
-                if "BUILD FAILURE" in patched_log_content or "BUILD ERROR" in patched_log_content or not "BUILD SUCCESS" in patched_log_content:
-                    return False
-
-            return True
-
-        except Exception as e:
-            logging.error(f"{self.repo} - {self.commit} - Error checking Maven success: {e}")
-            return False
 
     def _get_maven_total_time(self, log_path: str) -> float:
         """
@@ -377,7 +327,7 @@ class CommitPerfImprovementAnalyzer:
         run_cmd(["rm", "-rf", self.repo.replace('/', '__') + "_" + self.commit + '_patched'], self.working_dir)
         run_cmd(["rm", "-rf", self.repo.replace('/', '__') + "_" + self.commit + '_original'], self.working_dir)
 
-    def _get_exec_times(self, mvnw_exec_results: CommitDockerizer.MvnwExecResults) -> tuple[list[float], list[float]]:
+    def _get_exec_times(self, mvnw_exec_results: MvnwExecResults) -> tuple[list[float], list[float]]:
         original_exec_times = []
         patched_exec_times = []
         for original_mvnw_log_path, patched_mvnw_log_path in zip(mvnw_exec_results.original_mvnw_log_paths, mvnw_exec_results.patched_mvnw_log_paths):
@@ -409,16 +359,10 @@ class CommitPerfImprovementAnalyzer:
         logging.info(f"{self.repo} - {self.commit} - Got the results of executing maven")
 
         # check if maven runs successfully on both versions
-        maven_success = self._check_maven_success(mvnw_exec_results)
-        if not maven_success:
+        if not mvnw_exec_results.is_successful():
             logging.error(f"{self.repo} - {self.commit} - Maven execution failed")
             raise Exception(f"{self.repo} - {self.commit} - Maven execution failed")
         logging.info(f"{self.repo} - {self.commit} - Maven execution successful")
 
-        # compute exec times
-        original_exec_times, patched_exec_times = self._get_exec_times(mvnw_exec_results)
-        logging.info(f"{self.repo} - {self.commit} - Computed exec times")
-        
-
         logging.info(f"{self.repo} - {self.commit} - Running analysis complete")
-        return self.AnalysisResult(self.repo, self.commit, self.dockerizer.image_name, original_exec_times, patched_exec_times)
+        return self.AnalysisResult(self.repo, self.commit, self.dockerizer.image_name, mvnw_exec_results)

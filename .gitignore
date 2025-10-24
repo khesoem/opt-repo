@@ -28,3 +28,4 @@ tmp*.txt
 tmp*.log
 err.err
 log.log
+collected_commits/tmp_commits.csv

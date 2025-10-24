@@ -20,7 +20,7 @@ perf_commit = {
     'min-likelihood': 50.0,
     'max-likelihood': 90.0,
     'min-exec-time-improvement': 0.05,
-    'min-p-value': 0.05,
+    'min-p-value': 0.1,
 }
 
 def get_mvnw_log_file_name(version: str, exec_time: int) -> str:

@@ -6,15 +6,12 @@ from src import config
 from src.utils import run_cmd
 import os
 from src.gh.commit_analysis.utils.java_detector import get_java_version
+from src.gh.commit_analysis.utils.mvn_log_analyzer import MvnwExecResults
 
 logger = logging.getLogger(__name__)
 
 class CommitDockerizer:
-    class MvnwExecResults:
-        def __init__(self, original_mvnw_log_paths: list[str], patched_mvnw_log_paths: list[str]):
-            self.original_mvnw_log_paths = original_mvnw_log_paths
-            self.patched_mvnw_log_paths = patched_mvnw_log_paths
-
+    
     def __init__(self, working_dir: str, repo: str, commit: str, patched_repo_path: str, original_repo_path: str, module_names: list[str], builder_name: str):
         self.working_dir = working_dir
         self.repo = repo
@@ -91,7 +88,7 @@ class CommitDockerizer:
                 original_mvnw_log_paths.append(original_mvnw_log_path)
                 patched_mvnw_log_paths.append(patched_mvnw_log_path)
 
-            return self.MvnwExecResults(original_mvnw_log_paths=original_mvnw_log_paths, patched_mvnw_log_paths=patched_mvnw_log_paths)
+            return MvnwExecResults(original_mvnw_log_paths=original_mvnw_log_paths, patched_mvnw_log_paths=patched_mvnw_log_paths)
         finally:
             # Ensure container is always removed, even if an exception occurs
             run_cmd(['docker', 'rm', f'{self.container_name}'], self.working_dir)
