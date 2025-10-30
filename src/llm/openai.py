@@ -2,7 +2,9 @@ from .invocation import *
 from .llm_adapter import LLMAdapter
 
 
-class GPT4_1_Nano(LLMAdapter):
+class GPT5_Nano(LLMAdapter):
+    def __init__(self, read_from_cache: bool=False, save_to_cache: bool=False):
+        super().__init__(read_from_cache, save_to_cache, "openai/gpt-5-nano")
 
     def get_response(self, prompt: Prompt) -> Response:
         cached_invocation = self.load_cache(prompt)
@@ -10,7 +12,7 @@ class GPT4_1_Nano(LLMAdapter):
             return cached_invocation.response
 
         completion = self.client.chat.completions.create(
-            model="openai/gpt-4.1-nano",
+            model=self.model,
             messages=[m.__dict__ for m in prompt.messages]
         )
         response = Response([Response.Sample(c.message.content)
@@ -19,7 +21,9 @@ class GPT4_1_Nano(LLMAdapter):
         self.save_cache(Invocation(prompt, response))
         return response
 
-class O4_Mini_High(LLMAdapter):
+class GPT5_Codex(LLMAdapter):
+    def __init__(self, read_from_cache: bool=False, save_to_cache: bool=False):
+        super().__init__(read_from_cache, save_to_cache, "openai/gpt-5-codex")
 
     def get_response(self, prompt: Prompt) -> Response:
         cached_invocation = self.load_cache(prompt)
@@ -27,7 +31,7 @@ class O4_Mini_High(LLMAdapter):
             return cached_invocation.response
 
         completion = self.client.chat.completions.create(
-            model="openai/o4-mini-high",
+            model=self.model,
             messages=[m.__dict__ for m in prompt.messages]
         )
         response = Response([Response.Sample(c.message.content)

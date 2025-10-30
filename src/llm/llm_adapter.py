@@ -7,7 +7,7 @@ from src.llm.invocation import Invocation, Prompt
 
 
 class LLMAdapter:
-    def __init__(self, read_from_cache: bool=False, save_to_cache: bool=False):
+    def __init__(self, read_from_cache: bool=False, save_to_cache: bool=False, model: str=conf.llm['default-model']):
         self.cache_dir = conf.llm['llm-invocation-cache-dir']
         self.read_from_cache = read_from_cache
         self.save_to_cache = save_to_cache
@@ -15,6 +15,10 @@ class LLMAdapter:
             base_url=conf.llm['api-url'],
             api_key=conf.llm['openrouter-api-key'],
         )
+        self.model = model
+    
+    def get_model(self) -> str:
+        return self.model
 
     def load_cache(self, prompt: Prompt) -> Invocation | None:
         if not self.read_from_cache:

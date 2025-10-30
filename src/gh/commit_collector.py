@@ -1,7 +1,7 @@
 import time
 import re
-import tiktoken
-
+import pandas as pd
+from src.data.dataset_adapter import DatasetAdapter
 from src.llm.openai import *
 from src.llm.invocation import Prompt
 import src.config as conf
@@ -12,20 +12,26 @@ from github.Repository import Repository
 from github.Commit import Commit
 import logging
 from datetime import datetime, timedelta, timezone
+from typing import Set
 
 class CommitCollector:
     def __init__(self):
         access_token = conf.github['access-token']
         auth = Auth.Token(access_token)
         self.g = Github(auth=auth)
-        self.gpt4 = GPT4_1_Nano(read_from_cache=True, save_to_cache=True)
-        self.o4 = O4_Mini_High(read_from_cache=True, save_to_cache=True)
+        self.gpt5_nano = GPT5_Nano(read_from_cache=True, save_to_cache=True)
+        self.gpt5_codex = GPT5_Codex(read_from_cache=True, save_to_cache=True)
+        self.start_date = conf.perf_commit['start-date']
+        self.min_stars = conf.perf_commit['min-stars']
+        self.max_commit_files = conf.perf_commit['max-files']
+        self.dataset = DatasetAdapter()
 
     def get_popular_repos(self):
-        query = "pushed:>2025-01-01 language:Java stars:>1000 archived:false"
+        query = f"pushed:>{self.start_date} language:Java stars:>{self.min_stars} archived:false"
         repositories = self.g.search_repositories(query=query, sort="stars", order="desc")
         logging.info(f"Fetch results for {query}.")
         return repositories
+
 
     def get_diff(self, commit: Commit) -> str:
         diff = ""
@@ -35,101 +41,225 @@ class CommitCollector:
                 diff += f.patch + '\n'
         return diff
 
-    def is_performance_commit(self, repo, commit: Commit) -> bool:
-        # First stage, ask Gpt4.1
-        p = Prompt([Prompt.Message("user",
-                                  f"The following is the message of a commit in the {repo.full_name} repository:\n\n###Message Start###{commit.commit.message}\n###Message End###"
-                                  + f"\n\nHow likely is it for this commit to be a performance improving commit in terms of execution time? Answer by only writing the likelihood in the following format:\nLikelihood: x%"
-                                  )])
-        res = self.gpt4.get_response(p)
+    def extract_fixed_issues(self, commit_message: str, repo: Repository) -> Set[int]:
+        """
+        Extract issue numbers from commit message that are explicitly closed/fixed.
+        
+        Args:
+            commit_message: The commit message to parse
+            repo: The GitHub repository object
+            
+        Returns:
+            Set of issue numbers that are explicitly closed by this commit
+            
+        Examples:
+            - "Fixes #123" -> {123}
+            - "Closes #456 and resolves #789" -> {456, 789}
+            - "Fix GH-123" -> {123}
+            - "Resolves owner/repo#456" -> {456} (if matches current repo)
+        """
+        if not commit_message:
+            return set()
+            
+        msg = commit_message.strip()
+        out: Set[int] = set()
 
-        match = re.search(r"Likelihood:\s*([0-9]+(?:\.[0-9]+)?)%", res.first_content)
-        if match:
-            likelihood = float(match.group(1))
-        else:
-            logging.info(f"Commit {commit.sha} in {repo.full_name} did not return a valid likelihood response.")
-            return False
+        # Enhanced regex patterns to catch more formats
+        closing_prefix = r'(?:(?<![A-Za-z])(?:fix|fixes|fixed|close|closes|closed|resolve|resolves|resolved|address|addresses|addressed))(?:\s*[:\-])?\s+'
+        
+        # Individual issue reference patterns (without named groups to avoid conflicts)
+        issue_patterns = [
+            r'#(\d+)',  # #123
+            r'GH-(\d+)',  # GH-123
+            r'issue\s*#(\d+)',  # issue #123
+            r'bug\s*#(\d+)',  # bug #123
+        ]
+        
+        # Full repository reference patterns
+        full_repo_patterns = [
+            r'([\w.-]+/[\w.-]+)#(\d+)',  # owner/repo#123
+            r'https?://github\.com/([\w.-]+/[\w.-]+)/issues/(\d+)',  # Full URL
+        ]
+        
+        # PR patterns (to be filtered out)
+        pr_patterns = [
+            r'https?://github\.com/([\w.-]+/[\w.-]+)/pull/(\d+)',  # PR URL
+        ]
+        
+        # Compile all patterns
+        all_issue_patterns = issue_patterns + full_repo_patterns
+        compiled_patterns = [re.compile(pattern, re.IGNORECASE) for pattern in all_issue_patterns]
+        compiled_pr_patterns = [re.compile(pattern, re.IGNORECASE) for pattern in pr_patterns]
+        
+        # Main fix block pattern (simplified to avoid group conflicts)
+        fix_block = re.compile(
+            closing_prefix + r'(?:' + '|'.join(all_issue_patterns) + r')(?:\s*(?:,|\band\b|&|\bor\b|\|)\s*(?:' + '|'.join(all_issue_patterns) + r'))*', 
+            re.IGNORECASE | re.MULTILINE
+        )
 
-        if likelihood < conf.perf_commit['min-likelihood']:
-            logging.info(f"Commit {commit.sha} in {repo.full_name} has a likelihood of {likelihood}%, which is below the threshold.")
-            return False
-        if likelihood >= conf.perf_commit['max-likelihood']:
-            logging.info(f"Commit {commit.sha} in {repo.full_name} has a high likelihood of being a performance commit ({likelihood}%).")
-            return True
+        # Cache for API calls to avoid duplicate requests
+        issue_cache = {}
+        
+        def is_issue(n: int) -> bool:
+            """Check if the number refers to an issue (not a PR)."""
+            # Check cache first
+            if n in issue_cache:
+                return issue_cache[n]
+                
+            try:
+                issue = repo.get_issue(n)
+                is_issue_result = getattr(issue, "pull_request", None) is None
+                issue_cache[n] = is_issue_result
+                return is_issue_result
+            except UnknownObjectException:
+                # Issue doesn't exist or is private
+                issue_cache[n] = False
+                return False
+            except Exception as e:
+                # Handle rate limiting and other API errors
+                logging.warning(f"Error checking issue #{n} in {repo.full_name}: {e}")
+                issue_cache[n] = False  # Assume it's an issue to be safe
+                return False
 
-        diff = self.get_diff(commit)
-
-        # Second stage, ask O4
-        p = Prompt([Prompt.Message("user",
-                                   f"The following is the message of a commit in the {repo.full_name} repository:\n\n###Message Start###{commit.commit.message}\n###Message End###"
-                                   + f"\n\nThe diff of the commit is:\n\n###Diff Start###{diff}\n###Diff End###"
-                                   + f"\n\nIs this commit a performance improving commit in terms of execution time? Answer with 'YES' or 'NO'."
-                                   )])
-
-        tokens_cnt = len(tiktoken.encoding_for_model("o3").encode(p.messages[0].content))
-
-        if tokens_cnt > conf.llm['max-o4-tokens']:
-            logging.info(f"Commit {commit.sha} in {repo.full_name} has too many tokens ({tokens_cnt}), skipping.")
-            return False
-
-        res = self.o4.get_response(p)
-
-        return 'YES' in res.first_content and 'NO' not in res.first_content
-
-    def is_maven(self, repo: Repository) -> bool:
         try:
-            repo.get_contents("pom.xml")
+            # Find all fix blocks in the commit message
+            for block in fix_block.finditer(msg):
+                block_text = block.group(0)
+                logging.debug(f"Found fix block: '{block_text}'")
+                
+                # Extract issue references using individual patterns
+                for pattern in compiled_patterns:
+                    for match in pattern.finditer(block_text):
+                        issue_number = None
+                        
+                        if len(match.groups()) == 1:
+                            # Simple patterns like #123, GH-123, issue #123, bug #123
+                            issue_number = int(match.group(1))
+                        elif len(match.groups()) == 2:
+                            # Full repo patterns like owner/repo#123 or full URLs
+                            repo_name = match.group(1)
+                            if repo_name.lower() == repo.full_name.lower():
+                                issue_number = int(match.group(2))
+                        
+                        if issue_number is not None and issue_number > 0:
+                            if is_issue(issue_number):
+                                out.add(issue_number)
+                
+                # Check for PR references to skip them
+                for pr_pattern in compiled_pr_patterns:
+                    for match in pr_pattern.finditer(block_text):
+                        logging.debug(f"Skipping PR reference: {match.group(0)}")
+                            
+        except Exception as e:
+            logging.error(f"Error parsing commit message for issues: {e}")
+            # Return what we found so far rather than failing completely
+            return out
+
+        return out
+
+
+    def fixed_performance_issue(self, repo: Repository, commit: Commit) -> int | None:
+        msg = commit.commit.message or ""
+
+        issue_refs = self.extract_fixed_issues(msg, repo)
+
+        if not issue_refs:
+            return None
+
+        issue_title_body_tuples = []
+        for number in issue_refs:
+            try:
+                gh_issue = repo.get_issue(number)
+
+                if gh_issue.pull_request is not None:
+                    continue
+
+                title = gh_issue.title or ""
+                body = gh_issue.body or ""
+
+                issue_title_body_tuples.append((number, title, body))
+
+                p = Prompt(messages=[Prompt.Message("user",
+                                    f"The following is an issue in the {repo.full_name} repository:\n\n###Issue Title###{title}\n###Issue Title End###\n\n###Issue Body###{body}\n###Issue Body End###"
+                                    + f"\n\nThe following is the commit message that fixes this issue:\n\n###Commit Message###{msg}\n###Commit Message End###"
+                                    + f"\n\nIs this issue likely to be related to improving execution time? Answer by only one word: 'yes' or 'no' (without any other text or punctuation). If you do not have enough information to decide, say 'no'."
+                                    )], model=self.gpt5_nano.get_model())
+                res = self.gpt5_nano.get_response(p)
+
+                if "yes" in res.first_content.lower().strip():
+                    logging.info(f"Commit {commit.sha} in {repo.full_name} is related to a likely performance issue prompted by GPT5_Nano (#{number}).")
+
+                    # Also check with gpt5_codex
+                    p = Prompt(messages=[Prompt.Message("user",
+                                        f"The following is an issue in the {repo.full_name} repository:\n\n###Issue Title###{title}\n###Issue Title End###\n\n###Issue Body###{body}\n###Issue Body End###"
+                                        + f"\n\nThe following is the commit message that fixes this issue:\n\n###Commit Message###{msg}\n###Commit Message End###"
+                                        + f"\n\nIs this issue related to improving execution time? Answer by only one word: 'yes' or 'no' (without any other text or punctuation). If you do not have enough information to decide, say 'no'.")], model=self.gpt5_codex.get_model())
+                    res = self.gpt5_codex.get_response(p)
+
+                    if "yes" in res.first_content.lower().strip():
+                        logging.info(f"Commit {commit.sha} in {repo.full_name} is related to a likely performance issue prompted by GPT5_Codex (#{number}).")
+                        return number
+
+            except UnknownObjectException:
+                continue
+                
+        return None
+
+    def is_mvnw_repo(self, repo: Repository) -> bool:
+        try:
+            repo.get_contents("mvnw")
             return True
         except UnknownObjectException:
             return False
 
-    def get_java_performance_commits(self, repo):
+    def collect_repo_perf_commits(self, repo):
         # Fetch and filter commits
-        since = datetime.now(timezone.utc) - timedelta(days=240)
-        perf_commits = []
+        since = datetime.strptime(self.start_date, "%Y-%m-%d")
         fetched_commits = repo.get_commits(since=since)
         logging.info(f"Fetched {fetched_commits.totalCount} commits for {repo.full_name} since {since.isoformat()}")
 
         for commit in fetched_commits:
-            if commit.files.totalCount > conf.perf_commit['max-files']:
+            if commit.files.totalCount > self.max_commit_files:
                 logging.info(f"Skipping commit {commit.sha} in {repo.full_name} due to too many files ({commit.files.totalCount}).")
                 continue
-
-            message = commit.commit.message
-            if not any(f.filename.endswith(".java") and not 'test' in f.filename.lower() for f in commit.files):
-                logging.info(f"Commit {commit.sha} in {repo.full_name} does not contain Java files.")
+            
+            # Skip if the commit does not contain changes in Java source files or contains anything other than Java source files
+            if not all(f.filename.endswith(".java") and not '/test/' in f.filename.lower() for f in commit.files):
+                logging.info(f"Commit {commit.sha} in {repo.full_name} does not contain Java files or contains test files.")
                 continue
 
-            if not self.is_performance_commit(repo, commit):
-                logging.info(f"Commit {commit.sha} in {repo.full_name} is not related to performance.")
+            
+            issue_number = self.fixed_performance_issue(repo, commit)
+            if issue_number is None:
+                logging.info(f"Commit {commit.sha} in {repo.full_name} is not fixing performance issues.")
                 continue
 
-            logging.info(f"Found performance commit: {commit.html_url}")
-            perf_commits.append({
-                "sha": commit.sha,
-                "message": message,
-                "url": commit.html_url
-            })
+            logging.info(f"Found performance commit: {commit.html_url} (#{issue_number})")
 
-        # Display matching commits
-        for pc in perf_commits:
-            logging.info(f"{pc['sha']} - {pc['message']}\n{pc['url']}\n")
+            self.dataset.add_or_update_commit(
+                repo=repo.full_name,
+                commit_hash=commit.sha,
+                issue_number=issue_number,
+                exec_status=None,
+                exec_time_improvement=None,
+                p_value=None
+            )
 
-    def get_commits(self):
+    def collect_commits(self):
         repos = self.get_popular_repos()
         # Iterate and print repository info
         for repo in repos:
 
             logging.info(f"Processing repository {repo.full_name} with {repo.stargazers_count} stars.")
 
-            if not self.is_maven(repo):
+            if not self.is_mvnw_repo(repo):
                 logging.info(f"Skipping repository {repo.full_name} as it is not a Maven project.")
                 continue
 
             repo_tries = 0
             while True:
                 try:
-                    self.get_java_performance_commits(repo)
+                    self.collect_repo_perf_commits(repo)
                     break # Successfully processed the repository
                 except Exception as e:
                     logging.info(f"Error processing repository {repo.full_name}: {e}")

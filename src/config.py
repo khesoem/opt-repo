@@ -1,26 +1,27 @@
 import os
 from datetime import datetime
-# llm = {
-#     'llm-invocation-cache-dir': 'cache/llm_invocations',
-#     'api-url': 'https://openrouter.ai/api/v1',
-#     'openrouter-api-key': os.environ['OPENROUTER_API_KEY'],
-#     'default-temp': 0,
-#     'default-sample-size': 1,
-#     'default-improvement-iterations': 0,
-#     'default-model': 'deepseek/deepseek-r1-0528-qwen3-8b',
-#     'max-o4-tokens': 10000,
-# }
+llm = {
+    'llm-invocation-cache-dir': 'cache/llm_invocations',
+    'api-url': 'https://openrouter.ai/api/v1',
+    'openrouter-api-key': os.environ['OPENROUTER_API_KEY'],
+    'default-temp': 0,
+    'default-sample-size': 1,
+    'default-improvement-iterations': 0,
+    'default-model': 'openai/gpt-4.1-nano',
+    'max-o4-tokens': 10000,
+}
 
-# github = {
-#     'access-token': os.environ['access_token'],
-# }
+github = {
+    'access-token': os.environ['github_access_token'],
+}
 
 perf_commit = {
-    'max-files': 20,
-    'min-likelihood': 50.0,
+    'max-files': 20, # Taken from PEACE dataset
     'max-likelihood': 90.0,
     'min-exec-time-improvement': 0.05,
-    'min-p-value': 0.1,
+    'min-p-value': 0.05,
+    'start-date': '2025-10-01',
+    'min-stars': 100,
 }
 
 def get_mvnw_log_file_name(version: str, exec_time: int) -> str:
@@ -43,4 +44,8 @@ run_analysis = {
     'log-file': 'logs/logging_{:%Y-%m-%d-%H-%M}.log'.format(datetime.now()),
     'log-format': '%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
     'log-datefmt': '%H:%M:%S',
+}
+
+data = {
+    'dataset-path': 'results/dataset.csv',
 }
