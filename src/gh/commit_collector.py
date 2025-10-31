@@ -1,3 +1,4 @@
+from pathlib import Path
 import time
 import re
 import pandas as pd
@@ -25,6 +26,18 @@ class CommitCollector:
         self.min_stars = conf.perf_commit['min-stars']
         self.max_commit_files = conf.perf_commit['max-files']
         self.dataset = DatasetAdapter()
+        self.processed_commits = set()
+
+        # Load processed commits from previous logs
+        for log_file in ['logs/logging_2025-10-30-15-26.log', 'logs/logging_2025-10-30-18-41.log', 'logs/logging_2025-10-30-21-25.log']:
+            with open(log_file, 'r') as f:
+                for line in f:
+                    if 'root INFO Commit' in line:
+                        commit_hash = line.split('root INFO Commit ')[1].split(' ')[0].strip()
+                        self.processed_commits.add(commit_hash)
+                    if 'root INFO Skipping commit' in line:
+                        commit_hash = line.split('root INFO Skipping commit ')[1].split(' ')[0].strip()
+                        self.processed_commits.add(commit_hash)
 
     def get_popular_repos(self):
         query = f"pushed:>{self.start_date} language:Java stars:>{self.min_stars} archived:false"
@@ -32,6 +45,37 @@ class CommitCollector:
         logging.info(f"Fetch results for {query}.")
         return repositories
 
+    def iter_popular_repos_segmented(self):
+        """
+        Work around GitHub Search API's 1,000 result cap by segmenting the search
+        across pushed-date windows and deduplicating repositories across windows.
+        """
+        # Build rolling windows from now backwards to start_date
+        start_boundary = datetime.strptime(self.start_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        window_end = datetime.now(timezone.utc)
+        window_size = timedelta(days=1)
+        seen_repo_ids: Set[int] = set()
+
+        while window_end > start_boundary:
+            window_start = max(start_boundary, window_end - window_size)
+
+            # Construct segmented query for this window (inclusive dates)
+            pushed_range = f"pushed:{window_start.date()}..{window_end.date()}"
+            query = f"{pushed_range} language:Java stars:>{self.min_stars} archived:false"
+            logging.info(f"Segmented fetch for {query}.")
+
+            repos_window = self.g.search_repositories(query=query, sort="stars", order="desc")
+
+            # Iterate this window and deduplicate
+            for repo in repos_window:
+                if getattr(repo, 'id', None) in seen_repo_ids:
+                    continue
+                if getattr(repo, 'id', None) is not None:
+                    seen_repo_ids.add(repo.id)
+                yield repo
+
+            # Move window backwards
+            window_end = window_start
 
     def get_diff(self, commit: Commit) -> str:
         diff = ""
@@ -212,13 +256,18 @@ class CommitCollector:
         except UnknownObjectException:
             return False
 
-    def collect_repo_perf_commits(self, repo):
+    def collect_repo_perf_commits(self, repo: Repository):
         # Fetch and filter commits
         since = datetime.strptime(self.start_date, "%Y-%m-%d")
         fetched_commits = repo.get_commits(since=since)
         logging.info(f"Fetched {fetched_commits.totalCount} commits for {repo.full_name} since {since.isoformat()}")
 
         for commit in fetched_commits:
+            if commit.sha in self.processed_commits:
+                continue
+            
+            self.processed_commits.add(commit.sha)
+
             if commit.files.totalCount > self.max_commit_files:
                 logging.info(f"Skipping commit {commit.sha} in {repo.full_name} due to too many files ({commit.files.totalCount}).")
                 continue
@@ -246,8 +295,9 @@ class CommitCollector:
             )
 
     def collect_commits(self):
-        repos = self.get_popular_repos()
-        # Iterate and print repository info
+        # Iterate using segmented search to bypass 1k cap
+
+        repos = self.iter_popular_repos_segmented()
         for repo in repos:
 
             logging.info(f"Processing repository {repo.full_name} with {repo.stargazers_count} stars.")
@@ -263,7 +313,7 @@ class CommitCollector:
                     break # Successfully processed the repository
                 except Exception as e:
                     logging.info(f"Error processing repository {repo.full_name}: {e}")
-                    time.sleep(300)  # Sleep to avoid hitting rate limits
+                    time.sleep(600)  # Sleep to avoid hitting rate limits
                     repo_tries += 1
                     if repo_tries >= 12: # Do not wait more than one hour for a repo
                         logging.info(f"Too many errors, stopping processing {repo.full_name}.")
