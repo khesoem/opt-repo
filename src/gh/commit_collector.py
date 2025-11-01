@@ -313,9 +313,9 @@ class CommitCollector:
                     break # Successfully processed the repository
                 except Exception as e:
                     logging.info(f"Error processing repository {repo.full_name}: {e}")
-                    time.sleep(600)  # Sleep to avoid hitting rate limits
+                    time.sleep(300)  # Sleep to avoid hitting rate limits
                     repo_tries += 1
-                    if repo_tries >= 12: # Do not wait more than one hour for a repo
+                    if repo_tries >= 6: # Do not wait more than one hour for a repo
                         logging.info(f"Too many errors, stopping processing {repo.full_name}.")
                         break
 

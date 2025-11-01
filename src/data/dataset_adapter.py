@@ -42,6 +42,9 @@ class DatasetAdapter:
             })
             df.to_csv(DATASET_PATH, index=False)
         return df
+    
+    def get_dataset(self) -> pd.DataFrame:
+        return self.df
 
     def add_or_update_commit(
         self,
@@ -67,7 +70,8 @@ class DatasetAdapter:
             mask = (self.df["repo"] == repo) & (self.df["commit_hash"] == commit_hash)
             if mask.any():
                 for key, value in new_row.items():
-                    self.df.loc[mask, key] = value
+                    if value is not None:
+                        self.df.loc[mask, key] = value
             else:
                 self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True)
 

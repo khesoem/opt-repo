@@ -44,6 +44,7 @@ run_analysis = {
     'log-file': 'logs/logging_{:%Y-%m-%d-%H-%M}.log'.format(datetime.now()),
     'log-format': '%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
     'log-datefmt': '%H:%M:%S',
+    'working-dir': '/zdata/ketemadi/projects/opt/tmp/workingdir',
 }
 
 data = {

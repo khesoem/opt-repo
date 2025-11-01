@@ -57,26 +57,44 @@ class MvnwExecResults:
 
     def _is_exec_time_improvement_significant(
         self,
-        v1_times: Sequence[float],
-        v2_times: Sequence[float]
+        original_times: Sequence[float],
+        patched_times: Sequence[float]
     ) -> bool:
-        if len(v1_times) != len(v2_times):
-            raise ValueError("v1_times and v2_times must have the same length")
-        v1 = np.asarray(v1_times, dtype=float)
-        v2 = np.asarray(v2_times, dtype=float)
-
-        c = 1.0 - conf.perf_commit['min-exec-time-improvement']  # we test μ1 < c * μ2
-        v2_scaled = c * v2
-
-        # Welch's t-test, one-sided: H1: mean(v1) < mean(v2_scaled)
-        res = stats.ttest_ind(v1, v2_scaled, equal_var=False, alternative='less')
+        res = self.get_improvement_p_value(original_times, patched_times)
         return bool(res.pvalue < conf.perf_commit['min-p-value'])
     
     def _get_total_execution_time(self, log_path: str) -> float:
         return sum(self._get_per_test_execution_times(log_path).values())
     
+    def get_valid_total_execution_times(self) -> tuple[list[float], list[float]]:
+        original_total_execution_times, patched_total_execution_times = self.get_total_execution_times()
+        return (original_total_execution_times[1:], patched_total_execution_times[1:]) # ignore the first execution time
+    
     def get_total_execution_times(self) -> tuple[list[float], list[float]]:
         return [self._get_total_execution_time(log_path) for log_path in self.original_mvnw_log_paths], [self._get_total_execution_time(log_path) for log_path in self.patched_mvnw_log_paths]
     
     def is_improvement_commit(self) -> bool:
-        return self._is_exec_time_improvement_significant(self.get_total_execution_times()[1], self.get_total_execution_times()[0])
+        original_times, patched_times = self.get_valid_total_execution_times()
+        return self._is_exec_time_improvement_significant(original_times, patched_times)
+
+    def get_execution_improvement(self) -> float:
+        original_times, patched_times = self.get_valid_total_execution_times()
+        return (original_times - patched_times) / original_times
+    
+    def get_improvement_p_value(
+        self,
+        original_times: Sequence[float],
+        patched_times: Sequence[float]
+    ) -> float:
+        if len(original_times) != len(patched_times):
+            raise ValueError("original_times and patched_times must have the same length")
+        original_times_array = np.asarray(original_times, dtype=float)
+        patched_times_array = np.asarray(patched_times, dtype=float)
+
+        c = 1.0 - conf.perf_commit['min-exec-time-improvement']  # we test μ1 < c * μ2
+        original_times_array_scaled = c * original_times_array
+
+        # Welch's t-test, one-sided: H1: mean(v1) < mean(v2_scaled)
+        res = stats.ttest_ind(patched_times_array, original_times_array_scaled, equal_var=False, alternative='less')
+
+        return res.pvalue
