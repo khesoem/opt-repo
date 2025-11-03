@@ -29,7 +29,7 @@ class CommitCollector:
         self.processed_commits = set()
 
         # Load processed commits from previous logs
-        for log_file in ['logs/logging_2025-10-30-15-26.log', 'logs/logging_2025-10-30-18-41.log', 'logs/logging_2025-10-30-21-25.log']:
+        for log_file in ['logs/logging_2025-10-30-15-26.log', 'logs/logging_2025-10-30-18-41.log', 'logs/logging_2025-10-30-21-25.log', 'logs/logging_2025-10-31-21-06.log']:
             with open(log_file, 'r') as f:
                 for line in f:
                     if 'root INFO Commit' in line:
@@ -273,7 +273,7 @@ class CommitCollector:
                 continue
             
             # Skip if the commit does not contain changes in Java source files or contains anything other than Java source files
-            if not all(f.filename.endswith(".java") and not '/test/' in f.filename.lower() for f in commit.files):
+            if not all(f.filename.endswith(".java") and not 'test' in f.filename.lower() for f in commit.files):
                 logging.info(f"Commit {commit.sha} in {repo.full_name} does not contain Java files or contains test files.")
                 continue
 

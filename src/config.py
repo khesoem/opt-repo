@@ -34,9 +34,12 @@ docker = {
     'original-repo-path': '/app/original_repo',
     'patched-repo-path': '/app/patched_repo',
     'host-mvnw-log-path': get_mvnw_log_file_name,
-    'exec-times': 6,
-    'cpu-core-per-exec': 6,
-    'memory-per-exec': 10,
+    'initial-exec-times': 1,
+    'final-exec-times': 31,
+    'initial-cpu-core-per-exec': 6,
+    'final-cpu-core-per-exec': 30,
+    'initial-memory-per-exec': 10,
+    'final-memory-per-exec': 50,
 }
 
 run_analysis = {
@@ -48,5 +51,5 @@ run_analysis = {
 }
 
 data = {
-    'dataset-path': 'results/dataset.csv',
+    'dataset-path': 'results/dataset_bak.csv',
 }

@@ -1,16 +1,21 @@
+from enum import Enum
 import os
 import json
 import re
 from src.utils import run_cmd
 from src.gh.commit_analysis.commit_static_analyzer import RepoAnalyzer
 from src.gh.commit_analysis.utils.pom_manipulator import add_tia_to_pom
-from src.reproducibility.dockerizer import CommitDockerizer
+from src.reproducibility.dockerizer import CommitDockerizer, initial_docker_image_exists
 import logging
 import src.config as conf
 import numpy as np
 from scipy import stats
 from src.gh.commit_analysis.utils.mvn_log_analyzer import MvnwExecResults
 from src.data.dataset_adapter import DatasetAdapter
+
+class AnalysisType(Enum):
+    INITIAL = "initial"
+    FINAL = "final"
 
 class CommitPerfImprovementAnalyzer:
     class TestResult:
@@ -28,12 +33,13 @@ class CommitPerfImprovementAnalyzer:
             self.original_exec_times, self.patched_exec_times = mvnw_exec_results.get_total_execution_times()
             self.is_improvement_commit = mvnw_exec_results.is_improvement_commit()
     
-    def __init__(self, repo: str, commit: str, working_dir: str, builder_name: str):
+    def __init__(self, repo: str, commit: str, working_dir: str, builder_name: str, analysis_type: AnalysisType):
         self.repo = repo
         self.commit = commit
         self.working_dir = working_dir
         self.builder_name = builder_name
         self.dataset = DatasetAdapter()
+        self.analysis_type = analysis_type
 
     def _clone_and_checkout_repo(self) -> str:
         repo_dir = self.repo.replace('/', '__') + "_" + self.commit + '_patched'
@@ -325,7 +331,9 @@ class CommitPerfImprovementAnalyzer:
         return original_exec_time, patched_exec_time
 
     def clean_tmp_dirs(self) -> None:
-        self.dockerizer.clean_tmp_dirs()
+        # check if self has a dockerizer
+        if hasattr(self, 'dockerizer'):
+            self.dockerizer.clean_tmp_dirs()
         run_cmd(["rm", "-rf", self.repo.replace('/', '__') + "_" + self.commit + '_patched'], self.working_dir)
         run_cmd(["rm", "-rf", self.repo.replace('/', '__') + "_" + self.commit + '_original'], self.working_dir)
 
@@ -339,6 +347,12 @@ class CommitPerfImprovementAnalyzer:
 
 
     def run_analysis(self) -> AnalysisResult:
+        if self.analysis_type == AnalysisType.FINAL:
+            if not initial_docker_image_exists(self.working_dir, self.repo, self.commit):
+                raise Exception(f"{self.repo} - {self.commit} - Initial docker image does not exist")
+
+        logging.info(f"{self.repo} - {self.commit} - Running {self.analysis_type.value} analysis")
+
         # clone the repo & checkout the commit & before commit
         logging.info(f"{self.repo} - {self.commit} - Cloning and checking out the repo")
         patched_clone_path = self._clone_and_checkout_repo()
@@ -347,12 +361,12 @@ class CommitPerfImprovementAnalyzer:
         self.dataset.add_or_update_commit(self.repo, self.commit, None, "clone_and_checkout_repo", None, None)
 
 
-        # add testwise plugin to modified modules
+        # identify modified modules
         modified_modules = self._get_modified_modules(patched_clone_path)
         # logging.info(f"{self.repo} - {self.commit} - Added testwise plugin to modified modules")
 
         # build docker image containing the modified repos and run tests in docker
-        self.dockerizer = CommitDockerizer(self.working_dir, self.repo, self.commit, patched_clone_path, original_clone_path, modified_modules, self.builder_name)
+        self.dockerizer = CommitDockerizer(self.working_dir, self.repo, self.commit, patched_clone_path, original_clone_path, modified_modules, self.builder_name, self.analysis_type)
         self.dockerizer.build_commit_docker_image()
         logging.info(f"{self.repo} - {self.commit} - Built docker image")
         self.dataset.add_or_update_commit(self.repo, self.commit, None, "docker_image_built", None, None)
