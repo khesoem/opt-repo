@@ -58,8 +58,8 @@ class MvnwExecResults:
     def _is_exec_time_improvement_significant(
         self
     ) -> bool:
-        res = self.get_improvement_p_value()
-        return bool(res < conf.perf_commit['min-p-value'])
+        original_times, patched_times = self.get_valid_total_execution_times()
+        return self.get_improvement_p_value(original_times, patched_times) < conf.perf_commit['min-p-value']
     
     def _get_total_execution_time(self, log_path: str) -> float:
         return sum(self._get_per_test_execution_times(log_path).values())
@@ -79,9 +79,8 @@ class MvnwExecResults:
         return (sum(original_times) - sum(patched_times)) / sum(original_times)
     
     def get_improvement_p_value(
-        self
+        self, original_times: list[float], patched_times: list[float]
     ) -> float:
-        original_times, patched_times = self.get_valid_total_execution_times()
         if len(original_times) != len(patched_times):
             raise ValueError("original_times and patched_times must have the same length")
 
@@ -96,3 +95,29 @@ class MvnwExecResults:
 
         # return pvalue as float
         return float(res.pvalue)
+    
+    def get_significant_test_time_changes(self) -> dict[str, list[str]]:
+        all_original_test_times = {}
+        all_patched_test_times = {}
+        significant_test_time_changes = {'original_outperforms_patched': [], 'patched_outperforms_original': []}
+        for original_log_path, patched_log_path in zip(self.original_mvnw_log_paths[1:], self.patched_mvnw_log_paths[1:]):
+            original_test_times = self._get_per_test_execution_times(original_log_path)
+            patched_test_times = self._get_per_test_execution_times(patched_log_path)
+
+            for test_class in original_test_times.keys():
+                if not test_class in all_original_test_times:
+                    all_original_test_times[test_class] = []
+                all_original_test_times[test_class].append(original_test_times[test_class])
+            for test_class in patched_test_times.keys():
+                if not test_class in all_patched_test_times:
+                    all_patched_test_times[test_class] = []
+                all_patched_test_times[test_class].append(patched_test_times[test_class])
+
+        for test_class in all_original_test_times.keys():
+            if len(all_original_test_times[test_class]) == 5 and len(all_patched_test_times[test_class]) == 5:
+                if self.get_improvement_p_value(all_original_test_times[test_class], all_patched_test_times[test_class]) < conf.perf_commit['min-p-value']:
+                    significant_test_time_changes['original_outperforms_patched'].append(test_class)
+                elif self.get_improvement_p_value(all_patched_test_times[test_class], all_original_test_times[test_class]) < conf.perf_commit['min-p-value']:
+                    significant_test_time_changes['patched_outperforms_original'].append(test_class)
+
+        return significant_test_time_changes
