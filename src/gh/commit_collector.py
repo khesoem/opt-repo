@@ -6,7 +6,7 @@ from src.data.dataset_adapter import DatasetAdapter
 from src.llm.openai import *
 from src.llm.invocation import Prompt
 import src.config as conf
-from github import Github
+from github import Github, Issue
 from github import Auth
 from github.GithubException import UnknownObjectException
 from github.Repository import Repository
@@ -30,7 +30,7 @@ class CommitCollector:
         self.processed_commits = set()
 
         # Load processed commits from previous logs
-        for log_file in ['logs/logging_2025-10-30-15-26.log', 'logs/logging_2025-10-30-18-41.log', 'logs/logging_2025-10-30-21-25.log', 'logs/logging_2025-10-31-21-06.log']:
+        for log_file in ['logs/logging_2025-10-30-15-26.log', 'logs/logging_2025-10-30-18-41.log', 'logs/logging_2025-10-30-21-25.log', 'logs/logging_2025-10-31-21-06.log', 'logs/logging_2025-11-05-20-21.log']:
             with open(log_file, 'r') as f:
                 for line in f:
                     if 'root INFO Commit' in line:
@@ -56,7 +56,10 @@ class CommitCollector:
 
             # Construct segmented query for this window (inclusive dates)
             pushed_range = f"pushed:{window_start.date()}..{window_end.date()}"
-            query = f"{pushed_range} language:Java stars:{self.min_stars}..{self.max_stars} archived:false"
+            if self.max_stars != -1:
+                query = f"{pushed_range} language:Java stars:{self.min_stars}..{self.max_stars} archived:false"
+            else:
+                query = f"{pushed_range} language:Java stars:>={self.min_stars} archived:false"
             logging.info(f"Segmented fetch for {query}.")
 
             repos_window = self.g.search_repositories(query=query, sort="stars", order="desc")
@@ -80,12 +83,12 @@ class CommitCollector:
                 diff += f.patch + '\n'
         return diff
 
-    def extract_fixed_issues(self, commit_message: str, repo: Repository) -> Set[int]:
+    def extract_fixed_issues(self, message: str, repo: Repository) -> Set[int]:
         """
-        Extract issue numbers from commit message that are explicitly closed/fixed.
+        Extract issue numbers from message that are explicitly closed/fixed.
         
         Args:
-            commit_message: The commit message to parse
+            message: The message to parse
             repo: The GitHub repository object
             
         Returns:
@@ -96,11 +99,13 @@ class CommitCollector:
             - "Closes #456 and resolves #789" -> {456, 789}
             - "Fix GH-123" -> {123}
             - "Resolves owner/repo#456" -> {456} (if matches current repo)
+            - "HAL-2028: fix attribute processing" -> {2028} (if GitHub issue #2028 exists)
+            - "Issue: [HAL-2028]" -> {2028} (if GitHub issue #2028 exists)
         """
-        if not commit_message:
+        if not message:
             return set()
             
-        msg = commit_message.strip()
+        msg = message.strip()
         out: Set[int] = set()
 
         # Enhanced regex patterns to catch more formats
@@ -118,6 +123,14 @@ class CommitCollector:
         full_repo_patterns = [
             r'([\w.-]+/[\w.-]+)#(\d+)',  # owner/repo#123
             r'https?://github\.com/([\w.-]+/[\w.-]+)/issues/(\d+)',  # Full URL
+        ]
+        
+        # Additional patterns for project-prefixed issues (e.g., HAL-2028, JIRA-123)
+        # These are captured separately and extract the numeric portion
+        project_issue_patterns = [
+            r'\b([A-Z]+-(\d+))(?:\s*:|,|\s|$)',  # HAL-2028: or HAL-2028,
+            r'\[([A-Z]+-(\d+))\]',  # [HAL-2028]
+            r'Issue:\s*\[?([A-Z]+-(\d+))\]?',  # Issue: HAL-2028 or Issue: [HAL-2028]
         ]
         
         # PR patterns (to be filtered out)
@@ -188,6 +201,19 @@ class CommitCollector:
                 for pr_pattern in compiled_pr_patterns:
                     for match in pr_pattern.finditer(block_text):
                         logging.debug(f"Skipping PR reference: {match.group(0)}")
+            
+            # Also search for project-prefixed issues throughout the entire message
+            # (e.g., HAL-2028:, [HAL-2028], Issue: HAL-2028)
+            for pattern_str in project_issue_patterns:
+                pattern = re.compile(pattern_str, re.IGNORECASE | re.MULTILINE)
+                for match in pattern.finditer(msg):
+                    # Extract the numeric portion from patterns like HAL-2028
+                    # The second group captures just the number
+                    if len(match.groups()) >= 2:
+                        issue_number = int(match.group(2))
+                        if issue_number > 0 and is_issue(issue_number):
+                            logging.debug(f"Found project-prefixed issue: {match.group(1)} -> #{issue_number}")
+                            out.add(issue_number)
                             
         except Exception as e:
             logging.error(f"Error parsing commit message for issues: {e}")
@@ -196,52 +222,67 @@ class CommitCollector:
 
         return out
 
+    def is_performance_issue(self, repo: Repository, commit: Commit, issue: Issue) -> bool:
+        if issue.pull_request is not None:
+            return False
+
+        title = issue.title or ""
+        body = issue.body or ""
+
+        p = Prompt(messages=[Prompt.Message("user",
+                            f"The following is an issue in the {repo.full_name} repository:\n\n###Issue Title###{title}\n###Issue Title End###\n\n###Issue Body###{body}\n###Issue Body End###"
+                            + f"\n\nThe following is the commit message that fixes this issue:\n\n###Commit Message###{commit.commit.message}\n###Commit Message End###"
+                            + f"\n\nIs this issue likely to be related to improving execution time? Answer by only one word: 'yes' or 'no' (without any other text or punctuation). If you do not have enough information to decide, say 'no'."
+                            )], model=self.gpt5_nano.get_model())
+        res = self.gpt5_nano.get_response(p)
+
+        if "yes" in res.first_content.lower().strip():
+            logging.info(f"Commit {commit.sha} in {repo.full_name} is related to a likely performance issue prompted by GPT5_Nano (#{issue.number}).")
+
+            # Also check with gpt5_codex
+            p = Prompt(messages=[Prompt.Message("user",
+                                f"The following is an issue in the {repo.full_name} repository:\n\n###Issue Title###{title}\n###Issue Title End###\n\n###Issue Body###{body}\n###Issue Body End###"
+                                + f"\n\nThe following is the commit message that fixes this issue:\n\n###Commit Message###{commit.commit.message}\n###Commit Message End###"
+                                + f"\n\nIs this issue related to improving execution time? Answer by only one word: 'yes' or 'no' (without any other text or punctuation). If you do not have enough information to decide, say 'no'.")], model=self.gpt5_codex.get_model())
+            res = self.gpt5_codex.get_response(p)
+
+            if "yes" in res.first_content.lower().strip():
+                return True
+        
+        return False
 
     def fixed_performance_issue(self, repo: Repository, commit: Commit) -> int | None:
         msg = commit.commit.message or ""
 
         issue_refs = self.extract_fixed_issues(msg, repo)
 
-        if not issue_refs:
-            return None
-
-        issue_title_body_tuples = []
-        for number in issue_refs:
-            try:
-                gh_issue = repo.get_issue(number)
-
-                if gh_issue.pull_request is not None:
-                    continue
-
-                title = gh_issue.title or ""
-                body = gh_issue.body or ""
-
-                issue_title_body_tuples.append((number, title, body))
-
-                p = Prompt(messages=[Prompt.Message("user",
-                                    f"The following is an issue in the {repo.full_name} repository:\n\n###Issue Title###{title}\n###Issue Title End###\n\n###Issue Body###{body}\n###Issue Body End###"
-                                    + f"\n\nThe following is the commit message that fixes this issue:\n\n###Commit Message###{msg}\n###Commit Message End###"
-                                    + f"\n\nIs this issue likely to be related to improving execution time? Answer by only one word: 'yes' or 'no' (without any other text or punctuation). If you do not have enough information to decide, say 'no'."
-                                    )], model=self.gpt5_nano.get_model())
-                res = self.gpt5_nano.get_response(p)
-
-                if "yes" in res.first_content.lower().strip():
-                    logging.info(f"Commit {commit.sha} in {repo.full_name} is related to a likely performance issue prompted by GPT5_Nano (#{number}).")
-
-                    # Also check with gpt5_codex
-                    p = Prompt(messages=[Prompt.Message("user",
-                                        f"The following is an issue in the {repo.full_name} repository:\n\n###Issue Title###{title}\n###Issue Title End###\n\n###Issue Body###{body}\n###Issue Body End###"
-                                        + f"\n\nThe following is the commit message that fixes this issue:\n\n###Commit Message###{msg}\n###Commit Message End###"
-                                        + f"\n\nIs this issue related to improving execution time? Answer by only one word: 'yes' or 'no' (without any other text or punctuation). If you do not have enough information to decide, say 'no'.")], model=self.gpt5_codex.get_model())
-                    res = self.gpt5_codex.get_response(p)
-
-                    if "yes" in res.first_content.lower().strip():
-                        logging.info(f"Commit {commit.sha} in {repo.full_name} is related to a likely performance issue prompted by GPT5_Codex (#{number}).")
+        if issue_refs:
+            for number in issue_refs:
+                try:
+                    if self.is_performance_issue(repo, commit, repo.get_issue(number)):
                         return number
 
-            except UnknownObjectException:
-                continue
+                except UnknownObjectException:
+                    continue
+        
+        # If no fixed performance issue is found in the message, check if the commit is linked to a pull request and if the pull request fixes an a performance issue
+        try:
+            pulls = commit.get_pulls()
+            for pr in pulls:
+                # Extract issues fixed by the PR from its body and title
+                pr_message = (pr.title or "") + "\n" + (pr.body or "")
+                pr_issue_refs = self.extract_fixed_issues(pr_message, repo)
                 
+                if pr_issue_refs:
+                    for number in pr_issue_refs:
+                        try:
+                            if self.is_performance_issue(repo, commit, repo.get_issue(number)):
+                                return number
+                        except UnknownObjectException:
+                            continue
+        except Exception as e:
+            logging.warning(f"Error checking pull requests for commit {commit.sha}: {e}")
+
         return None
 
     def is_mvnw_repo(self, repo: Repository) -> bool:

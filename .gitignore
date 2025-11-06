@@ -19,7 +19,7 @@
 /poetry.toml
 cache/
 .hypothesis/
-logs/
+logs/*.log
 #generated_tests/
 htmlcov/
 tmp*.py

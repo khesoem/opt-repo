@@ -20,9 +20,9 @@ perf_commit = {
     'max-likelihood': 90.0,
     'min-exec-time-improvement': 0.05,
     'min-p-value': 0.05,
-    'start-date': '2024-01-01',
+    'start-date': '2020-01-01',
     'min-stars': 20,
-    'max-stars': 50,
+    'max-stars': -1,
 }
 
 def get_mvnw_log_file_name(version: str, exec_time: int) -> str:
@@ -52,5 +52,5 @@ run_analysis = {
 }
 
 data = {
-    'dataset-path': 'results/dataset_bak.csv',
+    'dataset-path': 'results/dataset.csv',
 }
