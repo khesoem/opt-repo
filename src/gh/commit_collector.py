@@ -24,6 +24,7 @@ class CommitCollector:
         self.gpt5_codex = GPT5_Codex(read_from_cache=True, save_to_cache=True)
         self.start_date = conf.perf_commit['start-date']
         self.min_stars = conf.perf_commit['min-stars']
+        self.max_stars = conf.perf_commit['max-stars']
         self.max_commit_files = conf.perf_commit['max-files']
         self.dataset = DatasetAdapter()
         self.processed_commits = set()
@@ -38,12 +39,6 @@ class CommitCollector:
                     if 'root INFO Skipping commit' in line:
                         commit_hash = line.split('root INFO Skipping commit ')[1].split(' ')[0].strip()
                         self.processed_commits.add(commit_hash)
-
-    def get_popular_repos(self):
-        query = f"pushed:>{self.start_date} language:Java stars:>{self.min_stars} archived:false"
-        repositories = self.g.search_repositories(query=query, sort="stars", order="desc")
-        logging.info(f"Fetch results for {query}.")
-        return repositories
 
     def iter_popular_repos_segmented(self):
         """
@@ -61,7 +56,7 @@ class CommitCollector:
 
             # Construct segmented query for this window (inclusive dates)
             pushed_range = f"pushed:{window_start.date()}..{window_end.date()}"
-            query = f"{pushed_range} language:Java stars:>{self.min_stars} archived:false"
+            query = f"{pushed_range} language:Java stars:{self.min_stars}..{self.max_stars} archived:false"
             logging.info(f"Segmented fetch for {query}.")
 
             repos_window = self.g.search_repositories(query=query, sort="stars", order="desc")
@@ -274,7 +269,7 @@ class CommitCollector:
             
             # Skip if the commit does not contain changes in Java source files or contains anything other than Java source files
             if not all(f.filename.endswith(".java") and not 'test' in f.filename.lower() for f in commit.files):
-                logging.info(f"Commit {commit.sha} in {repo.full_name} does not contain Java files or contains test files.")
+                logging.info(f"Commit {commit.sha} in {repo.full_name} does not contain Java files or contains non Java source files.")
                 continue
 
             

@@ -21,7 +21,8 @@ perf_commit = {
     'min-exec-time-improvement': 0.05,
     'min-p-value': 0.05,
     'start-date': '2024-01-01',
-    'min-stars': 50,
+    'min-stars': 20,
+    'max-stars': 50,
 }
 
 def get_mvnw_log_file_name(version: str, exec_time: int) -> str:
