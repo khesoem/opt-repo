@@ -41,6 +41,8 @@ docker = {
     'final-cpu-core-per-exec': 30,
     'initial-memory-per-exec': 10,
     'final-memory-per-exec': 50,
+    'initial-timeout': 3600 * 5,
+    'final-timeout': 3600 * 5,
 }
 
 run_analysis = {
@@ -52,5 +54,5 @@ run_analysis = {
 }
 
 data = {
-    'dataset-path': 'results/dataset.csv',
+    'dataset-path': 'results/dataset_bak.csv',
 }

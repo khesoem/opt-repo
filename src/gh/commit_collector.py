@@ -29,17 +29,6 @@ class CommitCollector:
         self.dataset = DatasetAdapter()
         self.processed_commits = set()
 
-        # Load processed commits from previous logs
-        for log_file in ['logs/logging_2025-10-30-15-26.log', 'logs/logging_2025-10-30-18-41.log', 'logs/logging_2025-10-30-21-25.log', 'logs/logging_2025-10-31-21-06.log', 'logs/logging_2025-11-05-20-21.log']:
-            with open(log_file, 'r') as f:
-                for line in f:
-                    if 'root INFO Commit' in line:
-                        commit_hash = line.split('root INFO Commit ')[1].split(' ')[0].strip()
-                        self.processed_commits.add(commit_hash)
-                    if 'root INFO Skipping commit' in line:
-                        commit_hash = line.split('root INFO Skipping commit ')[1].split(' ')[0].strip()
-                        self.processed_commits.add(commit_hash)
-
     def iter_popular_repos_segmented(self):
         """
         Work around GitHub Search API's 1,000 result cap by segmenting the search
@@ -327,7 +316,8 @@ class CommitCollector:
                 issue_number=issue_number,
                 exec_status=None,
                 exec_time_improvement=None,
-                p_value=None
+                p_value=None,
+                test_class_improvements=None,
             )
 
     def collect_commits(self):

@@ -68,36 +68,28 @@ RUN chmod +x mvnw || true
 # Debug: Check if mvnw exists and is executable
 RUN ls -la mvnw || echo "mvnw not found in repo_original"
 
-# Run tests on repo patched
+# Debug: Print environment variables
+RUN echo "MODULE_NAMES: $MODULE_NAMES"
+RUN echo "Current directory: $(pwd)"
+
+# Download dependencies
 WORKDIR /app/patched_repo
-
-# Debug: Print environment variables
-RUN echo "MODULE_NAMES: $MODULE_NAMES"
-RUN echo "Current directory: $(pwd)"
-
-# Download dependencies first
 RUN ./mvnw -B dependency:go-offline || echo "Dependency download failed"
 
-# Run tests with Maven success checking
-RUN for i in $(seq 1 $EXEC_TIMES); do \
-      LOG_FILE="/logs/patched_repo_mvnw_$i.log"; \
-      ./mvnw -pl $MODULE_NAMES -am test 2>&1 | tee "$LOG_FILE"; \
-      /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
-    done
-
-# Run tests on repo original (before commit)
 WORKDIR /app/original_repo
-
-# Debug: Print environment variables
-RUN echo "MODULE_NAMES: $MODULE_NAMES"
-RUN echo "Current directory: $(pwd)"
-
-# Download dependencies first
 RUN ./mvnw -B dependency:go-offline || echo "Dependency download failed"
 
-# Run tests with Maven success checking
+# Run tests alternating between patched and original repos
 RUN for i in $(seq 1 $EXEC_TIMES); do \
+      # Run patched version \
+      cd /app/patched_repo && \
+      LOG_FILE="/logs/patched_repo_mvnw_$i.log"; \
+      ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical 2>&1 | tee "$LOG_FILE"; \
+      /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
+      \
+      # Run original version \
+      cd /app/original_repo && \
       LOG_FILE="/logs/original_repo_mvnw_$i.log"; \
-      ./mvnw -pl $MODULE_NAMES -am test 2>&1 | tee "$LOG_FILE"; \
+      ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical 2>&1 | tee "$LOG_FILE"; \
       /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
     done

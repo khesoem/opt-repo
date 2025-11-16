@@ -3,7 +3,6 @@ import logging
 import shutil
 from pathlib import Path
 from src import config
-from src.gh.commit_analysis.test_analyzer import AnalysisType
 from src.utils import run_cmd
 import os
 from src.gh.commit_analysis.utils.java_detector import get_java_version
@@ -11,14 +10,14 @@ from src.gh.commit_analysis.utils.mvn_log_analyzer import MvnwExecResults
 
 logger = logging.getLogger(__name__)
 
-def initial_docker_image_exists(working_dir: str, repo: str, commit: str) -> bool:
+def docker_image_exists(working_dir: str, repo: str, commit: str, image_suffix: str) -> bool:
     # run_cmd returns the output of the command
-    ls_res = run_cmd(['docker', 'image', 'ls', f'{config.docker['image-name-prefix']}-{repo}-{commit}'], working_dir, capture_output=True)
-    return ls_res is not None and commit in ls_res
+    ls_res = run_cmd(['docker', 'image', 'ls', f'{config.docker['image-name-prefix']}-{repo}-{commit}-{image_suffix}'], working_dir, capture_output=True)
+    return ls_res is not None and config.docker['image-name-prefix'] in ls_res
 
 class CommitDockerizer:
     
-    def __init__(self, working_dir: str, repo: str, commit: str, patched_repo_path: str, original_repo_path: str, module_names: list[str], builder_name: str, analysis_type: AnalysisType):
+    def __init__(self, working_dir: str, repo: str, commit: str, patched_repo_path: str, original_repo_path: str, module_names: list[str], builder_name: str, exec_times: int, image_suffix: str, timeout: int):
         self.working_dir = working_dir
         self.repo = repo
         self.commit = commit
@@ -26,11 +25,13 @@ class CommitDockerizer:
         self.original_repo_path = original_repo_path
         self.module_names = module_names
         self.builder_name = builder_name
-        self.analysis_type = analysis_type
+        self.exec_times = exec_times
+        self.image_suffix = image_suffix
+        self.timeout = timeout
 
     @property
     def image_name(self):
-        return f"{config.docker['image-name-prefix']}-{self.repo}-{self.commit}-{self.analysis_type.value}".lower()
+        return f"{config.docker['image-name-prefix']}-{self.repo}-{self.commit}-{self.image_suffix}".lower()
     
     @property
     def tmp_dir(self):
@@ -39,6 +40,9 @@ class CommitDockerizer:
     @property
     def container_name(self):
         return f"container-{self.image_name.replace('/', '__')}"
+
+    def image_exists(self) -> bool:
+        return docker_image_exists(self.working_dir, self.repo, self.commit, self.image_suffix)
 
     def build_commit_docker_image(self):
         try:
@@ -54,9 +58,8 @@ class CommitDockerizer:
             original_repo_path = self.original_repo_path.replace(self.working_dir, '')
             patched_repo_path = self.patched_repo_path.replace(self.working_dir, '')
             
-            # Build the Docker image
-            run_cmd([
-                "docker", "buildx", "build", "--builder", self.builder_name, "--load",
+            command_args = [
+                "timeout", str(self.timeout), "docker", "buildx", "build", "--builder", self.builder_name, "--load",
                 "-f", str(dockerfile_path),
                 "-t", self.image_name,
                 str(Path(self.working_dir)),
@@ -64,8 +67,11 @@ class CommitDockerizer:
                 "--build-arg", f"ORIGINAL_REPO_DIR={original_repo_path}",
                 "--build-arg", f"MODULE_NAMES={','.join(self.module_names)}",
                 "--build-arg", f"JAVA_VERSION={java_version}",
-                "--build-arg", f"EXEC_TIMES={config.docker[f'{self.analysis_type.value}-exec-times']}"
-            ], self.working_dir, capture_output=False)
+                "--build-arg", f"EXEC_TIMES={self.exec_times}"
+            ]
+
+            # Build the Docker image
+            run_cmd(command_args, self.working_dir, capture_output=False)
             
             logger.info(f"Successfully built Docker image: {self.image_name}")
             return self.image_name
@@ -86,7 +92,7 @@ class CommitDockerizer:
 
             original_mvnw_log_paths = []
             patched_mvnw_log_paths = []
-            for exec_time in range(1, config.docker[f'{self.analysis_type.value}-exec-times'] + 1):
+            for exec_time in range(1, self.exec_times + 1):
                 original_mvnw_log_path = os.path.join(self.tmp_dir, config.docker['host-mvnw-log-path']('original', exec_time))
                 patched_mvnw_log_path = os.path.join(self.tmp_dir, config.docker['host-mvnw-log-path']('patched', exec_time))
                 if not os.path.exists(original_mvnw_log_path) or not os.path.exists(patched_mvnw_log_path):
@@ -95,7 +101,7 @@ class CommitDockerizer:
                 original_mvnw_log_paths.append(original_mvnw_log_path)
                 patched_mvnw_log_paths.append(patched_mvnw_log_path)
 
-            return MvnwExecResults(original_mvnw_log_paths=original_mvnw_log_paths, patched_mvnw_log_paths=patched_mvnw_log_paths)
+            return MvnwExecResults(original_mvnw_log_paths=original_mvnw_log_paths, patched_mvnw_log_paths=patched_mvnw_log_paths, expected_exec_times=self.exec_times)
         finally:
             # Ensure container is always removed, even if an exception occurs
             run_cmd(['docker', 'rm', f'{self.container_name}'], self.working_dir)

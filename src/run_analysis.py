@@ -45,7 +45,8 @@ def run_analysis(repo: str, commit: str, builder_queue: mp.Queue, run_type: RunT
         analyzer = CommitPerfImprovementAnalyzer(repo, commit, WORKING_DIR, builder_name, AnalysisType.INITIAL if run_type == RunType.INITIAL else AnalysisType.FINAL)
 
         analysis_result = analyzer.run_analysis()
-        logging.info(f"{repo} - {commit} - Analysis Result - {analysis_result.__dict__}")
+        if analysis_result is not None:
+            logging.info(f"{repo} - {commit} - Analysis Result - {analysis_result.__dict__}")
     except Exception as e:
         logging.error(f"{repo} - {commit} - Analysis Error - {e}")
     finally:
@@ -65,7 +66,7 @@ def run_resource_checker():
         logging.error(f"Resource checker error: {e}")
         sys.exit(1)
 
-def run(run_type: RunType = RunType.INITIAL):
+def run(run_type: RunType):
 
     pool = None
     if run_type == RunType.INITIAL:
@@ -89,6 +90,7 @@ def run(run_type: RunType = RunType.INITIAL):
     for _, row in df.iterrows():
         repo = row['repo']
         commit = row['commit_hash']
+
         if run_type == RunType.INITIAL:
             pool.apply_async(run_analysis, (repo, commit, builder_queue, run_type))
         elif run_type == RunType.FINAL:

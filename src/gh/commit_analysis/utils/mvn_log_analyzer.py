@@ -5,9 +5,10 @@ from scipy import stats
 import src.config as conf
 
 class MvnwExecResults:
-    def __init__(self, original_mvnw_log_paths: list[str], patched_mvnw_log_paths: list[str]):
+    def __init__(self, original_mvnw_log_paths: list[str], patched_mvnw_log_paths: list[str], expected_exec_times: int):
         self.original_mvnw_log_paths = original_mvnw_log_paths
         self.patched_mvnw_log_paths = patched_mvnw_log_paths
+        self.expected_exec_times = expected_exec_times
     
     def is_successful(self) -> bool:
         return all(self._is_exec_successful(log_path) for log_path in self.original_mvnw_log_paths) and all(self._is_exec_successful(log_path) for log_path in self.patched_mvnw_log_paths)
@@ -78,25 +79,41 @@ class MvnwExecResults:
         original_times, patched_times = self.get_valid_total_execution_times()
         return (sum(original_times) - sum(patched_times)) / sum(original_times)
     
-    def get_improvement_p_value(
-        self, original_times: list[float], patched_times: list[float]
+    def get_execution_improvement_p_value(
+        self
     ) -> float:
-        if len(original_times) != len(patched_times):
-            raise ValueError("original_times and patched_times must have the same length")
+        original_times, patched_times = self.get_valid_total_execution_times()
+        return self.get_improvement_p_value(original_times, patched_times)
 
-        original_times_array = np.asarray(original_times, dtype=float)
-        patched_times_array = np.asarray(patched_times, dtype=float)
+    def get_improvement_p_value(
+        self, v1: list[float], v2: list[float]
+    ) -> float:
+        """
+        Test if the mean of v2 is significantly less than min-exec-time-improvement * the mean of v1.
+
+        Args:
+            v1: List of values
+            v2: List of values
+
+        Returns:
+            p-value
+        """
+        if len(v1) != len(v2):
+            raise ValueError("v1 and v2 must have the same length")
+
+        v1_arr = np.asarray(v1, dtype=float)
+        v2_arr = np.asarray(v2, dtype=float)
 
         c = 1.0 - conf.perf_commit['min-exec-time-improvement']  # we test μ1 < c * μ2
-        original_times_array_scaled = c * original_times_array
+        v1_scaled = c * v1_arr
 
         # Welch's t-test, one-sided: H1: mean(v1) < mean(v2_scaled)
-        res = stats.ttest_ind(patched_times_array, original_times_array_scaled, equal_var=False, alternative='less')
+        res = stats.ttest_ind(v2_arr, v1_scaled, equal_var=False, alternative='less')
 
         # return pvalue as float
         return float(res.pvalue)
     
-    def get_significant_test_time_changes(self) -> dict[str, list[str]]:
+    def get_significant_test_class_improvements(self) -> dict[str, list[str]]:
         all_original_test_times = {}
         all_patched_test_times = {}
         significant_test_time_changes = {'original_outperforms_patched': [], 'patched_outperforms_original': []}
@@ -114,10 +131,10 @@ class MvnwExecResults:
                 all_patched_test_times[test_class].append(patched_test_times[test_class])
 
         for test_class in all_original_test_times.keys():
-            if len(all_original_test_times[test_class]) == 5 and len(all_patched_test_times[test_class]) == 5:
+            if len(all_original_test_times[test_class]) == self.expected_exec_times - 1 and len(all_patched_test_times[test_class]) == self.expected_exec_times - 1:
                 if self.get_improvement_p_value(all_original_test_times[test_class], all_patched_test_times[test_class]) < conf.perf_commit['min-p-value']:
-                    significant_test_time_changes['original_outperforms_patched'].append(test_class)
-                elif self.get_improvement_p_value(all_patched_test_times[test_class], all_original_test_times[test_class]) < conf.perf_commit['min-p-value']:
                     significant_test_time_changes['patched_outperforms_original'].append(test_class)
+                elif self.get_improvement_p_value(all_patched_test_times[test_class], all_original_test_times[test_class]) < conf.perf_commit['min-p-value']:
+                    significant_test_time_changes['original_outperforms_patched'].append(test_class)
 
         return significant_test_time_changes

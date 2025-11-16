@@ -1,3 +1,4 @@
+import json
 import os
 import threading
 import pandas as pd
@@ -31,6 +32,7 @@ class DatasetAdapter:
         """Load existing dataset or create an empty one."""
         if os.path.exists(DATASET_PATH):
             df = pd.read_csv(DATASET_PATH)
+            df["test_class_improvements"] = [json.loads(test_class_improvements) if test_class_improvements is not None else None for test_class_improvements in df["test_class_improvements"]]
         else:
             df = pd.DataFrame({
                 "repo": pd.Series(dtype="string"),
@@ -39,6 +41,7 @@ class DatasetAdapter:
                 "exec_status": pd.Series(dtype="string"),
                 "exec_time_improvement": pd.Series(dtype="float64"),
                 "p_value": pd.Series(dtype="float64"),
+                "test_class_improvements": pd.Series(dtype="object"),
             })
             df.to_csv(DATASET_PATH, index=False)
         return df
@@ -54,6 +57,7 @@ class DatasetAdapter:
         exec_status: str | None,
         exec_time_improvement: float | None,
         p_value: float | None,
+        test_class_improvements: dict[str, float] | None,
     ):
         """Thread-safe add or update of a commit record."""
         new_row = {
@@ -63,6 +67,7 @@ class DatasetAdapter:
             "exec_status": exec_status,
             "exec_time_improvement": exec_time_improvement,
             "p_value": p_value,
+            "test_class_improvements": json.dumps(test_class_improvements) if test_class_improvements is not None else None,
         }
 
         with self._write_lock:
