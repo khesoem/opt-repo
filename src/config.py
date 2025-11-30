@@ -18,9 +18,9 @@ github = {
 perf_commit = {
     'max-files': 20, # Taken from PEACE dataset
     'max-likelihood': 90.0,
-    'min-exec-time-improvement': 0.05,
+    'min-exec-time-improvement': 0.1,
     'min-p-value': 0.05,
-    'start-date': '2020-01-01',
+    'start-date': '2015-01-01',
     'min-stars': 20,
     'max-stars': -1,
 }
@@ -30,19 +30,20 @@ def get_mvnw_log_file_name(version: str, exec_time: int) -> str:
 
 docker = {
     'dockerfile': 'docker/Dockerfile',
+    'mvn-settings-file': 'docker/settings.xml',
     'image-name-prefix': 'optds',
     'mvnw-log-path': '/logs',
     'original-repo-path': '/app/original_repo',
     'patched-repo-path': '/app/patched_repo',
     'host-mvnw-log-path': get_mvnw_log_file_name,
     'initial-exec-times': 1,
-    'final-exec-times': 31,
+    'final-exec-times': 11,
     'initial-cpu-core-per-exec': 6,
     'final-cpu-core-per-exec': 30,
     'initial-memory-per-exec': 10,
     'final-memory-per-exec': 50,
-    'initial-timeout': 3600 * 5,
-    'final-timeout': 3600 * 5,
+    'initial-timeout': 3600 * 2,
+    'final-timeout': 3600 * 2,
 }
 
 run_analysis = {

@@ -92,3 +92,7 @@ class DatasetAdapter:
         finally:
             tmp_file.close()
         shutil.move(tmp_file.name, DATASET_PATH)
+    
+    def contains(self, repo: str, commit: str) -> bool:
+        mask = (self.df["repo"] == repo) & (self.df["commit_hash"] == commit)
+        return mask.any()

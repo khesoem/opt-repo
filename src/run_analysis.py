@@ -22,7 +22,7 @@ logging.basicConfig(filename=LOG_FILE,
                     level=logging.INFO)
 
 class RunType(Enum):
-    INITIAL = "initial"
+    # INITIAL = "initial"
     FINAL = "final"
 
 def define_new_builder(builder_index: int, run_type: RunType):

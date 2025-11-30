@@ -15,19 +15,43 @@ import logging
 from datetime import datetime, timedelta, timezone
 from typing import Set
 
+PREVIOUSLY_ASSESSED_COMMITS = set()
+prompted_by_gpt5_nano = set()
+with open('logs/commit-collection-log.log', 'r') as f:
+    for line in f:
+        if 'root INFO Commit ' in line:
+            commit_hash = line.split('root INFO Commit ')[1].split(' ')[0]
+            PREVIOUSLY_ASSESSED_COMMITS.add(commit_hash)
+            if 'GPT5_Nano' in line:
+                prompted_by_gpt5_nano.add(commit_hash)
+        elif 'root INFO Skipping commit ' in line:
+            commit_hash = line.split('root INFO Skipping commit ')[1].split(' ')[0]
+            PREVIOUSLY_ASSESSED_COMMITS.add(commit_hash)
+with open('logs/logging_2025-11-27-22-07.log', 'r') as f:
+    for line in f:
+        if 'root INFO Commit ' in line:
+            commit_hash = line.split('root INFO Commit ')[1].split(' ')[0]
+            PREVIOUSLY_ASSESSED_COMMITS.add(commit_hash)
+        elif 'root INFO Skipping commit ' in line:
+            commit_hash = line.split('root INFO Skipping commit ')[1].split(' ')[0]
+            PREVIOUSLY_ASSESSED_COMMITS.add(commit_hash)
+
+# remove commits that have been prompted by GPT5_Nano from PREVIOUSLY_ASSESSED_COMMITS
+PREVIOUSLY_ASSESSED_COMMITS = PREVIOUSLY_ASSESSED_COMMITS - prompted_by_gpt5_nano
+
 class CommitCollector:
     def __init__(self):
         access_token = conf.github['access-token']
         auth = Auth.Token(access_token)
         self.g = Github(auth=auth)
         self.gpt5_nano = GPT5_Nano(read_from_cache=True, save_to_cache=True)
-        self.gpt5_codex = GPT5_Codex(read_from_cache=True, save_to_cache=True)
+        self.gpt5_codex = GPT_5_1_Codex_Mini(read_from_cache=True, save_to_cache=True)
         self.start_date = conf.perf_commit['start-date']
         self.min_stars = conf.perf_commit['min-stars']
         self.max_stars = conf.perf_commit['max-stars']
         self.max_commit_files = conf.perf_commit['max-files']
         self.dataset = DatasetAdapter()
-        self.processed_commits = set()
+        self.processed_commits = PREVIOUSLY_ASSESSED_COMMITS
 
     def iter_popular_repos_segmented(self):
         """
@@ -221,24 +245,14 @@ class CommitCollector:
         p = Prompt(messages=[Prompt.Message("user",
                             f"The following is an issue in the {repo.full_name} repository:\n\n###Issue Title###{title}\n###Issue Title End###\n\n###Issue Body###{body}\n###Issue Body End###"
                             + f"\n\nThe following is the commit message that fixes this issue:\n\n###Commit Message###{commit.commit.message}\n###Commit Message End###"
-                            + f"\n\nIs this issue likely to be related to improving execution time? Answer by only one word: 'yes' or 'no' (without any other text or punctuation). If you do not have enough information to decide, say 'no'."
-                            )], model=self.gpt5_nano.get_model())
-        res = self.gpt5_nano.get_response(p)
+                            + f"\n\nIs this issue related to improving execution time? Answer by only one word: 'yes' or 'no' (without any other text or punctuation). If you do not have enough information to decide, say 'no'.")], model=self.gpt5_codex.get_model())
+        res = self.gpt5_codex.get_response(p)
 
         if "yes" in res.first_content.lower().strip():
-            logging.info(f"Commit {commit.sha} in {repo.full_name} is related to a likely performance issue prompted by GPT5_Nano (#{issue.number}).")
-
-            # Also check with gpt5_codex
-            p = Prompt(messages=[Prompt.Message("user",
-                                f"The following is an issue in the {repo.full_name} repository:\n\n###Issue Title###{title}\n###Issue Title End###\n\n###Issue Body###{body}\n###Issue Body End###"
-                                + f"\n\nThe following is the commit message that fixes this issue:\n\n###Commit Message###{commit.commit.message}\n###Commit Message End###"
-                                + f"\n\nIs this issue related to improving execution time? Answer by only one word: 'yes' or 'no' (without any other text or punctuation). If you do not have enough information to decide, say 'no'.")], model=self.gpt5_codex.get_model())
-            res = self.gpt5_codex.get_response(p)
-
-            if "yes" in res.first_content.lower().strip():
-                return True
+            return True
         
-        return False
+        else:
+            return False
 
     def fixed_performance_issue(self, repo: Repository, commit: Commit) -> int | None:
         msg = commit.commit.message or ""
@@ -291,6 +305,9 @@ class CommitCollector:
             if commit.sha in self.processed_commits:
                 continue
             
+            if self.dataset.contains(repo.full_name, commit.sha):
+                continue
+
             self.processed_commits.add(commit.sha)
 
             if commit.files.totalCount > self.max_commit_files:

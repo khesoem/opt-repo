@@ -14,6 +14,7 @@ ARG PATCHED_REPO_DIR
 ARG ORIGINAL_REPO_DIR
 ARG MODULE_NAMES
 ARG EXEC_TIMES
+ARG MVN_SETTINGS_FILE
 
 # Create logs directory
 RUN mkdir -p /logs
@@ -72,24 +73,40 @@ RUN ls -la mvnw || echo "mvnw not found in repo_original"
 RUN echo "MODULE_NAMES: $MODULE_NAMES"
 RUN echo "Current directory: $(pwd)"
 
+COPY $MVN_SETTINGS_FILE /root/.m2/settings.xml
+
 # Download dependencies
 WORKDIR /app/patched_repo
+RUN ./mvnw -U -DskipTests install
 RUN ./mvnw -B dependency:go-offline || echo "Dependency download failed"
 
 WORKDIR /app/original_repo
+RUN ./mvnw -U -DskipTests install
 RUN ./mvnw -B dependency:go-offline || echo "Dependency download failed"
 
 # Run tests alternating between patched and original repos
 RUN for i in $(seq 1 $EXEC_TIMES); do \
-      # Run patched version \
-      cd /app/patched_repo && \
-      LOG_FILE="/logs/patched_repo_mvnw_$i.log"; \
-      ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical 2>&1 | tee "$LOG_FILE"; \
-      /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
-      \
-      # Run original version \
-      cd /app/original_repo && \
-      LOG_FILE="/logs/original_repo_mvnw_$i.log"; \
-      ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical 2>&1 | tee "$LOG_FILE"; \
-      /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
+      if [ $((i % 2)) -eq 1 ]; then \
+        # Odd iterations: run patched first, then original \
+        cd /app/patched_repo && \
+        LOG_FILE="/logs/patched_repo_mvnw_$i.log"; \
+        ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical 2>&1 | tee "$LOG_FILE"; \
+        /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
+        \
+        cd /app/original_repo && \
+        LOG_FILE="/logs/original_repo_mvnw_$i.log"; \
+        ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical 2>&1 | tee "$LOG_FILE"; \
+        /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
+      else \
+        # Even iterations: run original first, then patched \
+        cd /app/original_repo && \
+        LOG_FILE="/logs/original_repo_mvnw_$i.log"; \
+        ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical 2>&1 | tee "$LOG_FILE"; \
+        /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
+        \
+        cd /app/patched_repo && \
+        LOG_FILE="/logs/patched_repo_mvnw_$i.log"; \
+        ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical 2>&1 | tee "$LOG_FILE"; \
+        /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
+      fi; \
     done

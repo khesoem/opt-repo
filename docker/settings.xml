@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.1.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0
+                              https://maven.apache.org/xsd/settings-1.1.0.xsd">
+
+  <!-- Optional: proxy configuration if you’re behind a firewall -->
+  <!--
+  <proxies>
+    <proxy>
+      <id>corp-proxy</id>
+      <active>true</active>
+      <protocol>https</protocol>
+      <host>proxy.example.com</host>
+      <port>8080</port>
+      <nonProxyHosts>localhost|127.0.0.1</nonProxyHosts>
+    </proxy>
+  </proxies>
+  -->
+
+  <mirrors>
+    <!-- Official Maven Central -->
+    <mirror>
+      <id>central</id>
+      <name>Maven Central</name>
+      <url>https://repo.maven.apache.org/maven2/</url>
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+
+    <!-- Sonatype public mirror -->
+    <mirror>
+      <id>sonatype</id>
+      <name>Sonatype OSS Mirror</name>
+      <url>https://oss.sonatype.org/content/repositories/releases/</url>
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+
+    <!-- Aliyun mirror (very fast for Asia) -->
+    <mirror>
+      <id>aliyun</id>
+      <name>Aliyun Maven Mirror</name>
+      <url>https://maven.aliyun.com/repository/public</url>
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+
+    <!-- Tencent Cloud mirror -->
+    <mirror>
+      <id>tencent</id>
+      <name>Tencent Cloud Maven Mirror</name>
+      <url>https://mirrors.cloud.tencent.com/nexus/repository/maven-public/</url>
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+
+    <!-- Huawei Cloud mirror -->
+    <mirror>
+      <id>huawei</id>
+      <name>Huawei Cloud Maven Mirror</name>
+      <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+
+    <!-- Apache Software Foundation mirror -->
+    <mirror>
+      <id>apache</id>
+      <name>Apache Maven Mirror</name>
+      <url>https://repository.apache.org/content/groups/public/</url>
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+  </mirrors>
+
+  <profiles>
+    <profile>
+      <id>default-profile</id>
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>https://repo.maven.apache.org/maven2</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+      </repositories>
+
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>https://repo.maven.apache.org/maven2</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>false</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+
+      <!-- Optional: higher timeouts and retries -->
+      <properties>
+        <maven.wagon.rto>600000</maven.wagon.rto>
+        <maven.wagon.http.retryHandler.count>10</maven.wagon.http.retryHandler.count>
+      </properties>
+    </profile>
+  </profiles>
+
+  <activeProfiles>
+    <activeProfile>default-profile</activeProfile>
+  </activeProfiles>
+</settings>

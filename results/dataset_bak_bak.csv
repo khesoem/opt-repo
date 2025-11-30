@@ -1,297 +1,802 @@
 repo,commit_hash,issue_number,exec_status,exec_time_improvement,p_value,test_class_improvements
-netty/netty,e1cc93f60ae3e331a1f57090f4f586b0539ee026,15751,maven_execution_successful,0.002677153144605,1.0,"{'original_outperforms_patched': ['io.netty.util.internal.logging.Log4JLoggerFactoryTest'], 'patched_outperforms_original': ['io.netty.util.internal.ObjectUtilTest']}"
-keycloak/keycloak,47288a96439bb3e6db587ea37ceece7e96665320,43698,maven_execution_successful,0.0024190631217219,0.9999988880451252,"{'original_outperforms_patched': ['org.keycloak.common.util.KeystoreUtilTest', 'org.keycloak.sdjwt.JsonClaimsetTest', 'org.keycloak.sdjwt.SdJWTSamplesTest', 'org.keycloak.connections.jpa.support.EntityManagerProxyTest', 'org.keycloak.models.utils.StripSecretsUtilsTest', 'org.keycloak.policy.BlacklistPasswordPolicyProviderTest', 'org.keycloak.utils.StreamsUtilTest'], 'patched_outperforms_original': ['org.keycloak.sdjwt.SdJwtTest', 'org.keycloak.util.UriUtilsTest', 'org.keycloak.crypto.def.test.DefaultCertificateIdentityExtractorTest', 'org.keycloak.authentication.authenticators.x509.X509AuthenticatorConfigModelTest', 'org.keycloak.truststore.FileTruststoreProviderFactoryTest']}"
-keycloak/keycloak,02dfb4bd8a29dd7b83a34130cce956f2d910b9cf,43362,maven_execution_successful,-0.0022931577983158,0.9999999971726128,"{'original_outperforms_patched': ['org.keycloak.sdjwt.SdJWTSamplesTest', 'org.keycloak.provider.ProviderConfigurationBuilderTest', 'org.keycloak.utils.MapperTypeSerializerTest', 'org.keycloak.models.BrowserSecurityHeadersTest'], 'patched_outperforms_original': ['org.keycloak.sdjwt.UndisclosedClaimTest', 'org.keycloak.models.ModelVersionTest', 'org.keycloak.models.utils.KeycloakModelUtilsTest']}"
-keycloak/keycloak,10f06e9eb7c23aadb14e564b469f4b39f7af1e6f,43357,maven_execution_successful,-0.0200857253887512,0.9999999999943292,"{'original_outperforms_patched': ['org.keycloak.sdjwt.ArrayElementSerializationTest', 'org.keycloak.crypto.def.test.DefaultCertificateIdentityExtractorTest', 'org.keycloak.saml.processing.core.saml.v2.writers.SAMLAssertionWriterTest'], 'patched_outperforms_original': ['org.keycloak.json.StringListMapDeserializerTest', 'org.keycloak.crypto.def.test.DefaultCryptoJWKTest', 'org.keycloak.crypto.def.test.PemUtilsBCTest', 'org.keycloak.saml.processing.core.parsers.saml.SAMLAttributeParserTest']}"
-keycloak/keycloak,66b9e801c122b8fe9c1bc661357198eeb1d04d5c,43365,maven_execution_successful,-0.0077915004725519,0.9999999839505916,"{'original_outperforms_patched': ['org.keycloak.representations.workflows.WorkflowDefinitionTest', 'org.keycloak.sdjwt.ArrayElementDisclosureTest', 'org.keycloak.sdjwt.SdJwtTest', 'org.keycloak.models.utils.SessionExpirationUtilsTest'], 'patched_outperforms_original': ['org.keycloak.common.util.PaddingUtilsTest', 'org.keycloak.saml.processing.core.saml.v2.util.ArtifactResponseUtilTest']}"
-quarkusio/quarkus,49ccb88a9064c295147060804a2b9abf9553cbd3,32021,,,,{}
-camunda/camunda,a7ec41bdbe4f40778933087e5d288485cf813996,39932,,,,{}
-spring-projects/spring-batch,480a343f1705946dee84921d8e82ab55dde7bccc,4930,,,,{}
-spring-projects/spring-data-commons,7682b3cdea2e2f40f49763f4508b44d03e01bead,3375,,,,{}
-google/guava,911661a9519815e4a132acd8ce2bd8ce42bd18dd,7143,,,,{}
-google/guava,0e1aebf73ec48848b17b402a22f33f55756073e8,6845,,,,{}
-netty/netty,092ce05a6533d563e88e647e71e649ea67d0bd8d,15723,maven_execution_successful,-0.0005147836944731,1.0,"{'original_outperforms_patched': ['io.netty.buffer.PooledBigEndianHeapByteBufTest'], 'patched_outperforms_original': ['io.netty.buffer.LittleEndianDirectByteBufTest']}"
-netty/netty,06f8920da07b3572dc0f06d3fb729414e408e5fa,15723,maven_execution_successful,-0.0069456427955132,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': ['io.netty.util.internal.logging.CommonsLoggerTest']}"
-netty/netty,c4ac6613b3bc9c6c233fd89822c0d45fa295d0b0,15502,,,,{}
-netty/netty,32a6a4ce4ee5381c1f14f28b68a180ca085d0b69,15510,,,,{}
-netty/netty,15b8bbf864680ec2250c72d52b35ed46bfaf3a6f,15503,maven_execution_successful,0.001630654417907,0.9999999999999986,"{'original_outperforms_patched': ['io.netty.util.internal.MathUtilTest', 'io.netty.buffer.UnpooledByteBufAllocatorTest'], 'patched_outperforms_original': ['io.netty.util.internal.logging.Log4JLoggerFactoryTest']}"
-netty/netty,ab2bd1a1f12bda2f6aac0eee456461e52052df4e,14930,maven_execution_successful,0.0047589380946634,0.9999999999999856,"{'original_outperforms_patched': ['io.netty.util.concurrent.ImmediateExecutorTest', 'io.netty.util.AsciiStringMemoryTest'], 'patched_outperforms_original': ['io.netty.util.internal.SWARUtilTest']}"
-netty/netty,f92a33c20df844a615719314f411b468f1ed6b39,14876,,,,{}
-netty/netty,fbe14e13633fdd404f5cdbccce15e1fd1f7221e5,14165,maven_execution_successful,-0.0033952805253075,1.0,"{'original_outperforms_patched': ['io.netty.util.concurrent.PromiseCombinerTest'], 'patched_outperforms_original': ['io.netty.channel.DelegatingChannelPromiseNotifierTest']}"
-netty/netty,48687be377c1e0b94acddca4ae54eff996c1ee2a,14268,maven_execution_successful,0.0089054252013729,0.9999999999999996,"{'original_outperforms_patched': ['io.netty.util.internal.logging.Log4J2LoggerTest', 'io.netty.util.internal.logging.Slf4JLoggerTest'], 'patched_outperforms_original': []}"
-netty/netty,314d59b07ff028feef540bc532c1fe00f09ce8e9,13826,,,,{}
-netty/netty,c7c295a3bba8d76ece225211c1862c9741bc71c2,13166,,,,{}
-keycloak/keycloak,a84d243d470d435fa1a81f71377904f7bb6879b7,42922,,,,{}
-keycloak/keycloak,5acec7d5fc2843b80f3740d3f3177c9df5b32b33,42880,,,,{}
-keycloak/keycloak,87a6a3d4455806dd863bf0b3d8823a44d8d4b76b,42882,,,,{}
-keycloak/keycloak,4ccf7407ed3b12503bacfe86f483ba30f3a3739b,42628,,,,{}
-keycloak/keycloak,971016f74346955c71f1b4fcb45be1e43abb9f8b,42283,maven_execution_successful,-0.0099891027969487,0.9999999999979144,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
-keycloak/keycloak,48994b8a5fabe2380f46291fd37aa8c6e52c0fac,42419,,,,{}
-keycloak/keycloak,a01571c2cc0247b09f8f55253dda2e72b7890b3d,41074,,,,{}
-keycloak/keycloak,5b4973f0e88d5b6a50dfaf7f5532af9aae6db5b6,41532,,,,{}
-keycloak/keycloak,98612bbb6750f36672d4b9c12e3e499a33813518,41235,,,,{}
-keycloak/keycloak,d74e71e5ed1a55cf55835339c819c1f68c3f6126,40805,maven_execution_successful,0.0066436617483738,0.998923618258584,"{'original_outperforms_patched': ['org.keycloak.common.util.StringSerializationTest', 'org.keycloak.common.util.URLEncodingTest', 'org.keycloak.sdjwt.JsonClaimsetTest'], 'patched_outperforms_original': ['org.keycloak.common.util.KeycloakUriBuilderTest', 'org.keycloak.common.util.PaddingUtilsTest']}"
-keycloak/keycloak,c9f38d36a97764dc161b6126eb8eff24b3c9a1c1,35932,,,,{}
-keycloak/keycloak,6062ddc6b2fb5416faa3b30d0c0caf50c39662a3,40213,,,,{}
-keycloak/keycloak,4fc065aadc5146c938ecf842a1548ef67f1ecdb3,39987,maven_execution_successful,0.0127279977361015,0.9973028807723732,"{'original_outperforms_patched': ['org.keycloak.common.util.MultivaluedHashMapTest', 'org.keycloak.common.util.URLEncodingTest', 'org.keycloak.sdjwt.IssuerSignedJWTTest', 'org.keycloak.sdjwt.JsonClaimsetTest', 'org.keycloak.policy.NotEmailPasswordPolicyProviderTest', 'org.keycloak.saml.processing.core.parsers.saml.SAMLAttributeValueParserTest', 'org.keycloak.saml.processing.core.util.JAXPValidationUtilTest'], 'patched_outperforms_original': []}"
-keycloak/keycloak,7802be9508be9f45cdc829f09b0a91fb50e46a27,39668,,,,{}
-keycloak/keycloak,e0d631d803618cf4ca4c934c6c1d319bafc53e74,38059,,,,{}
-keycloak/keycloak,37f8baeb1fa22985a7bcabec44459347e76ef1f1,39665,,,,{}
-keycloak/keycloak,7a7543dcc6c98d64ee038a5ee416eaa415563822,39653,,,,{}
-keycloak/keycloak,7eb7eb286daa776d7a4e87fcc764c7aa540148a4,39253,,,,{}
-keycloak/keycloak,660217dc41013564d1dca5bd2bda39a83bb6714c,39237,,,,{}
-keycloak/keycloak,e68e43cbc873a2f2687bca67675a61cb4968ecaa,38837,,,,{}
-keycloak/keycloak,9ce4539d2290a64bfaca96abd544f3dc5d22c7a3,38552,,,,{}
-keycloak/keycloak,c0da1468731761b435813a2b03bcebdca5f9db30,34364,,,,{}
-keycloak/keycloak,221d21639d363e20f5f23af65694ee2250d6417c,38195,,,,{}
-keycloak/keycloak,491b7861ed1c47a45003cb92ddbf2fc3cae1bdc6,33953,,,,{}
-keycloak/keycloak,1cb7a4736c198988b3d84c50b0a3d9b0b54ed71b,37062,,,,{}
-keycloak/keycloak,a357589c148742ecf2240b75fc74d3218c8b78fc,36919,maven_execution_successful,0.0377305924260213,0.8283654917076622,"{'original_outperforms_patched': ['org.keycloak.common.util.KeyUtilsTest', 'org.keycloak.sdjwt.SdJwtUtilsTest'], 'patched_outperforms_original': ['org.keycloak.models.BrowserSecurityHeadersTest']}"
-keycloak/keycloak,c8078fa2afe635655c07d36fae6cdc895d27c88d,35834,,,,{}
-keycloak/keycloak,a43b65281d6f3631366b71858cad25676aaf635d,35796,maven_execution_successful,-0.0052687253346352,0.99997114664015,"{'original_outperforms_patched': ['org.keycloak.common.util.KeystoreUtilTest', 'org.keycloak.util.UriUtilsTest'], 'patched_outperforms_original': ['org.keycloak.common.util.MultivaluedHashMapTest']}"
-keycloak/keycloak,45a6b5c6572279269b322ecc41e128db8d4d1c27,35758,,,,{}
-keycloak/keycloak,a4d70ad6d2ac76a2711b5b975bb3d75770fc650a,35457,,,,{}
-keycloak/keycloak,83b324d98a610a7c37f1f92511829f2ea6d4980d,35402,,,,{}
-keycloak/keycloak,347cd3b9b971495c45ad8590077e7fbf86065b4e,34848,maven_execution_successful,-0.0061207344881385,0.999939331411175,"{'original_outperforms_patched': ['org.keycloak.sdjwt.UndisclosedClaimTest', 'org.keycloak.broker.provider.util.SimpleHttpTest$ResponseConsideringCharsetTest'], 'patched_outperforms_original': ['org.keycloak.sdjwt.SdJWTSamplesTest', 'org.keycloak.utils.StringUtilTest', 'org.keycloak.models.ModelVersionTest']}"
-keycloak/keycloak,ba51140a25d18f5a7bfa75b749c55ad32826cfd5,34313,,,,{}
-keycloak/keycloak,d66030fcadf48eab8b2f8dc34a3d30921283c5e3,34412,,,,{}
-keycloak/keycloak,4690e00d910cdd64fb447fbcdf3a336af4b8b76c,34050,,,,{}
-keycloak/keycloak,ef48a3a360cc0c96faeef3ecbedd42b8e88d36bd,33424,,,,{}
-keycloak/keycloak,3887ee3006fce7af5e6321f4aefe062e9cdd20c7,33439,maven_execution_successful,0.0102281279688098,0.999903307669228,"{'original_outperforms_patched': ['org.keycloak.common.util.PaddingUtilsTest', 'org.keycloak.json.StringListMapDeserializerTest', 'org.keycloak.models.utils.StripSecretsUtilsTest'], 'patched_outperforms_original': []}"
-keycloak/keycloak,8769fed585c7482e7d648cadf392213cc16e5e0f,33353,maven_execution_successful,-0.0020200017349707,0.9999998404899756,"{'original_outperforms_patched': ['org.keycloak.common.util.KeycloakUriBuilderTest'], 'patched_outperforms_original': ['org.keycloak.sdjwt.sdjwtvp.KeyBindingJwtVerificationOptsTest']}"
-keycloak/keycloak,fd1f3c52d39537da6091bf8200db37d487ea613e,33353,maven_execution_successful,-0.0009136817671099,0.9999931126340816,"{'original_outperforms_patched': ['org.keycloak.common.util.StringPropertyReplacerTest'], 'patched_outperforms_original': ['org.keycloak.models.utils.SessionExpirationUtilsTest', 'org.keycloak.marshalling.IndexSchemaChangeTest']}"
-keycloak/keycloak,5c503a55e9f44a5283cb321e97c2f611cc2b22b3,33353,,,,{}
-keycloak/keycloak,0becdaa2a92382de1ea2b98eb3125dc173f33c22,33331,maven_execution_successful,0.0016363390297616,0.999997164789995,"{'original_outperforms_patched': ['org.keycloak.jose.jwk.JWKUtilTest', 'org.keycloak.sdjwt.ArrayElementDisclosureTest', 'org.keycloak.models.BrowserSecurityHeadersTest', 'org.keycloak.models.ModelVersionTest'], 'patched_outperforms_original': ['org.keycloak.common.util.KeystoreUtilTest', 'org.keycloak.sdjwt.JsonNodeComparisonTest', 'org.keycloak.marshalling.IndexSchemaChangeTest']}"
-keycloak/keycloak,5bb23eb0fc711c626ead010c0aa70fbc029c6f97,32906,,,,{}
-keycloak/keycloak,bf19ec11cfd7189141a0ed67f57b464b55fd54d1,32761,maven_execution_successful,-0.0072554220627242,0.9999745371145228,"{'original_outperforms_patched': [], 'patched_outperforms_original': ['org.keycloak.common.util.CollectionUtilTest']}"
-keycloak/keycloak,866101e72e8d45a52980cdab9a121c661df039e7,32683,,,,{}
-keycloak/keycloak,e6b271895e14c076bdc57e4dbb58aa573333257b,32388,,,,{}
-keycloak/keycloak,079242c398d0a1290d3370eae2626e2534eb49df,32091,,,,{}
-keycloak/keycloak,5bd3da657b75dcc163809cd5ec3f81f7c3c88f73,32428,,,,{}
-keycloak/keycloak,04d2126c7358ca3b069ea9909a07e549a07aca95,32273,,,,{}
-keycloak/keycloak,5740f8836aa489e87a8084c716bbec78b7e66c25,32273,,,,{}
-keycloak/keycloak,a7964a588baafd6e8b83f6485204b22ce8704005,32273,maven_execution_successful,0.0011195283054073,0.9999996186283217,"{'original_outperforms_patched': ['org.keycloak.jose.jwk.JWKUtilTest'], 'patched_outperforms_original': ['org.keycloak.utils.StringUtilTest', 'org.keycloak.broker.provider.util.SimpleHttpTest$ResponseConsideringCharsetTest', 'org.keycloak.models.TotpTest']}"
-keycloak/keycloak,aa91f6027801d198e68409bc8b907761fe08c776,31519,maven_execution_successful,0.0069955085655232,0.9941776788817056,"{'original_outperforms_patched': ['org.keycloak.common.util.StringSerializationTest', 'org.keycloak.models.BrowserSecurityHeadersTest', 'org.keycloak.models.utils.SessionExpirationUtilsTest'], 'patched_outperforms_original': ['org.keycloak.sdjwt.SdJwtTest']}"
-keycloak/keycloak,11b19bc272f7b79e3ca4a5e3a270577fa2132b57,31115,,,,{}
-keycloak/keycloak,00d8e06f7995eafe061ac2d407869372d3be3c3e,31701,maven_execution_successful,0.0006247422938037,0.9999999936575248,"{'original_outperforms_patched': ['org.keycloak.models.BrowserSecurityHeadersTest'], 'patched_outperforms_original': ['org.keycloak.common.util.KeycloakUriBuilderTest', 'org.keycloak.common.util.KeystoreUtilTest', 'org.keycloak.sdjwt.JsonNodeComparisonTest']}"
-keycloak/keycloak,557cf1e60e2ab67d43f1ea02c8037078705cc0a6,31699,maven_execution_successful,0.0025308603684635,0.9999986483287427,"{'original_outperforms_patched': ['org.keycloak.common.util.URLEncodingTest', 'org.keycloak.sdjwt.ArrayElementSerializationTest', 'org.keycloak.models.sessions.infinispan.initializer.InitializerStateTest'], 'patched_outperforms_original': ['org.keycloak.sdjwt.SdJwtUtilsTest', 'org.keycloak.models.KeycloakModelUtilsTest', 'org.keycloak.utils.StreamsUtilTest']}"
-keycloak/keycloak,97cc973af0e1baacb48e2a47fac7545982efedbe,29818,,,,{}
-keycloak/keycloak,701e49e4a5074cc4effe17371b0f051ca95a01b3,29129,,,,{}
-keycloak/keycloak,673e122443f3bd535563a28e50ca55bdb63d0ff7,29319,maven_execution_successful,0.0248278290812334,0.8051975019866588,"{'original_outperforms_patched': [], 'patched_outperforms_original': ['org.keycloak.util.BasicAuthHelperTest']}"
-keycloak/keycloak,d55a8b0b176443a7d5f91c76ff92b48b675e3e19,29133,,,,{}
-keycloak/keycloak,17a700b6b982a5d7d63a078114479741b9bb57c0,29073,,,,{}
-keycloak/keycloak,ae1aaef96c80563c7d78ed617556fbbd91d7ad30,29130,maven_execution_successful,-0.0741793615491378,0.9882541901651076,"{'original_outperforms_patched': ['org.keycloak.sdjwt.UndisclosedClaimTest'], 'patched_outperforms_original': ['org.keycloak.common.util.HtmlUtilsTest', 'org.keycloak.common.util.PaddingUtilsTest', 'org.keycloak.common.util.StringPropertyReplacerTest', 'org.keycloak.sdjwt.SdJwtUtilsTest', 'org.keycloak.storage.StorageIdTest']}"
-keycloak/keycloak,f1532565b6f6a1a670c8aee591c9f5b43324f1ab,28935,,,,{}
-keycloak/keycloak,004f419fd042bbb12cd50febc7a9400143e035c6,28672,,,,{}
-keycloak/keycloak,69ba92808dc90292e62ab2767fc0f05241cbb08a,14084,,,,{}
-keycloak/keycloak,f168b8cce97e87585d0af85e905cb310f4c357dc,27852,,,,{}
-keycloak/keycloak,f7f7f1bd1027614d6119b38f3d63819f9559a38f,25731,,,,{}
-quarkusio/quarkus,82b9aafc2a812070c52bf93e0899fc675b4081d1,46949,,,,{}
-quarkusio/quarkus,387bec39702adb1dd0354706012c505d6542dd65,44383,,,,{}
+netty/netty,e1cc93f60ae3e331a1f57090f4f586b0539ee026,15751,maven_execution_successful,0.0011348974732235,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,47288a96439bb3e6db587ea37ceece7e96665320,43698,maven_execution_successful,0.0024712305699898,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,02dfb4bd8a29dd7b83a34130cce956f2d910b9cf,43362,maven_execution_successful,0.0076591120769948,0.999999807216227,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,10f06e9eb7c23aadb14e564b469f4b39f7af1e6f,43357,maven_execution_successful,0.0014860284745917,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,66b9e801c122b8fe9c1bc661357198eeb1d04d5c,43365,maven_execution_successful,0.0024058627075452,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+quarkusio/quarkus,49ccb88a9064c295147060804a2b9abf9553cbd3,32021,final_clone_and_checkout_repo,,,{}
+camunda/camunda,a7ec41bdbe4f40778933087e5d288485cf813996,39932,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-batch,480a343f1705946dee84921d8e82ab55dde7bccc,4930,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-commons,7682b3cdea2e2f40f49763f4508b44d03e01bead,3375,final_clone_and_checkout_repo,,,{}
+google/guava,911661a9519815e4a132acd8ce2bd8ce42bd18dd,7143,final_clone_and_checkout_repo,,,{}
+google/guava,0e1aebf73ec48848b17b402a22f33f55756073e8,6845,final_clone_and_checkout_repo,,,{}
+netty/netty,092ce05a6533d563e88e647e71e649ea67d0bd8d,15723,maven_execution_successful,-0.0005455642117369,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+netty/netty,06f8920da07b3572dc0f06d3fb729414e408e5fa,15723,maven_execution_successful,0.0015874942715642,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+netty/netty,c4ac6613b3bc9c6c233fd89822c0d45fa295d0b0,15502,final_clone_and_checkout_repo,,,{}
+netty/netty,32a6a4ce4ee5381c1f14f28b68a180ca085d0b69,15510,final_clone_and_checkout_repo,,,{}
+netty/netty,15b8bbf864680ec2250c72d52b35ed46bfaf3a6f,15503,maven_execution_successful,-0.0077710643147124,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+netty/netty,ab2bd1a1f12bda2f6aac0eee456461e52052df4e,14930,maven_execution_successful,-0.005602530238415,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+netty/netty,f92a33c20df844a615719314f411b468f1ed6b39,14876,final_clone_and_checkout_repo,,,{}
+netty/netty,fbe14e13633fdd404f5cdbccce15e1fd1f7221e5,14165,maven_execution_successful,-0.0003762487234418,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+netty/netty,48687be377c1e0b94acddca4ae54eff996c1ee2a,14268,final_clone_and_checkout_repo,,,{}
+netty/netty,314d59b07ff028feef540bc532c1fe00f09ce8e9,13826,final_clone_and_checkout_repo,,,{}
+netty/netty,c7c295a3bba8d76ece225211c1862c9741bc71c2,13166,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,a84d243d470d435fa1a81f71377904f7bb6879b7,42922,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,5acec7d5fc2843b80f3740d3f3177c9df5b32b33,42880,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,87a6a3d4455806dd863bf0b3d8823a44d8d4b76b,42882,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,4ccf7407ed3b12503bacfe86f483ba30f3a3739b,42628,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,971016f74346955c71f1b4fcb45be1e43abb9f8b,42283,maven_execution_successful,0.0021909804637576,0.999999133346678,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,48994b8a5fabe2380f46291fd37aa8c6e52c0fac,42419,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,a01571c2cc0247b09f8f55253dda2e72b7890b3d,41074,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,5b4973f0e88d5b6a50dfaf7f5532af9aae6db5b6,41532,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,98612bbb6750f36672d4b9c12e3e499a33813518,41235,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,d74e71e5ed1a55cf55835339c819c1f68c3f6126,40805,maven_execution_successful,0.0308858154765437,0.999524112790823,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,c9f38d36a97764dc161b6126eb8eff24b3c9a1c1,35932,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,6062ddc6b2fb5416faa3b30d0c0caf50c39662a3,40213,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,4fc065aadc5146c938ecf842a1548ef67f1ecdb3,39987,maven_execution_successful,0.0052265600145435,0.9999998975545168,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,7802be9508be9f45cdc829f09b0a91fb50e46a27,39668,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,e0d631d803618cf4ca4c934c6c1d319bafc53e74,38059,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,37f8baeb1fa22985a7bcabec44459347e76ef1f1,39665,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,7a7543dcc6c98d64ee038a5ee416eaa415563822,39653,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,7eb7eb286daa776d7a4e87fcc764c7aa540148a4,39253,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,660217dc41013564d1dca5bd2bda39a83bb6714c,39237,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,e68e43cbc873a2f2687bca67675a61cb4968ecaa,38837,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,9ce4539d2290a64bfaca96abd544f3dc5d22c7a3,38552,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,c0da1468731761b435813a2b03bcebdca5f9db30,34364,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,221d21639d363e20f5f23af65694ee2250d6417c,38195,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,491b7861ed1c47a45003cb92ddbf2fc3cae1bdc6,33953,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,1cb7a4736c198988b3d84c50b0a3d9b0b54ed71b,37062,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,a357589c148742ecf2240b75fc74d3218c8b78fc,36919,maven_execution_successful,-0.0067911714770798,0.999999290332198,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,c8078fa2afe635655c07d36fae6cdc895d27c88d,35834,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,a43b65281d6f3631366b71858cad25676aaf635d,35796,maven_execution_successful,0.003954722463227,0.9999999990686774,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,45a6b5c6572279269b322ecc41e128db8d4d1c27,35758,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,a4d70ad6d2ac76a2711b5b975bb3d75770fc650a,35457,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,83b324d98a610a7c37f1f92511829f2ea6d4980d,35402,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,347cd3b9b971495c45ad8590077e7fbf86065b4e,34848,maven_execution_successful,-0.0067856854350108,0.999999993480742,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,ba51140a25d18f5a7bfa75b749c55ad32826cfd5,34313,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,d66030fcadf48eab8b2f8dc34a3d30921283c5e3,34412,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,4690e00d910cdd64fb447fbcdf3a336af4b8b76c,34050,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,ef48a3a360cc0c96faeef3ecbedd42b8e88d36bd,33424,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,3887ee3006fce7af5e6321f4aefe062e9cdd20c7,33439,maven_execution_successful,-0.0141908960324929,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,8769fed585c7482e7d648cadf392213cc16e5e0f,33353,maven_execution_successful,-0.0083023895584806,0.9999999981373549,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,fd1f3c52d39537da6091bf8200db37d487ea613e,33353,maven_execution_successful,-0.012889891018414,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,5c503a55e9f44a5283cb321e97c2f611cc2b22b3,33353,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,0becdaa2a92382de1ea2b98eb3125dc173f33c22,33331,maven_execution_successful,0.003911033362489,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,5bb23eb0fc711c626ead010c0aa70fbc029c6f97,32906,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,bf19ec11cfd7189141a0ed67f57b464b55fd54d1,32761,maven_execution_successful,-0.0039200614911606,0.9999999906867744,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,866101e72e8d45a52980cdab9a121c661df039e7,32683,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,e6b271895e14c076bdc57e4dbb58aa573333257b,32388,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,079242c398d0a1290d3370eae2626e2534eb49df,32091,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,5bd3da657b75dcc163809cd5ec3f81f7c3c88f73,32428,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,04d2126c7358ca3b069ea9909a07e549a07aca95,32273,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,5740f8836aa489e87a8084c716bbec78b7e66c25,32273,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,a7964a588baafd6e8b83f6485204b22ce8704005,32273,maven_execution_successful,-0.0020514478248437,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,aa91f6027801d198e68409bc8b907761fe08c776,31519,maven_execution_successful,0.0011674718196457,0.9999998975545168,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,11b19bc272f7b79e3ca4a5e3a270577fa2132b57,31115,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,00d8e06f7995eafe061ac2d407869372d3be3c3e,31701,maven_execution_successful,0.0177527074710329,0.9999999972060324,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,557cf1e60e2ab67d43f1ea02c8037078705cc0a6,31699,maven_execution_successful,0.0068566902236469,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,97cc973af0e1baacb48e2a47fac7545982efedbe,29818,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,701e49e4a5074cc4effe17371b0f051ca95a01b3,29129,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,673e122443f3bd535563a28e50ca55bdb63d0ff7,29319,maven_execution_successful,-0.0330156369258468,0.9999751579016448,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,d55a8b0b176443a7d5f91c76ff92b48b675e3e19,29133,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,17a700b6b982a5d7d63a078114479741b9bb57c0,29073,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,ae1aaef96c80563c7d78ed617556fbbd91d7ad30,29130,maven_execution_successful,0.0077175537791642,0.9896661214530156,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,f1532565b6f6a1a670c8aee591c9f5b43324f1ab,28935,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,004f419fd042bbb12cd50febc7a9400143e035c6,28672,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,69ba92808dc90292e62ab2767fc0f05241cbb08a,14084,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,f168b8cce97e87585d0af85e905cb310f4c357dc,27852,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,f7f7f1bd1027614d6119b38f3d63819f9559a38f,25731,final_clone_and_checkout_repo,,,{}
+quarkusio/quarkus,82b9aafc2a812070c52bf93e0899fc675b4081d1,46949,final_clone_and_checkout_repo,,,{}
+quarkusio/quarkus,387bec39702adb1dd0354706012c505d6542dd65,44383,final_clone_and_checkout_repo,,,{}
 quarkusio/quarkus,88a0dced3582f6dd875b0c95eae9943daaf7ecf9,44653,final_docker_image_built,,,{}
-quarkusio/quarkus,6ccf8b7db2ea3f652acab473ea89b6dde5b2980c,36006,,,,{}
-quarkusio/quarkus,45d0d25efeaeea7f79b3c353967c286d03b11570,42778,maven_execution_successful,-0.0025078369905956,0.999999999999718,"{'original_outperforms_patched': ['org.jboss.resteasy.reactive.common.providers.serialisers.AbstractJsonMessageBodyReaderTest'], 'patched_outperforms_original': ['org.jboss.resteasy.reactive.common.jaxrs.StatusTypeImplTest']}"
-quarkusio/quarkus,5e90a1bc1b254e90a6f8afcb6d55926724d3e8ee,41404,,,,{}
-quarkusio/quarkus,e5eb9898704b394c5585bd807de6b6a1444e6142,39130,,,,{}
-quarkusio/quarkus,637ebeae5ecc85b33a0baf5d976b0e2a683d83f7,38683,,,,{}
-quarkusio/quarkus,95a069b23c1f62d6df88d2d68b59dd8adeb90bd3,38128,,,,{}
-spring-projects/spring-ai,d1133dc866c83f28deb4ac20634d8d0e76209fa6,4346,maven_execution_successful,0.0558085845848859,0.0516281599331182,"{'original_outperforms_patched': ['JacksonUtilsKotlinTests', 'org.springframework.ai.embedding.TokenCountBatchingStrategyTests', 'org.springframework.ai.observation.conventions.AiProviderTests', 'org.springframework.ai.observation.ObservabilityHelperTests', 'org.springframework.ai.observation.TracingAwareLoggingObservationHandlerTests', 'org.springframework.ai.reader.TextReaderTests', 'org.springframework.ai.document.ContentFormatterTests', 'org.springframework.ai.document.DocumentBuilderTests', 'org.springframework.ai.transformer.splitter.TokenTextSplitterTest', 'org.springframework.ai.converter.ListOutputConverterTest', 'org.springframework.ai.converter.KotlinBeanOutputConverterTests', 'org.springframework.ai.converter.BeanOutputConverterTest$FormatTest', 'org.springframework.ai.converter.BeanOutputConverterTest$ConverterTest', 'org.springframework.ai.converter.BeanOutputConverterTest', 'org.springframework.ai.tool.function.FunctionToolCallbackTest', 'org.springframework.ai.tool.observation.ToolCallingContentObservationFilterTests', 'org.springframework.ai.image.observation.DefaultImageModelObservationConventionTests', 'org.springframework.ai.image.observation.ImageModelPromptContentObservationHandlerTests', 'org.springframework.ai.chat.messages.MessageUtilsTests', 'org.springframework.ai.chat.prompt.SystemPromptTemplateTests', 'org.springframework.ai.chat.ChatModelTests', 'org.springframework.ai.embedding.observation.DefaultEmbeddingModelObservationConventionTests', 'org.springframework.ai.model.tool.ToolExecutionResultTests', 'org.springframework.ai.model.tool.DefaultToolExecutionResultTests', 'org.springframework.ai.model.tool.ToolCallingChatOptionsTests', 'org.springframework.ai.model.tool.DefaultToolExecutionEligibilityPredicateTests', 'org.springframework.ai.model.tool.ToolExecutionEligibilityPredicateTests', 'org.springframework.ai.model.tool.DefaultToolCallingChatOptionsTests', 'org.springframework.ai.model.observation.ModelUsageMetricsGeneratorTests', 'org.springframework.ai.model.observation.ModelObservationContextTests', 'org.springframework.ai.model.MediaTests', 'org.springframework.ai.aot.ToolRuntimeHintsTests'], 'patched_outperforms_original': ['org.springframework.ai.observation.conventions.SpringAiKindTests', 'org.springframework.ai.observation.conventions.AiOperationTypeTests', 'org.springframework.ai.observation.AiOperationMetadataTests', 'org.springframework.ai.reader.JsonReaderTests', 'org.springframework.ai.template.NoOpTemplateRendererTests', 'org.springframework.ai.writer.FileDocumentWriterTest', 'org.springframework.ai.document.id.IdGeneratorProviderTest', 'org.springframework.ai.transformer.splitter.TextSplitterTests', 'org.springframework.ai.tool.resolution.SpringBeanToolCallbackResolverKotlinTests', 'org.springframework.ai.tool.observation.DefaultToolCallingObservationConventionTests', 'org.springframework.ai.tool.method.MethodToolCallbackGenericTypesTest', 'org.springframework.ai.tool.method.MethodToolCallbackProviderTests', 'org.springframework.ai.tool.support.ToolUtilsTests', 'org.springframework.ai.image.observation.ImageModelObservationContextTests', 'org.springframework.ai.chat.memory.MessageWindowChatMemoryTests', 'org.springframework.ai.chat.memory.InMemoryChatMemoryRepositoryTests', 'org.springframework.ai.chat.observation.ChatModelCompletionObservationHandlerTests', 'org.springframework.ai.chat.observation.ChatModelMeterObservationHandlerTests', 'org.springframework.ai.chat.observation.DefaultChatModelObservationConventionTests', 'org.springframework.ai.chat.observation.ChatModelObservationContextTests', 'org.springframework.ai.chat.observation.ChatModelPromptContentObservationHandlerTests', 'org.springframework.ai.chat.prompt.PromptTests', 'org.springframework.ai.chat.prompt.ChatOptionsBuilderTests', 'org.springframework.ai.chat.prompt.PromptTemplateTests', 'org.springframework.ai.chat.prompt.PromptTemplateBuilderTests', 'org.springframework.ai.chat.metadata.DefaultUsageTests', 'org.springframework.ai.chat.model.ChatResponseTests', 'org.springframework.ai.chat.model.GenerationTests', 'org.springframework.ai.audio.tts.DefaultTextToSpeechOptionsTests', 'org.springframework.ai.embedding.observation.EmbeddingModelMeterObservationHandlerTests', 'org.springframework.ai.embedding.AbstractEmbeddingModelTests', 'org.springframework.ai.util.json.JsonParserTests', 'org.springframework.ai.util.json.JsonSchemaGeneratorTests', 'org.springframework.ai.model.transformer.KeywordMetadataEnricherTest', 'org.springframework.ai.model.KotlinModelOptionsUtilsTests', 'org.springframework.ai.model.tool.DefaultToolCallingManagerTest', 'org.springframework.ai.metadata.UsageTests', 'org.springframework.ai.aot.AiRuntimeHintsTests', 'org.springframework.ai.aot.SpringAiCoreRuntimeHintsTest', 'org.springframework.ai.aot.KnuddelsRuntimeHintsTest']}"
-spring-cloud/spring-cloud-gateway,9557d12253cf2759245fdbbc2f86f6a4974bef3d,2756,,,,{}
-spring-projects/spring-batch,5a62de9031923aac0e76fc52b972ee2aafdd00c3,4657,,,,{}
-spring-projects/spring-batch,75abf1587ff1bf1043aa1b743ac2ad26609219fc,1694,,,,{}
-spring-projects/spring-batch,5a261fa7c6945de9c3dc85145473c0fa3ac4321b,4479,,,,{}
-assertj/assertj,aed17a70ed3998b90f15bf278ea14651350669f4,3744,,,,{}
-openhab/openhab-addons,90ee2b2341f00bca03dfd2537e8f6c36f3b03c04,17768,,,,{}
-openhab/openhab-addons,2f35a79de77a49a1736f030a88fed8eaf14a5486,16806,,,,{}
-openhab/openhab-addons,b36dc180d6deda9d9437ec68b44b955c128ea9dc,15994,,,,{}
+quarkusio/quarkus,6ccf8b7db2ea3f652acab473ea89b6dde5b2980c,36006,final_clone_and_checkout_repo,,,{}
+quarkusio/quarkus,45d0d25efeaeea7f79b3c353967c286d03b11570,42778,maven_execution_successful,0.0047184649260772,0.9999991387858588,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+quarkusio/quarkus,5e90a1bc1b254e90a6f8afcb6d55926724d3e8ee,41404,final_clone_and_checkout_repo,,,{}
+quarkusio/quarkus,e5eb9898704b394c5585bd807de6b6a1444e6142,39130,final_clone_and_checkout_repo,,,{}
+quarkusio/quarkus,637ebeae5ecc85b33a0baf5d976b0e2a683d83f7,38683,final_clone_and_checkout_repo,,,{}
+quarkusio/quarkus,95a069b23c1f62d6df88d2d68b59dd8adeb90bd3,38128,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-ai,d1133dc866c83f28deb4ac20634d8d0e76209fa6,4346,maven_execution_successful,-0.0043847331563737,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+spring-cloud/spring-cloud-gateway,9557d12253cf2759245fdbbc2f86f6a4974bef3d,2756,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-batch,5a62de9031923aac0e76fc52b972ee2aafdd00c3,4657,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-batch,75abf1587ff1bf1043aa1b743ac2ad26609219fc,1694,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-batch,5a261fa7c6945de9c3dc85145473c0fa3ac4321b,4479,final_clone_and_checkout_repo,,,{}
+assertj/assertj,aed17a70ed3998b90f15bf278ea14651350669f4,3744,final_clone_and_checkout_repo,,,{}
+openhab/openhab-addons,90ee2b2341f00bca03dfd2537e8f6c36f3b03c04,17768,final_clone_and_checkout_repo,,,{}
+openhab/openhab-addons,2f35a79de77a49a1736f030a88fed8eaf14a5486,16806,final_clone_and_checkout_repo,,,{}
+openhab/openhab-addons,b36dc180d6deda9d9437ec68b44b955c128ea9dc,15994,final_clone_and_checkout_repo,,,{}
 datastax/jvector,1dc1d2911a2b4e212a8d421f146e837a6e2e36f3,220,final_docker_image_built,,,{}
 datastax/jvector,162ec61861f9f19bd216efe4433f200352b2e2db,220,final_docker_image_built,,,{}
-camunda/camunda,cb942c4b67cc64b9e569187a933add6aa188c232,35766,,,,{}
-camunda/camunda,a6c278ecbb85e98ce0acad22b844dd421a7f142f,35625,,,,{}
-camunda/camunda,3d34648460a533b30288c9142b49a0d2be15201a,24195,,,,{}
-camunda/camunda,357c972c7736cfaaa1e1a57a6753f467d4b7a90d,19225,,,,{}
-camunda/camunda,d726c17c83b75d2059ebf638523a165e9695d799,19424,,,,{}
-camunda/camunda,90e79816b66eb3b57dc43dbac9939da9113b1a1a,19424,,,,{}
-networknt/light-4j,da4dd9c6a215c7e082dd19fbbc9baac6ab0542b2,2104,,,,{}
-spring-projects/spring-data-jpa,e2b05387a36aade713a0a963dfa69b889b2d046e,3505,,,,{}
-spring-projects/spring-data-redis,42b1764667d5c832483f4b7576ed23fc05af3548,2970,,,,{}
-spring-projects/spring-data-mongodb,532dd289ed7d952bdf35f2ebf61ff1e975e7501a,4904,,,,{}
-spring-projects/spring-data-mongodb,b43c09d1f41e252130ccb56a3e4eba10ba388c61,4846,,,,{}
-spring-projects/spring-data-mongodb,1075a25df403e3f6a85c385f35d36011925a752f,4818,,,,{}
-spring-cloud/spring-cloud-stream,91064171e2fa7f01c8536dff2076bdef2db9fcb6,3101,,,,{}
-spring-cloud/spring-cloud-stream,afc8fa29da421f41fa70cedc4acc3b6c07addcf0,3076,,,,{}
-spring-cloud/spring-cloud-stream,a9fe0c2c3c9ba4fd3b31d92b02a8ed11f1097f08,3040,,,,{}
-spring-cloud/spring-cloud-stream,2f82f3cd02506ff11fc8275a84d388ec8cb791da,3004,,,,{}
+camunda/camunda,cb942c4b67cc64b9e569187a933add6aa188c232,35766,final_clone_and_checkout_repo,,,{}
+camunda/camunda,a6c278ecbb85e98ce0acad22b844dd421a7f142f,35625,final_clone_and_checkout_repo,,,{}
+camunda/camunda,3d34648460a533b30288c9142b49a0d2be15201a,24195,final_clone_and_checkout_repo,,,{}
+camunda/camunda,357c972c7736cfaaa1e1a57a6753f467d4b7a90d,19225,final_clone_and_checkout_repo,,,{}
+camunda/camunda,d726c17c83b75d2059ebf638523a165e9695d799,19424,final_clone_and_checkout_repo,,,{}
+camunda/camunda,90e79816b66eb3b57dc43dbac9939da9113b1a1a,19424,final_clone_and_checkout_repo,,,{}
+networknt/light-4j,da4dd9c6a215c7e082dd19fbbc9baac6ab0542b2,2104,maven_execution_successful,0.0135015939199544,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': ['com.networknt.config.ConfigDefaultTest', 'com.networknt.service.ServiceJsonLoadTest', 'com.networknt.client.MultipleAuthServerTest']}"
+spring-projects/spring-data-jpa,e2b05387a36aade713a0a963dfa69b889b2d046e,3505,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-redis,42b1764667d5c832483f4b7576ed23fc05af3548,2970,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-mongodb,532dd289ed7d952bdf35f2ebf61ff1e975e7501a,4904,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-mongodb,b43c09d1f41e252130ccb56a3e4eba10ba388c61,4846,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-mongodb,1075a25df403e3f6a85c385f35d36011925a752f,4818,final_clone_and_checkout_repo,,,{}
+spring-cloud/spring-cloud-stream,91064171e2fa7f01c8536dff2076bdef2db9fcb6,3101,final_clone_and_checkout_repo,,,{}
+spring-cloud/spring-cloud-stream,afc8fa29da421f41fa70cedc4acc3b6c07addcf0,3076,final_clone_and_checkout_repo,,,{}
+spring-cloud/spring-cloud-stream,a9fe0c2c3c9ba4fd3b31d92b02a8ed11f1097f08,3040,final_clone_and_checkout_repo,,,{}
+spring-cloud/spring-cloud-stream,2f82f3cd02506ff11fc8275a84d388ec8cb791da,3004,final_clone_and_checkout_repo,,,{}
 langgraph4j/langgraph4j,19b662f44ea4dd45baed9a9fd448ea462a8fcefa,151,final_clone_and_checkout_repo,,,{}
-langgraph4j/langgraph4j,1a1ecf2a8a24048aad051aa903922587e838de2e,106,,,,{}
-liquibase/liquibase,d534727e88c6ecd17678ee92fe27276deb5c865a,6685,,,,{}
-liquibase/liquibase,867f787fccb8e069c973d27ebb27ad6ce8bbb35a,6178,,,,{}
-liquibase/liquibase,3daa688c6a99ed131687036ba4e40cd743c4b3c8,5507,,,,{}
-spring-projects/spring-data-elasticsearch,7f178238db2647d82e87a6d4a94885c22a15d570,2876,,,,{}
-FasterXML/jackson-core,cbedab7ddf0c0a9bae10719d9818ea734c6be836,1351,,,,{}
-FasterXML/jackson-core,2b6e7a9010232d0100a1f478b5374f36c9fbd9c6,1193,,,,{}
-dylibso/chicory,73f631cc1c4f034dc825317d17465c0946ce6c4f,695,,,,{}
-dotCMS/core,3e050c4bd6761de29a2353910fc20fca614a6e0a,32958,,,,{}
-spring-projects/spring-data-neo4j,28a6e5ce8ae5e39cb61a831ded2b933458f1020c,2882,,,,{}
-spring-projects/spring-data-commons,bb833a145cf23a2365533e77d862ff4aae8966c1,3126,maven_execution_successful,0.0016222536045018,1.0,"{'original_outperforms_patched': ['org.springframework.data.transaction.ChainedTransactionManagerTests', 'org.springframework.data.repository.util.ClassUtilsUnitTests', 'org.springframework.data.repository.util.ReactiveWrapperConvertersUnitTests', 'org.springframework.data.repository.config.RepositoryConfigurationExtensionSupportUnitTests', 'org.springframework.data.repository.config.DefaultRepositoryConfigurationUnitTests', 'org.springframework.data.repository.config.RepositoryBeanNameGeneratorUnitTests', 'org.springframework.data.repository.config.XmlRepositoryConfigurationSourceUnitTests', 'org.springframework.data.repository.config.RepositoryBeanDefinitionRegistrarSupportIntegrationTests', 'org.springframework.data.repository.config.AnnotationRepositoryConfigurationSourceUnitTests', 'org.springframework.data.repository.config.ResourceReaderRepositoryPopulatorBeanDefinitionParserIntegrationTests', 'org.springframework.data.repository.config.PrimaryRepositoryIntegrationTests', 'org.springframework.data.repository.config.ImplementationDetectionConfigurationUnitTests', 'org.springframework.data.repository.config.SelectionSetUnitTests', 'org.springframework.data.repository.config.CustomRepositoryImplementationDetectorUnitTests', 'org.springframework.data.repository.core.support.AbstractRepositoryMetadataUnitTests', 'org.springframework.data.repository.core.support.AbstractEntityInformationUnitTests', 'org.springframework.data.repository.core.support.PersistentEntityInformationUnitTests', 'org.springframework.data.repository.core.support.RepositoryCompositionUnitTests', 'org.springframework.data.repository.core.support.RepositoryFragmentUnitTests', 'org.springframework.data.repository.core.support.QueryExecutionResultHandlerUnitTests', 'org.springframework.data.repository.core.support.TransactionRepositoryProxyPostProcessorUnitTests', 'org.springframework.data.repository.core.support.ExampleSpecificationAccessorUnitTests', 'org.springframework.data.repository.core.support.EventPublishingRepositoryProxyPostProcessorUnitTests', 'org.springframework.data.repository.core.support.QueryExecutorMethodInterceptorUnitTests', 'org.springframework.data.repository.core.support.TransactionRepositoryFactoryBeanSupportUnitTests', 'org.springframework.data.repository.query.parser.PartTreeUnitTests', 'org.springframework.data.repository.query.ParameterUnitTests', 'org.springframework.data.repository.query.QuotationMapUnitTests', 'org.springframework.data.repository.query.ParametersParameterAccessorUnitTests', 'org.springframework.data.repository.kotlin.CoroutineCrudRepositoryUnitTests', 'org.springframework.data.repository.cdi.RepositoryFragmentsIntegrationTests', 'org.springframework.data.repository.cdi.WebbeansCdiRepositoryExtensionSupportIntegrationTests', 'org.springframework.data.repository.cdi.CdiConfigurationIntegrationTests', 'org.springframework.data.mapping.SimpleTypeHolderUnitTests', 'org.springframework.data.mapping.PropertyPathUnitTests', 'org.springframework.data.mapping.model.SnakeCaseFieldNamingStrategyUnitTests', 'org.springframework.data.mapping.model.KotlinCopyMethodUnitTests', 'org.springframework.data.mapping.model.ClassGeneratingEntityInstantiatorUnitTests', 'org.springframework.data.mapping.model.ValueExpressionParameterValueProviderUnitTests', 'org.springframework.data.mapping.model.KotlinValueUtilsUnitTests', 'org.springframework.data.mapping.model.PersistentEntityParameterValueProviderUnitTests', 'org.springframework.data.mapping.model.ConvertingPropertyAccessorUnitTests', 'org.springframework.data.mapping.model.SimplePersistentPropertyPathAccessorUnitTests', 'org.springframework.data.mapping.model.PersistentPropertyAccessorTests', 'org.springframework.data.mapping.model.PreferredConstructorDiscovererUnitTests', 'org.springframework.data.mapping.model.ReflectionEntityInstantiatorValueClassUnitTests', 'org.springframework.data.mapping.InstantiationAwarePersistentPropertyAccessorUnitTests', 'org.springframework.data.convert.SimplePropertyValueConverterRegistryUnitTests', 'org.springframework.data.convert.ConfigurableTypeInformationMapperUnitTests', 'org.springframework.data.aot.TypeCollectorUnitTests', 'org.springframework.data.web.SortHandlerMethodArgumentResolverUnitTests', 'org.springframework.data.web.ReactiveOffsetScrollPositionHandlerMethodArgumentResolverUnitTests', 'org.springframework.data.web.PagedResourcesAssemblerUnitTests', 'org.springframework.data.web.OffsetScrollPositionHandlerMethodArgumentResolverUnitTests', 'org.springframework.data.web.ReactivePageableHandlerMethodArgumentResolverUnitTests', 'org.springframework.data.web.ReactiveSortHandlerMethodArgumentResolverUnitTests', 'org.springframework.data.web.MapDataBinderUnitTests', 'org.springframework.data.web.ProxyingHandlerMethodArgumentResolverUnitTests', 'org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolverUnitTests', 'org.springframework.data.web.querydsl.ReactiveQuerydslPredicateArgumentResolverUnitTests', 'org.springframework.data.web.config.SpringDataWebConfigurationIntegrationTests', 'org.springframework.data.web.config.EnableSpringDataWebSupportIntegrationTests', 'org.springframework.data.web.config.SliceableResourcesAssemblerIntegrationTests', 'org.springframework.data.web.config.SpringDataJacksonConfigurationUnitTests', 'org.springframework.data.querydsl.QuerydslRepositoryInvokerAdapterUnitTests', 'org.springframework.data.querydsl.QuerydslUtilsUnitTests', 'org.springframework.data.history.RevisionsUnitTests', 'org.springframework.data.history.RevisionUnitTests', 'org.springframework.data.history.AnnotationRevisionMetadataUnitTests', 'org.springframework.data.util.ReflectionUtilsUnitTests', 'org.springframework.data.config.TypeFilterParserUnitTests', 'org.springframework.data.auditing.AnnotationAuditingMetadataUnitTests', 'org.springframework.data.geo.GeoResultsUnitTests', 'org.springframework.data.geo.PointUnitTests', 'org.springframework.data.geo.format.PointFormatterUnitTests', 'org.springframework.data.geo.format.DistanceFormatterUnitTests', 'org.springframework.data.domain.ManagedTypesUnitTests'], 'patched_outperforms_original': ['org.springframework.data.type.classreading.MethodsMetadataReaderFactoryUnitTests', 'org.springframework.data.repository.util.QueryExecutionConvertersUnitTests', 'org.springframework.data.repository.config.DefaultImplementationLookupConfigurationUnitTests', 'org.springframework.data.repository.aot.RepositoryRegistrationAotProcessorIntegrationTests', 'org.springframework.data.repository.core.support.RepositoryInformationPreferringAnnotationTransactionAttributeSourceUnitTests', 'org.springframework.data.repository.core.support.ReactiveWrapperRepositoryFactorySupportUnitTests', 'org.springframework.data.repository.core.support.AnnotationRepositoryMetadataUnitTests', 'org.springframework.data.repository.core.support.PersistenceExceptionTranslationRepositoryProxyPostProcessorUnitTests', 'org.springframework.data.repository.core.support.DefaultRepositoryInformationUnitTests', 'org.springframework.data.repository.core.support.SurroundingTransactionDetectorMethodInterceptorUnitTests', 'org.springframework.data.repository.query.SpelEvaluatorUnitTests', 'org.springframework.data.repository.query.KParameterUnitTests', 'org.springframework.data.repository.query.ExtensionAwareEvaluationContextProviderUnitTests', 'org.springframework.data.repository.query.QueryMethodUnitTests', 'org.springframework.data.repository.query.ParametersUnitTests', 'org.springframework.data.repository.query.SimpleParameterAccessorUnitTests', 'org.springframework.data.repository.support.RepositoriesUnitTests', 'org.springframework.data.repository.support.CrudRepositoryInvokerUnitTests', 'org.springframework.data.repository.support.DomainClassConverterUnitTests', 'org.springframework.data.repository.support.AnnotationAttributeUnitTests', 'org.springframework.data.repository.support.MethodParametersUnitTests', 'org.springframework.data.repository.support.DomainClassConverterIntegrationTests', 'org.springframework.data.repository.support.DefaultRepositoryInvokerFactoryIntegrationTests', 'org.springframework.data.repository.kotlin.CoroutineCrudRepositoryCustomImplementationUnitTests', 'org.springframework.data.mapping.ParameterUnitTests', 'org.springframework.data.mapping.callback.EntityCallbackDiscovererUnitTests', 'org.springframework.data.mapping.callback.DefaultEntityCallbacksUnitTests', 'org.springframework.data.mapping.model.ClassGeneratingPropertyAccessorFactoryEntityTypeTests', 'org.springframework.data.mapping.model.BasicPersistentEntityUnitTests', 'org.springframework.data.mapping.model.FactoryMethodUnitTests', 'org.springframework.data.mapping.model.InstanceCreatorMetadataDiscovererUnitTests', 'org.springframework.data.mapping.model.SpelExpressionParameterProviderUnitTests', 'org.springframework.data.mapping.model.ClassGeneratingPropertyAccessorFactoryDatatypeTests', 'org.springframework.data.mapping.model.ReflectionEntityInstantiatorDataClassUnitTests', 'org.springframework.data.mapping.model.EntityCreatorMetadataDiscovererUnitTests', 'org.springframework.data.mapping.PreferredConstructorDiscovererUnitTests', 'org.springframework.data.mapping.PersistentPropertyAccessorUnitTests', 'org.springframework.data.mapping.PropertyReferenceExceptionUnitTests', 'org.springframework.data.mapping.MappingMetadataTests', 'org.springframework.data.mapping.context.EntityProjectionIntrospectorUnitTests', 'org.springframework.data.mapping.context.PersistentPropertyPathFactoryUnitTests', 'org.springframework.data.mapping.context.DefaultPersistentPropertyPathUnitTests', 'org.springframework.data.projection.ProxyProjectionFactoryUnitTests', 'org.springframework.data.projection.PropertyAccessingMethodInterceptorUnitTests', 'org.springframework.data.projection.DefaultMethodInvokingMethodInterceptorUnitTests', 'org.springframework.data.projection.MapAccessingMethodInterceptorUnitTests', 'org.springframework.data.projection.SpelEvaluatingMethodInterceptorUnitTests', 'org.springframework.data.projection.ProjectionIntegrationTests', 'org.springframework.data.convert.Jsr310ConvertersUnitTests', 'org.springframework.data.convert.DtoInstantiatingConverterUnitTests', 'org.springframework.data.convert.CustomConversionsUnitTests', 'org.springframework.data.convert.PropertyValueConverterRegistrarUnitTests', 'org.springframework.data.convert.MappingContextTypeInformationMapperUnitTests', 'org.springframework.data.convert.SimpleTypeInformationMapperUnitTests', 'org.springframework.data.convert.SimplePropertyValueConversionsUnitTests', 'org.springframework.data.convert.PropertyValueConverterFactoryUnitTests', 'org.springframework.data.aot.ManagedTypesBeanFactoryInitializationAotProcessorUnitTests', 'org.springframework.data.aot.ManagedTypesBeanRegistrationAotProcessorUnitTests', 'org.springframework.data.web.JsonProjectingMethodInterceptorFactoryUnitTests', 'org.springframework.data.web.config.PageableResourcesAssemblerIntegrationTests', 'org.springframework.data.web.PageImplJsonSerializationUnitTests', 'org.springframework.data.web.HateoasSortHandlerMethodArgumentResolverUnitTests', 'org.springframework.data.querydsl.SimpleEntityPathResolverUnitTests', 'org.springframework.data.querydsl.QSortUnitTests', 'org.springframework.data.querydsl.QPageRequestUnitTests', 'org.springframework.data.querydsl.binding.QuerydslDefaultBindingUnitTests', 'org.springframework.data.querydsl.binding.QuerydslBindingsFactoryUnitTests', 'org.springframework.data.querydsl.binding.QuerydslBindingsUnitTests', 'org.springframework.data.util.ParsingUtilsUnitTests', 'org.springframework.data.util.StreamUtilsTests', 'org.springframework.data.util.StreamableUnitTests', 'org.springframework.data.util.ProxyUtilsUnitTests', 'org.springframework.data.util.CloseableIteratorUnitTests', 'org.springframework.data.util.ParameterTypesUnitTests', 'org.springframework.data.util.AnnotationDetectionFieldCallbackUnitTests', 'org.springframework.data.util.CustomCollectionsUnitTests', 'org.springframework.data.util.LazyUnitTests', 'org.springframework.data.util.LockUnitTests', 'org.springframework.data.util.BeanLookupUnitTests', 'org.springframework.data.util.PairUnitTests', 'org.springframework.data.util.AnnotationDetectionMethodCallbackUnitTests', 'org.springframework.data.util.ClassTypeInformationUnitTests', 'org.springframework.data.util.AnnotatedTypeScannerUnitTests', 'org.springframework.data.util.NullableWrapperConvertersUnitTests', 'org.springframework.data.util.VersionUnitTests', 'org.springframework.data.auditing.AuditingHandlerUnitTests', 'org.springframework.data.auditing.ReflectionAuditingBeanWrapperUnitTests', 'org.springframework.data.auditing.ReactiveAuditingHandlerUnitTests', 'org.springframework.data.auditing.AuditorUnitTests', 'org.springframework.data.auditing.config.AuditingBeanDefinitionRegistrarSupportUnitTests', 'org.springframework.data.auditing.DefaultAuditableBeanWrapperFactoryUnitTests', 'org.springframework.data.auditing.MappingAuditableBeanWrapperFactoryUnitTests', 'org.springframework.data.geo.DistanceUnitTests', 'org.springframework.data.geo.GeoModuleIntegrationTests', 'org.springframework.data.annotation.TypeAliasUnitTests', 'org.springframework.data.domain.LimitUnitTests', 'org.springframework.data.domain.DirectionUnitTests', 'org.springframework.data.domain.SortUnitTests', 'org.springframework.data.domain.WindowIteratorUnitTests', 'org.springframework.data.domain.AbstractAggregateRootUnitTests', 'org.springframework.data.domain.ExampleMatcherUnitTests', 'org.springframework.data.domain.WindowUnitTests', 'org.springframework.data.domain.jaxb.SpringDataJaxbUnitTests', 'org.springframework.data.domain.PageRequestUnitTests', 'org.springframework.data.domain.ExampleUnitTests', 'org.springframework.data.domain.RangeUnitTests', 'org.springframework.data.domain.PageImplUnitTests', 'org.springframework.data.domain.ScrollPositionUnitTests', 'org.springframework.data.support.PersistableIsNewStrategyUnitTests', 'org.springframework.data.spel.spi.FunctionUnitTests', 'org.springframework.data.mapping.KPropertyPathTests']}"
-spring-projects/spring-data-commons,cf82e0fcda841c65aab6f734162b97938372bf93,3066,,,,{}
-dcm4che/dcm4chee-arc-light,4d679f7b99b0ae2564f0973f1fa6bee9035f8705,4702,,,,{}
-dcm4che/dcm4chee-arc-light,1813064a5161dad86fdae934e61ad7d6789cf581,4640,,,,{}
-dcm4che/dcm4chee-arc-light,c3c8ea7968c213baa74421306d8c80c670bc5e3a,4640,,,,{}
-dcm4che/dcm4chee-arc-light,b0aa3cda4131eb5b63e2d76d55578e3d4a013508,4460,,,,{}
-rabbitmq/rabbitmq-perf-test,43f4a009a609a161208a842dd833ef8ef9dfd914,703,maven_execution_successful,0.007156645868481631,1.0,{}
-apache/uniffle,e787d87c96f3d040e23b366afe378b657a02453d,2583,,,,{}
+langgraph4j/langgraph4j,1a1ecf2a8a24048aad051aa903922587e838de2e,106,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,d534727e88c6ecd17678ee92fe27276deb5c865a,6685,maven_execution_successful,0.0102794691361484,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+liquibase/liquibase,867f787fccb8e069c973d27ebb27ad6ce8bbb35a,6178,maven_execution_successful,0.0018320303780358,1.0,"{'original_outperforms_patched': ['liquibase.database.core.MSSQLDatabaseTest'], 'patched_outperforms_original': []}"
+liquibase/liquibase,3daa688c6a99ed131687036ba4e40cd743c4b3c8,5507,maven_execution_successful,-0.0149159247997096,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+spring-projects/spring-data-elasticsearch,7f178238db2647d82e87a6d4a94885c22a15d570,2876,final_clone_and_checkout_repo,,,{}
+FasterXML/jackson-core,cbedab7ddf0c0a9bae10719d9818ea734c6be836,1351,final_clone_and_checkout_repo,,,{}
+FasterXML/jackson-core,2b6e7a9010232d0100a1f478b5374f36c9fbd9c6,1193,final_clone_and_checkout_repo,,,{}
+dylibso/chicory,73f631cc1c4f034dc825317d17465c0946ce6c4f,695,final_clone_and_checkout_repo,,,{}
+dotCMS/core,3e050c4bd6761de29a2353910fc20fca614a6e0a,32958,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,28a6e5ce8ae5e39cb61a831ded2b933458f1020c,2882,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-commons,bb833a145cf23a2365533e77d862ff4aae8966c1,3126,maven_execution_successful,-0.0048715355186156,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+spring-projects/spring-data-commons,cf82e0fcda841c65aab6f734162b97938372bf93,3066,final_clone_and_checkout_repo,,,{}
+dcm4che/dcm4chee-arc-light,4d679f7b99b0ae2564f0973f1fa6bee9035f8705,4702,final_clone_and_checkout_repo,,,{}
+dcm4che/dcm4chee-arc-light,1813064a5161dad86fdae934e61ad7d6789cf581,4640,final_clone_and_checkout_repo,,,{}
+dcm4che/dcm4chee-arc-light,c3c8ea7968c213baa74421306d8c80c670bc5e3a,4640,final_clone_and_checkout_repo,,,{}
+dcm4che/dcm4chee-arc-light,b0aa3cda4131eb5b63e2d76d55578e3d4a013508,4460,final_clone_and_checkout_repo,,,{}
+rabbitmq/rabbitmq-perf-test,43f4a009a609a161208a842dd833ef8ef9dfd914,703,maven_execution_successful,-0.0009719585125482,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+apache/uniffle,e787d87c96f3d040e23b366afe378b657a02453d,2583,final_clone_and_checkout_repo,,,{}
 apache/uniffle,a1974f6e3dc9272efab7b32e5865912033ff6f0e,2576,final_clone_and_checkout_repo,,,{}
-apache/uniffle,887d04284eeee6a9d8886d9fe78edc7e309e6901,2496,,,,{}
-apache/uniffle,b3855e28661493ad374f228b44eb72a8c5ecabc0,2496,,,,{}
-apache/uniffle,95dccbda6920ef761a015578e79de54eabd46469,2454,,,,{}
+apache/uniffle,887d04284eeee6a9d8886d9fe78edc7e309e6901,2496,final_clone_and_checkout_repo,,,{}
+apache/uniffle,b3855e28661493ad374f228b44eb72a8c5ecabc0,2496,final_clone_and_checkout_repo,,,{}
+apache/uniffle,95dccbda6920ef761a015578e79de54eabd46469,2454,final_clone_and_checkout_repo,,,{}
 apache/uniffle,b43872f4725cad2149edcf663c1a303857391e5b,2441,final_clone_and_checkout_repo,,,{}
-apache/uniffle,f732fc227ca726be80f169cd02b077e5257dbb5f,493,,,,{}
-apache/uniffle,32187f8db4dd39271301e5ca0207f5f370cdcc15,2426,,,,{}
-apache/uniffle,af342e6e8687df509a10f15712a5c4337b4f4894,2083,,,,{}
-apache/uniffle,7e84a1a6d826a3c705b7896fde18e340022b4bff,1606,,,,{}
+apache/uniffle,f732fc227ca726be80f169cd02b077e5257dbb5f,493,final_clone_and_checkout_repo,,,{}
+apache/uniffle,32187f8db4dd39271301e5ca0207f5f370cdcc15,2426,final_clone_and_checkout_repo,,,{}
+apache/uniffle,af342e6e8687df509a10f15712a5c4337b4f4894,2083,final_clone_and_checkout_repo,,,{}
+apache/uniffle,7e84a1a6d826a3c705b7896fde18e340022b4bff,1606,final_clone_and_checkout_repo,,,{}
 apache/uniffle,fbcddbe3f776db3c02494e516ed9ae9697c8db2f,1885,final_clone_and_checkout_repo,,,{}
 apache/uniffle,6599ef27e257d117ffb01855cf0d2e8351b90eec,1809,final_clone_and_checkout_repo,,,{}
 apache/uniffle,9461d22334d903c259f9cd4f8b693d5e2bd64752,1784,final_clone_and_checkout_repo,,,{}
-apache/uniffle,a1e0d56c8d60af37d13010db130e86a014c09514,1543,,,,{}
+apache/uniffle,a1e0d56c8d60af37d13010db130e86a014c09514,1543,final_clone_and_checkout_repo,,,{}
 ascopes/protobuf-maven-plugin,9054a2e299c279f6688d20146f5caac39d1c687c,600,final_docker_image_built,,,{}
 ascopes/protobuf-maven-plugin,4281fef5c403aa9c56fd1ebf8e01340a7d7598a1,586,final_docker_image_built,,,{}
-langchain4j/langchain4j,770c77038ad00b3512e6997f043ea4c31003fe6b,2484,,,,{}
-langchain4j/langchain4j,b317d228cf505bf1aeaec0a27db30dac51712633,2053,,,,{}
-langchain4j/langchain4j,c369bb2837f339568f0542dff525942cc4fc0ff3,1447,,,,{}
-langchain4j/langchain4j,498145cb44c1ee2e515595a0dd52d8809ff0a755,715,,,,{}
-chrisvest/stormpot,4b19486b33c0ca16353588c1ea758ccd34646a60,99,,,,{}
-oracle/opengrok,ab6c4a3c48bc24a9f720bd183d015d86524c0b92,4549,,,,{}
-spring-cloud/spring-cloud-function,b32da7faf0bc3042366db22d41e78ee5f90947f8,1098,maven_execution_successful,0.0119739411162016,0.9999999796586678,"{'original_outperforms_patched': ['org.springframework.cloud.function.cloudevent.CloudEventMessageUtilsAndBuilderTests', 'org.springframework.cloud.function.cloudevent.CloudEventFunctionTests', 'org.springframework.cloud.function.context.HybridFunctionalRegistrationTests', 'org.springframework.cloud.function.context.MessageRoutingCallbackTests', 'org.springframework.cloud.function.context.test.FunctionalTests', 'org.springframework.cloud.function.context.catalog.BeanFactoryAwarePojoFunctionRegistryTests'], 'patched_outperforms_original': ['org.springframework.cloud.function.utils.JsonMapperTests', 'org.springframework.cloud.function.utils.JsonMaskerTests', 'org.springframework.cloud.function.context.string.FunctionalStringSourceTests']}"
-eclipse-xtext/xtext,d8c30d15ae0d8e2c11f5829a28299ca92a342e7c,2920,,,,{}
+langchain4j/langchain4j,770c77038ad00b3512e6997f043ea4c31003fe6b,2484,final_clone_and_checkout_repo,,,{}
+langchain4j/langchain4j,b317d228cf505bf1aeaec0a27db30dac51712633,2053,final_clone_and_checkout_repo,,,{}
+langchain4j/langchain4j,c369bb2837f339568f0542dff525942cc4fc0ff3,1447,final_clone_and_checkout_repo,,,{}
+langchain4j/langchain4j,498145cb44c1ee2e515595a0dd52d8809ff0a755,715,final_clone_and_checkout_repo,,,{}
+chrisvest/stormpot,4b19486b33c0ca16353588c1ea758ccd34646a60,99,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,ab6c4a3c48bc24a9f720bd183d015d86524c0b92,4549,final_clone_and_checkout_repo,,,{}
+spring-cloud/spring-cloud-function,b32da7faf0bc3042366db22d41e78ee5f90947f8,1098,maven_execution_successful,-0.000417820244446,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+eclipse-xtext/xtext,d8c30d15ae0d8e2c11f5829a28299ca92a342e7c,2920,final_clone_and_checkout_repo,,,{}
 subclipse/subclipse,3f6b53a74f30d10d1a37dd153eb1c04f31466298,173,final_docker_image_built,,,{}
-DominoKit/domino-ui,510cfaf43a0b244843898caad2b1506d06a5420a,1017,,,,{}
-mybatis-flex/mybatis-flex,a96bb4af03aa9426d867d694e9cc7ae0b61c2e8a,470,,,,{}
-eclipse-aspectj/aspectj,fc46e12f52fabad64e91041d37bfb0dc43333eb0,323,,,,{}
-eclipse-aspectj/aspectj,975671fa81f823643adf892f2af0e8120322e682,306,,,,{}
-eclipse-aspectj/aspectj,3e3c83712e7eb41ed2d769280092bc83b8492a3d,277,,,,{}
+DominoKit/domino-ui,510cfaf43a0b244843898caad2b1506d06a5420a,1017,final_docker_image_built,,,{}
+mybatis-flex/mybatis-flex,a96bb4af03aa9426d867d694e9cc7ae0b61c2e8a,470,final_clone_and_checkout_repo,,,{}
+eclipse-aspectj/aspectj,fc46e12f52fabad64e91041d37bfb0dc43333eb0,323,final_clone_and_checkout_repo,,,{}
+eclipse-aspectj/aspectj,975671fa81f823643adf892f2af0e8120322e682,306,final_clone_and_checkout_repo,,,{}
+eclipse-aspectj/aspectj,3e3c83712e7eb41ed2d769280092bc83b8492a3d,277,final_clone_and_checkout_repo,,,{}
 spring-cloud/spring-cloud-sleuth,71a141a70227ea85a48fc51b23cadcc6d134e963,2318,final_docker_image_built,,,{}
-bmarwell/jfmt,b0f139cdc99cfac45b9ddfdfc4ed1ffa41f2104f,85,maven_execution_successful,-0.0062094507048714,0.9999999999999996,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
-kadai-io/kadai,ba2bc94259a61282f7491622f9e9320a3acd92fd,1063,maven_execution_successful,0.0502182825825745,0.4829515807309341,"{'original_outperforms_patched': ['io.kadai.common.api.TimeIntervalTest', 'io.kadai.common.internal.util.ResourceUtilTest', 'io.kadai.common.internal.util.LambdaCheckedExceptionsTest$CheckedConsumerTest', 'io.kadai.common.internal.util.LambdaCheckedExceptionsTest$CheckedFunctionTest', 'io.kadai.common.internal.util.LambdaCheckedExceptionsTest$CheckedRunnableTest', 'io.kadai.common.internal.util.LambdaCheckedExceptionsTest', 'io.kadai.common.internal.util.ReflectionUtilTest', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest$UsualWorkingSlotsWithSingleBreak$WorkingTimeAddition', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest$UsualWorkingSlotsWithSingleBreak$WorkingTimeBetweenTwoInstants', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest$UsualWorkingSlotsWithSingleBreak$WorkingTimeSubtraction', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest$UsualWorkingSlotsWithSingleBreak', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest$WorkSlotSpansCompleteDay', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest$WorkSlotWithTimeIntervalsWithoutBreak', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest$WorkingDayDetermination', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest', 'io.kadai.sampledata.SampleDataGeneratorTest', 'acceptance.user.query.QueryUsersWithSortingTest', 'acceptance.user.query.QueryUsersAccTest', 'acceptance.user.query.QueryUsersWithPaginationAccTest$PhysicalPagination', 'acceptance.user.query.QueryUsersWithPaginationAccTest', 'acceptance.report.ProvideTaskCustomFieldValueReportAccTest', 'acceptance.report.ProvideTimestampReportAccTest', 'acceptance.report.ProvideTaskStatusReportAccTest', 'acceptance.report.ProvideDetailedClassificationReportAccTest', 'acceptance.report.GetTaskIdsOfTaskCustomFieldValueReportAccTest', 'acceptance.report.GetTaskIdsOfWorkbasketReportAccTest', 'acceptance.report.GetCustomAttributeValuesForReportAccTest', 'acceptance.report.WorkingDaysToDaysReportConverterTest', 'acceptance.report.ReportTest', 'acceptance.report.ProvideWorkbasketPriorityReportAccTest', 'acceptance.report.ProvideClassificationCategoryReportAccTest', 'acceptance.report.ProvideWorkbasketReportAccTest', 'acceptance.jobs.helper.TaskUpdatePriorityBatchStatementAccTest', 'acceptance.jobs.helper.SqlConnectionRunnerAccTest', 'acceptance.jobs.TaskUpdatePriorityJobAccTest', 'acceptance.history.HistoryEventManagerTest', 'acceptance.history.ObjectAttributeChangeDetectorTest', 'acceptance.persistence.UpdateObjectsUseUtcTimeStampsWithWorkingDaysCalculationAccTest', 'acceptance.persistence.UpdateObjectsUseUtcTimeStampsAccTest', 'acceptance.security.KadaiSecurityAccTest', 'acceptance.task.ServiceLevelPriorityWithWorkingDaysCalculationAccTest', 'acceptance.task.query.QueryTasksListValuesAccTest$ListValuesTest', 'acceptance.task.query.QueryTasksListValuesAccTest', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$OwnerLongName', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$PorCompanyClaimed', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$PorSystemInstanceParentBpiPlannedState', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$PorSystemNoteDueAndOwner', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$Received', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$TaskId', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$WorkbasketName', 'acceptance.task.query.QueryTasksByTimeIntervalsAccTest', 'acceptance.task.transfer.TransferTaskAccTest', 'acceptance.task.ServiceLevelPriorityAccTest', 'io.kadai.testapi.util.ServiceProviderExtractorTest$ErrorHandling', 'io.kadai.testapi.util.ServiceProviderExtractorTest$ExtractMultipleServiceProvidersFromMultipleServiceProviderInterfaces', 'io.kadai.testapi.util.ServiceProviderExtractorTest$ExtractServiceProvidersFromSingleServiceProviderInterface', 'io.kadai.testapi.util.ServiceProviderExtractorTest$ServiceProviderInstantiation', 'io.kadai.testapi.util.ServiceProviderExtractorTest', 'io.kadai.testapi.builder.WorkbasketBuilderTest', 'io.kadai.testapi.builder.TaskAttachmentBuilderTest', 'io.kadai.testapi.builder.ClassificationBuilderTest', 'io.kadai.testapi.builder.UserBuilderTest', 'io.kadai.testapi.TestContainerExtensionTest$NestedTestClassAnnotatedWithCleanKadaiContextAndConfigModifier', 'io.kadai.testapi.TestContainerExtensionTest$NestedTestClassWithConfigurationModifier', 'io.kadai.testapi.TestContainerExtensionTest$NestedTestClassWithServiceProvider', 'io.kadai.testapi.TestContainerExtensionTest', 'io.kadai.testapi.KadaiInitializationExtensionTest$NestedTestClassWithServiceProvider', 'configuration.KadaiConfigurationTest', 'acceptance.events.workbasket.CreateHistoryEventOnWorkbasketMarkedForDeletionAccTest', 'acceptance.events.workbasket.CreateHistoryEventOnWorkbasketAccessItemDeletionAccTest', 'acceptance.events.workbasket.CreateHistoryEventOnWorkbasketUpdateAccTest', 'acceptance.events.workbasket.CreateHistoryEventOnWorkbasketAccessItemCreationAccTest', 'acceptance.events.workbasket.CreateHistoryEventOnWorkbasketDeletionAccTest', 'acceptance.events.workbasket.CreateHistoryEventOnWorkbasketAccessItemsSetAccTest', 'acceptance.events.task.CreateHistoryEventOnTaskCancelClaimAccTest', 'acceptance.events.task.GetTaskHistoryEventAccTest', 'acceptance.events.task.CreateHistoryEventOnTaskUpdateAccTest', 'acceptance.events.task.CreateHistoryEventOnTaskDeletionAccTest', 'acceptance.events.task.CreateHistoryEventOnTaskTerminationAccTest', 'acceptance.events.task.CreateHistoryEventOnTaskReopeningAccTest', 'acceptance.events.task.CreateHistoryEventOnTaskCreationAccTest', 'acceptance.events.task.CreateHistoryEventOnTaskRequestChangesAccTest', 'acceptance.events.task.DeleteHistoryEventsOnTaskDeletionAccTest', 'acceptance.events.task.CreateHistoryEventOnTaskTransferAccTest', 'acceptance.events.task.CreateHistoryEventOnTaskClaimAccTest', 'acceptance.events.task.CreateHistoryEventOnTaskCancellationAccTest', 'io.kadai.simplehistory.impl.SimpleHistoryServiceImplTest'], 'patched_outperforms_original': ['io.kadai.common.api.IntIntervalTest', 'io.kadai.common.internal.util.SpiLoaderTest', 'io.kadai.common.internal.util.LogSanitizerTest', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest$WorkingTimeWithNonUtcTimeZoneAcrossDaylightSavingTimeSwitch', 'io.kadai.common.internal.workingtime.WorkingTimeScheduleTest', 'io.kadai.sampledata.SampleDataProviderTest', 'acceptance.report.GetTaskIdsOfClassificationReportAccTest', 'acceptance.config.KadaiConfigAccTest', 'acceptance.config.KadaiConfigurationTest', 'acceptance.config.KadaiSecurityConfigAccTest', 'acceptance.config.KadaiRoleConfigAccTest', 'acceptance.workbasket.WorkbasketModelsCloneTest', 'acceptance.workbasket.get.GetWorkbasketAuthorizationsAccTest', 'acceptance.workbasket.get.GetDistributionTargetsAccTest', 'acceptance.workbasket.create.CreateWorkbasketAccTest', 'acceptance.workbasket.create.CreateWorkbasketAuthorizationsAccTest', 'acceptance.workbasket.delete.DeleteWorkbasketAuthorizationsAccTest', 'acceptance.workbasket.delete.DeleteWorkbasketAccTest', 'acceptance.workbasket.query.QueryWorkbasketByPermissionAccTest', 'acceptance.workbasket.query.WorkbasketQueryWithOrderedPaginationAccTest', 'acceptance.workbasket.query.QueryWorkbasketsWithPaginationAccTest$PhysicalPagination', 'acceptance.workbasket.query.QueryWorkbasketsWithPaginationAccTest', 'acceptance.workbasket.query.WorkbasketQueryAccTest', 'acceptance.workbasket.query.QueryWorkbasketAccessItemsWithPaginationAccTest$PhysicalPagination', 'acceptance.workbasket.query.QueryWorkbasketAccessItemsWithPaginationAccTest', 'acceptance.workbasket.query.QueryWorkbasketAccessItemsAccTest', 'acceptance.workbasket.query.QueryWorkbasketAccTest', 'acceptance.workbasket.update.UpdateWorkbasketAuthorizations2AccTest', 'acceptance.workbasket.update.UpdateWorkbasketAccTest', 'acceptance.workbasket.update.UpdateDistributionTargetsAccTest', 'acceptance.workbasket.update.UpdateWorkbasketAuthorizationsAccTest', 'acceptance.task.claim.SelectAndClaimTaskAccTest', 'acceptance.task.update.UpdateTaskAttachmentWithWorkingDaysCalculationAccTest', 'acceptance.task.query.QueryObjectReferenceAccTest', 'acceptance.task.query.QueryObjectReferencesWithPaginationAccTest$PhysicalPagination', 'acceptance.task.query.QueryObjectReferencesWithPaginationAccTest', 'acceptance.task.query.QueryTasksAccTest', 'acceptance.task.CallbackStateAccTest', 'acceptance.task.TaskModelsCloneTest', 'acceptance.classification.query.QueryClassificationsWithPaginationAccTest', 'io.kadai.testapi.builder.WorkbasketAccessItemBuilderTest', 'io.kadai.testapi.builder.TaskCommentBuilderTest', 'io.kadai.testapi.builder.ObjectReferenceBuilderTest', 'io.kadai.testapi.builder.TaskBuilderTest', 'io.kadai.testapi.KadaiInitializationExtensionTest$NestedTestClassWithMultipleServiceProviders', 'acceptance.query.QueryTaskHistoryAccTest', 'acceptance.query.QueryClassificationHistoryAccTest$PhysicalPagination', 'acceptance.query.QueryClassificationHistoryAccTest', 'acceptance.events.workbasket.CreateHistoryEventOnWorkbasketAccessItemsDeletionAccTest', 'acceptance.events.workbasket.CreateHistoryEventOnWorkbasketDistributionTargetAddedAccTest', 'acceptance.events.workbasket.CreateHistoryEventOnWorkbasketDistributionTargetRemovedAccTest', 'acceptance.events.task.CreateHistoryEventOnTaskCompletionAccTest', 'acceptance.events.classification.CreateHistoryEventOnClassificationsCreationAccTest', 'acceptance.events.classification.CreateHistoryEventOnClassificationDeletionAccTest', 'acceptance.events.classification.CreateHistoryEventOnClassificationsUpdateAccTest', 'io.kadai.simplehistory.impl.WorkbasketHistoryQueryImplTest', 'io.kadai.simplehistory.impl.ClassificationHistoryQueryImplTest']}"
-kadai-io/kadai,a3afea91d4418ba474c3a805de71350288f61ca9,786,maven_execution_successful,-0.0407993071908414,1.0,"{'original_outperforms_patched': ['io.kadai.common.internal.pagination.PageInterceptorTest', 'io.kadai.common.internal.util.LambdaCheckedExceptionsTest$CheckedConsumerTest', 'io.kadai.common.internal.util.LambdaCheckedExceptionsTest$CheckedFunctionTest', 'io.kadai.common.internal.util.LambdaCheckedExceptionsTest', 'io.kadai.common.internal.util.ResourceUtilTest', 'io.kadai.common.internal.util.SpiLoaderTest', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest$UsualWorkingSlotsWithSingleBreak$WorkingTimeAddition', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest$UsualWorkingSlotsWithSingleBreak', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest', 'io.kadai.sampledata.SampleDataProviderTest', 'acceptance.config.KadaiConfigAccTest', 'acceptance.config.KadaiConfigurationTest', 'acceptance.config.KadaiSecurityConfigAccTest', 'acceptance.task.transfer.TransferTaskAccTest', 'acceptance.task.ServiceLevelPriorityAccTest', 'acceptance.task.query.QueryTasksWithPaginationAccTest$PaginationTest$ListPage', 'acceptance.task.query.QueryTasksWithPaginationAccTest$PaginationTest$OffsetAndLimit', 'acceptance.task.query.QueryTasksWithPaginationAccTest$PaginationTest', 'acceptance.task.query.QueryTasksWithPaginationAccTest$PhysicalPagination', 'acceptance.task.query.QueryTasksWithPaginationAccTest', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$AttachmentChannel', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$AttachmentClassificationId', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$AttachmentClassificationKey', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$AttachmentClassificationName', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$AttachmentReceived', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$AttachmentReference', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$BpiClassificationKeyAndPorType', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$Creator', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$CustomX', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$DomainNameAndCreated', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$ModifiedAndDomain', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$OwnerLongName', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$PorCompanyClaimed', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$PorSystemInstanceParentBpiPlannedState', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$PorSystemNoteDueAndOwner', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$Received', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$TaskId', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$WbKeyPriorityPorValueAndCompleted', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$WorkbasketId', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$WorkbasketName', 'acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest', 'acceptance.task.query.QueryTasksWithSortingAccTest', 'acceptance.task.query.QueryTasksByTimeIntervalsAccTest$TimeIntervalTest$Received', 'acceptance.task.query.QueryTasksByTimeIntervalsAccTest', 'acceptance.task.query.QueryObjectReferencesWithPaginationAccTest$PhysicalPagination', 'acceptance.task.query.QueryObjectReferencesWithPaginationAccTest', 'acceptance.task.query.QueryTasksByWildcardSearchAccTest$WildcardSearchTest', 'acceptance.task.query.QueryTasksByWildcardSearchAccTest', 'acceptance.task.TaskModelsCloneTest', 'acceptance.task.CallbackStateAccTest', 'acceptance.task.claim.SelectAndClaimTaskAccTest', 'acceptance.task.update.UpdateTaskAttachmentWithWorkingDaysCalculationAccTest', 'acceptance.report.ProvideClassificationCategoryReportAccTest', 'io.kadai.testapi.builder.UserBuilderTest', 'io.kadai.testapi.builder.TaskBuilderTest', 'io.kadai.testapi.builder.ClassificationBuilderTest', 'io.kadai.testapi.builder.WorkbasketAccessItemBuilderTest', 'io.kadai.testapi.KadaiInitializationExtensionTest$NestedTestClassWithMultipleServiceProviders', 'io.kadai.user.rest.assembler.UserRepresentationModelAssemblerTest', 'io.kadai.user.rest.assembler.UserSummaryRepresentationModelAssemblerTest', 'io.kadai.user.rest.UserControllerIntTest', 'io.kadai.user.jobs.UserInfoRefreshJobIntTest', 'io.kadai.monitor.rest.MonitorControllerIntTest', 'io.kadai.workbasket.rest.WorkbasketAccessItemControllerIntTest', 'io.kadai.workbasket.rest.assembler.WorkbasketSummaryRepresentationModelAssemblerTest', 'io.kadai.workbasket.rest.assembler.WorkbasketAccessItemRepresentationModelAssemblerTest', 'io.kadai.properties.MyKadaiConfigurationIntTest', 'io.kadai.common.rest.RestEndpointsTest', 'io.kadai.common.rest.ExceptionErrorKeyTest', 'io.kadai.common.rest.AccessIdControllerIntTest', 'io.kadai.common.rest.ldap.LdapClientTest', 'io.kadai.common.rest.AccessIdControllerForUseDnForGroupsDisabledIntTest', 'io.kadai.common.rest.KadaiEngineControllerIntTest', 'io.kadai.task.rest.assembler.TaskSummaryRepresentationModelAssemblerTest'], 'patched_outperforms_original': ['io.kadai.common.internal.util.ReflectionUtilTest', 'io.kadai.common.internal.util.CollectionUtilTest', 'io.kadai.common.internal.util.FileLoaderUtilTest', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest$WorkSlotSpansCompleteDay', 'io.kadai.common.internal.workingtime.WorkingTimeCalculatorImplTest$WorkingDayDetermination', 'io.kadai.common.internal.workingtime.HolidayScheduleTest', 'io.kadai.common.internal.workingtime.WorkingTimeScheduleTest', 'io.kadai.common.api.IntIntervalTest', 'io.kadai.common.api.TimeIntervalTest', 'io.kadai.common.api.LocalTimeIntervalTest', 'io.kadai.sampledata.SqlReplacerTest', 'acceptance.config.KadaiRoleConfigAccTest', 'acceptance.task.query.QueryTasksListValuesAccTest', 'acceptance.task.query.QueryTasksByWorkbasketAccTest$WorkbasketTest', 'acceptance.task.query.QueryTasksByRoleAccTest$RoleTest', 'acceptance.task.query.QueryTasksByRoleAccTest', 'acceptance.security.KadaiSecurityAccTest', 'acceptance.classification.query.QueryClassificationsWithPaginationAccTest$PhysicalPagination', 'acceptance.classification.query.QueryClassificationsWithPaginationAccTest', 'acceptance.classification.ClassificationModelsCloneTest', 'acceptance.history.HistoryEventManagerTest', 'acceptance.history.ObjectAttributeChangeDetectorTest', 'acceptance.workbasket.delete.DeleteWorkbasketAccTest', 'acceptance.workbasket.delete.DeleteWorkbasketAuthorizationsAccTest', 'acceptance.workbasket.create.CreateWorkbasketAccTest', 'acceptance.workbasket.update.UpdateWorkbasketAccTest', 'acceptance.workbasket.update.UpdateWorkbasketAuthorizationsAccTest', 'acceptance.workbasket.update.UpdateDistributionTargetsAccTest', 'acceptance.workbasket.query.QueryWorkbasketAccessItemsAccTest', 'acceptance.workbasket.query.QueryWorkbasketByPermissionAccTest', 'acceptance.workbasket.query.QueryWorkbasketAccTest', 'acceptance.workbasket.query.WorkbasketQueryWithOrderedPaginationAccTest', 'acceptance.workbasket.query.WorkbasketQueryAccTest', 'acceptance.workbasket.get.GetWorkbasketAuthorizationsAccTest', 'acceptance.workbasket.get.GetDistributionTargetsAccTest', 'acceptance.workbasket.WorkbasketModelsCloneTest', 'acceptance.user.query.QueryUsersAccTest', 'acceptance.user.query.QueryUsersWithPaginationAccTest$PhysicalPagination', 'acceptance.user.query.QueryUsersWithPaginationAccTest', 'acceptance.user.query.QueryUsersWithSortingTest', 'acceptance.report.ProvideTimestampReportAccTest', 'acceptance.report.ReportTest', 'acceptance.report.WorkingDaysToDaysReportConverterTest', 'acceptance.report.ProvideTaskCustomFieldValueReportAccTest', 'acceptance.report.ProvideWorkbasketReportAccTest', 'acceptance.report.GetTaskIdsOfClassificationReportAccTest', 'acceptance.report.GetCustomAttributeValuesForReportAccTest', 'acceptance.report.GetTaskIdsOfClassificationCategoryReportAccTest', 'acceptance.report.GetTaskIdsOfWorkbasketReportAccTest', 'acceptance.report.ProvideWorkbasketPriorityReportAccTest', 'acceptance.report.GetTaskIdsOfTaskCustomFieldValueReportAccTest', 'acceptance.report.ProvideClassificationReportAccTest', 'acceptance.report.ProvideDetailedClassificationReportAccTest', 'acceptance.report.ProvideTaskStatusReportAccTest', 'acceptance.jobs.helper.TaskUpdatePriorityBatchStatementAccTest', 'acceptance.jobs.helper.SqlConnectionRunnerAccTest', 'acceptance.jobs.TaskUpdatePriorityJobAccTest', 'acceptance.persistence.UpdateObjectsUseUtcTimeStampsAccTest', 'acceptance.persistence.UpdateObjectsUseUtcTimeStampsWithWorkingDaysCalculationAccTest', 'io.kadai.testapi.builder.WorkbasketBuilderTest', 'io.kadai.testapi.builder.TaskCommentBuilderTest', 'io.kadai.testapi.KadaiDependencyInjectionExtensionTest', 'io.kadai.testapi.util.ServiceProviderExtractorTest$ExtractMultipleServiceProvidersFromMultipleServiceProviderInterfaces', 'io.kadai.testapi.util.ServiceProviderExtractorTest$ExtractServiceProvidersFromSingleServiceProviderInterface', 'io.kadai.testapi.util.ServiceProviderExtractorTest$ServiceProviderInstantiation', 'io.kadai.testapi.util.ServiceProviderExtractorTest', 'io.kadai.testapi.KadaiInitializationExtensionTest$ModifiedKadaiConfig', 'io.kadai.testapi.KadaiInitializationExtensionTest$NestedTestClassAnnotatedWithCleanKadaiContext', 'io.kadai.testapi.KadaiInitializationExtensionTest$NestedTestClassWithServiceProvider', 'io.kadai.testapi.KadaiInitializationExtensionTest$ReuseKadai', 'io.kadai.testapi.KadaiInitializationExtensionTest', 'io.kadai.testapi.TestContainerExtensionTest$NestedTestClass', 'io.kadai.testapi.TestContainerExtensionTest$NestedTestClassAnnotatedWithCleanKadaiContext$NestedNestedTestClassAnnotatedWithCleanKadaiContext', 'io.kadai.testapi.TestContainerExtensionTest$NestedTestClassAnnotatedWithCleanKadaiContext', 'io.kadai.testapi.TestContainerExtensionTest$NestedTestClassAnnotatedWithCleanKadaiContextAndConfigModifier', 'io.kadai.testapi.TestContainerExtensionTest$NestedTestClassWithConfigurationModifier', 'io.kadai.testapi.TestContainerExtensionTest$NestedTestClassWithServiceProvider', 'io.kadai.testapi.TestContainerExtensionTest', 'io.kadai.monitor.rest.assembler.PriorityColumnHeaderRepresentationModelAssemblerTest', 'io.kadai.workbasket.rest.WorkbasketControllerIntTest', 'io.kadai.workbasket.rest.WorkbasketDefinitionControllerIntTest', 'io.kadai.task.rest.TaskControllerIntTest$CancelClaimTasks', 'io.kadai.task.rest.TaskControllerIntTest$CancelTasks', 'io.kadai.task.rest.TaskControllerIntTest$ClaimTasks', 'io.kadai.task.rest.TaskControllerIntTest$CompleteTasks', 'io.kadai.task.rest.TaskControllerIntTest$CreateTasks', 'io.kadai.task.rest.TaskControllerIntTest$DeleteTasks', 'io.kadai.task.rest.TaskControllerIntTest$DistributeTasks', 'io.kadai.task.rest.TaskControllerIntTest$GetTasks', 'io.kadai.task.rest.TaskControllerIntTest$TerminateTasks', 'io.kadai.task.rest.TaskControllerIntTest', 'io.kadai.task.rest.TaskCommentControllerIntTest', 'io.kadai.classification.rest.ClassificationDefinitionControllerIntTest', 'io.kadai.SpringArchitectureTest']}"
-google/guava,896541465f1cc99352e8fbfbba4d4617f19183d8,6087,,,,{}
-google/guava,6193884f7bf96b468fb44bf03b904130d2926c2d,3984,,,,{}
-google/guava,b6b4dc49b1ccfc4141181b24a26eadc689b48b43,3984,,,,{}
-google/guava,aa18c74a25d31228d65894a28a6c049a743edc51,3984,,,,{}
-google/guava,04997b1cf7b34ed2d93a6070a91d5c393ae7f1a7,3911,,,,{}
-google/guava,2d346856c76dc80aac3be2fbe3fe58b99c64f210,3911,,,,{}
-google/guava,bc7248bcb0a987e18cf7a4e7ef92ed458086f4b0,3873,,,,{}
-apache/dubbo,42664b6ec27dd24da61dcb2347c58aefe43853cc,14539,,,,{}
-apache/dubbo,5d76667808720eec49d6d970a57145142b228634,12493,,,,{}
-apache/dubbo,b967d3c1f83265f99b1b86303ccf4899ec4ee072,11776,,,,{}
-apache/dubbo,d6a1ff43a008b8a054bed11dca4f23a3c0d20ec0,9973,maven_execution_successful,-0.0146925495689721,1.0,"{'original_outperforms_patched': ['org.apache.dubbo.config.context.ConfigManagerTest', 'org.apache.dubbo.common.io.StreamUtilsTest', 'org.apache.dubbo.common.io.UnsafeByteArrayOutputStreamTest', 'org.apache.dubbo.common.io.UnsafeStringWriterTest', 'org.apache.dubbo.common.io.BytesTest', 'org.apache.dubbo.common.cache.FileCacheStoreFactoryTest', 'org.apache.dubbo.common.status.StatusTest', 'org.apache.dubbo.common.status.support.LoadStatusCheckerTest', 'org.apache.dubbo.common.status.support.MemoryStatusCheckerTest', 'org.apache.dubbo.common.status.support.StatusUtilsTest', 'org.apache.dubbo.common.status.reporter.FrameworkStatusReportServiceTest', 'org.apache.dubbo.common.profiler.ProfilerTest', 'org.apache.dubbo.common.extension.AdaptiveClassCodeGeneratorTest', 'org.apache.dubbo.common.extension.ExtensionLoader_Adaptive_Test', 'org.apache.dubbo.common.extension.wrapper.WrapperTest', 'org.apache.dubbo.common.extension.ExtensionLoader_Compatible_Test', 'org.apache.dubbo.common.extension.support.ActivateComparatorTest', 'org.apache.dubbo.common.extension.ExtensionLoaderTest', 'org.apache.dubbo.common.URLBuilderTest', 'org.apache.dubbo.common.json.GsonUtilsTest', 'org.apache.dubbo.common.config.OrderedPropertiesConfigurationTest', 'org.apache.dubbo.common.config.EnvironmentConfigurationTest', 'org.apache.dubbo.common.config.EnvironmentTest', 'org.apache.dubbo.common.config.InmemoryConfigurationTest', 'org.apache.dubbo.common.config.configcenter.DynamicConfigurationFactoryTest', 'org.apache.dubbo.common.config.configcenter.AbstractDynamicConfigurationTest', 'org.apache.dubbo.common.config.configcenter.ConfigChangedEventTest', 'org.apache.dubbo.common.config.configcenter.ConfigChangeTypeTest', 'org.apache.dubbo.common.CommonScopeModelInitializerTest', 'org.apache.dubbo.common.compiler.support.JdkCompilerTest', 'org.apache.dubbo.common.logger.support.FailsafeLoggerTest', 'org.apache.dubbo.common.BaseServiceMetadataTest', 'org.apache.dubbo.common.concurrent.CompletableFutureTaskTest', 'org.apache.dubbo.common.PojoUtilsForNonPublicStaticTest', 'org.apache.dubbo.common.convert.StringToOptionalConverterTest', 'org.apache.dubbo.common.convert.StringToIntegerConverterTest', 'org.apache.dubbo.common.convert.StringToCharArrayConverterTest', 'org.apache.dubbo.common.convert.multiple.StringToBlockingQueueConverterTest', 'org.apache.dubbo.common.convert.multiple.StringToCollectionConverterTest', 'org.apache.dubbo.common.convert.multiple.StringToArrayConverterTest', 'org.apache.dubbo.common.convert.multiple.StringToNavigableSetConverterTest', 'org.apache.dubbo.common.convert.multiple.StringToBlockingDequeConverterTest', 'org.apache.dubbo.common.convert.multiple.StringToSetConverterTest', 'org.apache.dubbo.common.convert.multiple.StringToDequeConverterTest', 'org.apache.dubbo.common.convert.multiple.StringToListConverterTest', 'org.apache.dubbo.common.threadpool.manager.ExecutorRepositoryTest', 'org.apache.dubbo.common.threadpool.support.fixed.FixedThreadPoolTest', 'org.apache.dubbo.common.threadpool.support.eager.EagerThreadPoolTest', 'org.apache.dubbo.common.threadpool.support.cached.CachedThreadPoolTest', 'org.apache.dubbo.common.function.ThrowableConsumerTest', 'org.apache.dubbo.common.function.PredicatesTest', 'org.apache.dubbo.common.utils.MethodUtilsTest', 'org.apache.dubbo.common.utils.DefaultPageTest', 'org.apache.dubbo.common.utils.PojoUtilsTest', 'org.apache.dubbo.common.utils.ClassUtilsTest', 'org.apache.dubbo.common.utils.LFUCacheTest', 'org.apache.dubbo.common.utils.LogHelperTest', 'org.apache.dubbo.common.utils.AnnotationUtilsTest', 'org.apache.dubbo.common.utils.HolderTest', 'org.apache.dubbo.common.utils.RegexPropertiesTest', 'org.apache.dubbo.common.utils.StackTest', 'org.apache.dubbo.common.utils.AtomicPositiveIntegerTest', 'org.apache.dubbo.common.utils.SerializeClassCheckerTest', 'org.apache.dubbo.common.utils.ReflectUtilsTest', 'org.apache.dubbo.common.utils.IOUtilsTest', 'org.apache.dubbo.rpc.model.FrameworkModelTest', 'org.apache.dubbo.rpc.model.ScopeModelUtilTest'], 'patched_outperforms_original': ['org.apache.dubbo.config.AbstractInterfaceConfigTest', 'org.apache.dubbo.common.io.UnsafeStringReaderTest', 'org.apache.dubbo.common.io.UnsafeByteArrayInputStreamTest', 'org.apache.dubbo.common.cache.FileCacheStoreTest', 'org.apache.dubbo.common.extension.inject.AdaptiveExtensionInjectorTest', 'org.apache.dubbo.common.extension.ExtensionLoader_Adaptive_UseJdkCompiler_Test', 'org.apache.dubbo.common.extension.ExtensionDirectorTest', 'org.apache.dubbo.common.timer.HashedWheelTimerTest', 'org.apache.dubbo.common.config.ConfigurationUtilsTest', 'org.apache.dubbo.common.config.PropertiesConfigurationTest', 'org.apache.dubbo.common.config.configcenter.AbstractDynamicConfigurationFactoryTest', 'org.apache.dubbo.common.config.CompositeConfigurationTest', 'org.apache.dubbo.common.URLStrParserTest', 'org.apache.dubbo.common.bytecode.WrapperTest', 'org.apache.dubbo.common.bytecode.ClassGeneratorTest', 'org.apache.dubbo.common.compiler.support.JavassistCompilerTest', 'org.apache.dubbo.common.url.URLParamTest', 'org.apache.dubbo.common.beanutil.JavaBeanSerializeUtilTest', 'org.apache.dubbo.common.beanutil.JavaBeanAccessorTest', 'org.apache.dubbo.common.resource.GlobalResourcesRepositoryTest', 'org.apache.dubbo.common.logger.LoggerAdapterTest', 'org.apache.dubbo.common.logger.LoggerFactoryTest', 'org.apache.dubbo.common.URLTest', 'org.apache.dubbo.common.beans.InstantiationStrategyTest', 'org.apache.dubbo.common.beans.ScopeBeanFactoryTest', 'org.apache.dubbo.common.InterfaceAddressURLTest', 'org.apache.dubbo.common.convert.StringToCharacterConverterTest', 'org.apache.dubbo.common.convert.StringToDoubleConverterTest', 'org.apache.dubbo.common.convert.multiple.StringToSortedSetConverterTest', 'org.apache.dubbo.common.convert.multiple.MultiValueConverterTest', 'org.apache.dubbo.common.convert.multiple.StringToQueueConverterTest', 'org.apache.dubbo.common.convert.StringToFloatConverterTest', 'org.apache.dubbo.common.convert.StringToStringConverterTest', 'org.apache.dubbo.common.threadpool.event.ThreadPoolExhaustedEventListenerTest', 'org.apache.dubbo.common.threadpool.ThreadlessExecutorTest', 'org.apache.dubbo.common.threadpool.MemorySafeLinkedBlockingQueueTest', 'org.apache.dubbo.common.threadpool.MemoryLimitedLinkedBlockingQueueTest', 'org.apache.dubbo.common.function.ThrowableFunctionTest', 'org.apache.dubbo.common.utils.UrlUtilsTest', 'org.apache.dubbo.common.utils.AssertTest', 'org.apache.dubbo.common.utils.NamedThreadFactoryTest', 'org.apache.dubbo.common.utils.LogTest', 'org.apache.dubbo.common.utils.ClassLoaderResourceLoaderTest', 'org.apache.dubbo.common.utils.JsonUtilsTest', 'org.apache.dubbo.common.utils.StringUtilsTest', 'org.apache.dubbo.common.utils.CompatibleTypeUtilsTest', 'org.apache.dubbo.common.utils.ArrayUtilsTest', 'org.apache.dubbo.common.utils.LRU2CacheTest', 'org.apache.dubbo.common.utils.StringConstantFieldValuePredicateTest', 'org.apache.dubbo.common.utils.ExecutorUtilTest', 'org.apache.dubbo.common.utils.NetUtilsInterfaceDisplayNameHasMetaCharactersTest', 'org.apache.dubbo.rpc.service.ServiceDescriptorInternalCacheTest', 'org.apache.dubbo.rpc.model.ServiceRepositoryTest', 'org.apache.dubbo.rpc.model.ScopeModelTest', 'org.apache.dubbo.rpc.model.ApplicationModelTest', 'org.apache.dubbo.rpc.model.ReflectionMethodDescriptorTest', 'org.apache.dubbo.rpc.model.FrameworkServiceRepositoryTest', 'org.apache.dubbo.rpc.model.ModuleModelTest', 'org.apache.dubbo.rpc.model.ScopeModelAwareExtensionProcessorTest', 'org.apache.dubbo.rpc.model.ReflectionServiceDescriptorTest', 'org.apache.dubbo.rpc.model.ModuleServiceRepositoryTest']}"
-apache/dubbo,06618160e76e134182a920d84a6b7234fe0350fd,9829,,,,{}
-apache/dubbo,f00464324398a401afa4f1cc9628224d970a1983,8070,,,,{}
-apache/dubbo,78d527788d6fdc2d27e33261299f20db65f74139,5892,maven_execution_successful,0.0024858964362702,1.0,"{'original_outperforms_patched': ['org.apache.dubbo.rpc.support.ProtocolUtilsTest', 'org.apache.dubbo.common.version.VersionTest', 'org.apache.dubbo.common.concurrent.CompletableFutureTaskTest', 'org.apache.dubbo.common.config.PropertiesConfigurationTest', 'org.apache.dubbo.common.config.EnvironmentConfigurationTest', 'org.apache.dubbo.common.config.ConfigurationUtilsTest', 'org.apache.dubbo.common.config.configcenter.AbstractDynamicConfigurationFactoryTest', 'org.apache.dubbo.common.config.configcenter.ConfigChangeTypeTest', 'org.apache.dubbo.common.config.configcenter.DynamicConfigurationFactoryTest', 'org.apache.dubbo.common.config.configcenter.ConfigChangedEventTest', 'org.apache.dubbo.common.config.configcenter.AbstractDynamicConfigurationTest', 'org.apache.dubbo.common.URLTest', 'org.apache.dubbo.common.logger.LoggerFactoryTest', 'org.apache.dubbo.common.logger.support.FailsafeLoggerTest', 'org.apache.dubbo.common.logger.slf4j.Slf4jLoggerTest', 'org.apache.dubbo.common.logger.LoggerAdapterTest', 'org.apache.dubbo.common.threadpool.event.ThreadPoolExhaustedEventListenerTest', 'org.apache.dubbo.common.threadpool.event.ThreadPoolExhaustedEventTest', 'org.apache.dubbo.common.threadpool.support.limited.LimitedThreadPoolTest', 'org.apache.dubbo.common.threadpool.support.eager.TaskQueueTest', 'org.apache.dubbo.common.URLBuilderTest', 'org.apache.dubbo.common.json.JSONTest', 'org.apache.dubbo.common.utils.PojoUtilsTest', 'org.apache.dubbo.common.utils.StackTest', 'org.apache.dubbo.common.utils.FieldUtilsTest', 'org.apache.dubbo.common.utils.StringUtilsTest', 'org.apache.dubbo.common.utils.CollectionUtilsTest', 'org.apache.dubbo.common.utils.ClassUtilsTest', 'org.apache.dubbo.common.bytecode.ProxyTest', 'org.apache.dubbo.common.extension.ExtensionLoaderTest', 'org.apache.dubbo.common.extension.ExtensionLoader_Adaptive_Test', 'org.apache.dubbo.event.GenericEventTest'], 'patched_outperforms_original': ['org.apache.dubbo.config.context.ConfigManagerTest', 'org.apache.dubbo.common.threadpool.support.AbortPolicyWithReportTest', 'org.apache.dubbo.common.utils.ReflectUtilsTest', 'org.apache.dubbo.common.utils.NamedThreadFactoryTest', 'org.apache.dubbo.common.utils.ExecutorUtilTest', 'org.apache.dubbo.common.utils.UrlUtilsTest', 'org.apache.dubbo.common.utils.IOUtilsTest', 'org.apache.dubbo.common.utils.LogHelperTest', 'org.apache.dubbo.common.utils.AssertTest', 'org.apache.dubbo.common.utils.AtomicPositiveIntegerTest', 'org.apache.dubbo.common.utils.AnnotationUtilsTest', 'org.apache.dubbo.common.utils.DubboAppenderTest', 'org.apache.dubbo.common.utils.LogUtilTest', 'org.apache.dubbo.common.utils.CompatibleTypeUtilsTest', 'org.apache.dubbo.common.io.BytesTest', 'org.apache.dubbo.common.io.UnsafeByteArrayOutputStreamTest', 'org.apache.dubbo.common.beanutil.JavaBeanSerializeUtilTest', 'org.apache.dubbo.common.lang.PrioritizedTest', 'org.apache.dubbo.common.lang.ShutdownHookCallbacksTest', 'org.apache.dubbo.common.compiler.support.AdaptiveCompilerTest', 'org.apache.dubbo.common.compiler.support.JavassistCompilerTest', 'org.apache.dubbo.common.compiler.support.ClassUtilsTest', 'org.apache.dubbo.common.bytecode.WrapperTest', 'org.apache.dubbo.common.bytecode.ClassGeneratorTest', 'org.apache.dubbo.common.bytecode.MixinTest', 'org.apache.dubbo.common.status.StatusTest', 'org.apache.dubbo.common.status.support.MemoryStatusCheckerTest', 'org.apache.dubbo.common.status.support.LoadStatusCheckerTest', 'org.apache.dubbo.common.function.StreamsTest', 'org.apache.dubbo.common.function.PredicatesTest', 'org.apache.dubbo.common.extension.ExtensionLoader_Adaptive_UseJdkCompiler_Test', 'org.apache.dubbo.convert.multiple.StringToDequeConverterTest', 'org.apache.dubbo.convert.multiple.StringToListConverterTest', 'org.apache.dubbo.convert.multiple.StringToSetConverterTest', 'org.apache.dubbo.convert.multiple.StringToSortedSetConverterTest', 'org.apache.dubbo.convert.multiple.StringToQueueConverterTest', 'org.apache.dubbo.convert.multiple.StringToBlockingDequeConverterTest', 'org.apache.dubbo.convert.multiple.StringToCollectionConverterTest', 'org.apache.dubbo.convert.multiple.StringToNavigableSetConverterTest', 'org.apache.dubbo.convert.multiple.StringToTransferQueueConverterTest']}"
-apache/dubbo,f3fb25282378271bb2b2b81d3a9e0e1e9446bbb7,5797,,,,{}
-apache/dubbo,15297955404cb13d4bbb41b24dac67804a9661cc,5468,maven_execution_successful,0.0091016265422026,0.9999999999998882,"{'original_outperforms_patched': ['org.apache.dubbo.common.status.support.MemoryStatusCheckerTest', 'org.apache.dubbo.common.status.support.LoadStatusCheckerTest', 'org.apache.dubbo.common.status.support.StatusUtilsTest', 'org.apache.dubbo.common.json.JSONTest', 'org.apache.dubbo.common.io.UnsafeByteArrayOutputStreamTest', 'org.apache.dubbo.common.compiler.support.ClassUtilsTest', 'org.apache.dubbo.common.logger.support.FailsafeLoggerTest', 'org.apache.dubbo.common.logger.LoggerFactoryTest', 'org.apache.dubbo.common.logger.LoggerTest', 'org.apache.dubbo.common.logger.slf4j.Slf4jLoggerTest', 'org.apache.dubbo.common.utils.CompatibleTypeUtilsTest', 'org.apache.dubbo.common.utils.AssertTest', 'org.apache.dubbo.common.utils.AtomicPositiveIntegerTest', 'org.apache.dubbo.common.utils.PojoUtilsTest', 'org.apache.dubbo.common.utils.StackTest', 'org.apache.dubbo.common.utils.UrlUtilsTest', 'org.apache.dubbo.common.utils.NamedThreadFactoryTest', 'org.apache.dubbo.common.config.InmemoryConfigurationTest', 'org.apache.dubbo.common.config.PropertiesConfigurationTest', 'org.apache.dubbo.common.config.EnvironmentConfigurationTest', 'org.apache.dubbo.common.config.configcenter.file.FileSystemDynamicConfigurationTest', 'org.apache.dubbo.common.config.configcenter.file.FileSystemDynamicConfigurationFactoryTest', 'org.apache.dubbo.common.config.configcenter.AbstractDynamicConfigurationTest', 'org.apache.dubbo.common.config.configcenter.AbstractDynamicConfigurationFactoryTest', 'org.apache.dubbo.common.config.ConfigurationUtilsTest', 'org.apache.dubbo.common.extension.support.ActivateComparatorTest', 'org.apache.dubbo.common.extension.ExtensionLoader_Adaptive_Test', 'org.apache.dubbo.common.extension.ExtensionLoaderTest', 'org.apache.dubbo.common.lang.PrioritizedTest', 'org.apache.dubbo.common.function.PredicatesTest', 'org.apache.dubbo.common.function.ThrowableFunctionTest', 'org.apache.dubbo.common.function.StreamsTest', 'org.apache.dubbo.common.function.ThrowableConsumerTest', 'org.apache.dubbo.common.store.support.SimpleDataStoreTest', 'org.apache.dubbo.common.URLBuilderTest', 'org.apache.dubbo.config.context.ConfigManagerTest', 'org.apache.dubbo.event.ParallelEventDispatcherTest', 'org.apache.dubbo.event.DirectEventDispatcherTest', 'org.apache.dubbo.remoting.buffer.ByteBufferBackedChannelBufferTest', 'org.apache.dubbo.remoting.buffer.HeapChannelBufferTest', 'org.apache.dubbo.remoting.handler.WrappedChannelHandlerTest', 'org.apache.dubbo.remoting.PerformanceServerTest', 'org.apache.dubbo.remoting.transport.codec.CodecAdapterTest', 'org.apache.dubbo.rpc.proxy.InvokerInvocationHandlerTest', 'org.apache.dubbo.rpc.proxy.jdk.JdkProxyFactoryTest', 'org.apache.dubbo.rpc.support.MockInvokerTest', 'org.apache.dubbo.rpc.support.RpcUtilsTest', 'org.apache.dubbo.rpc.filter.tps.DefaultTPSLimiterTest', 'org.apache.dubbo.rpc.filter.ClassLoaderFilterTest', 'org.apache.dubbo.rpc.filter.EchoFilterTest', 'org.apache.dubbo.rpc.cluster.merger.ResultMergerTest', 'org.apache.dubbo.rpc.cluster.loadbalance.LoadBalanceBaseTest', 'org.apache.dubbo.rpc.cluster.loadbalance.AbstractLoadBalanceTest', 'org.apache.dubbo.rpc.cluster.loadbalance.ConsistentHashLoadBalanceTest', 'org.apache.dubbo.rpc.cluster.router.file.FileRouterEngineTest', 'org.apache.dubbo.rpc.cluster.support.MergeableClusterInvokerTest', 'org.apache.dubbo.rpc.cluster.support.FailoverClusterInvokerTest', 'org.apache.dubbo.rpc.cluster.support.ClusterUtilsTest', 'org.apache.dubbo.rpc.cluster.support.FailfastClusterInvokerTest'], 'patched_outperforms_original': ['org.apache.dubbo.common.version.VersionTest', 'org.apache.dubbo.common.io.UnsafeByteArrayInputStreamTest', 'org.apache.dubbo.common.io.StreamUtilsTest', 'org.apache.dubbo.common.io.BytesTest', 'org.apache.dubbo.common.io.UnsafeStringWriterTest', 'org.apache.dubbo.common.io.UnsafeStringReaderTest', 'org.apache.dubbo.common.bytecode.WrapperTest', 'org.apache.dubbo.common.bytecode.ProxyTest', 'org.apache.dubbo.common.bytecode.ClassGeneratorTest', 'org.apache.dubbo.common.bytecode.MixinTest', 'org.apache.dubbo.common.compiler.support.JavassistCompilerTest', 'org.apache.dubbo.common.logger.LoggerAdapterTest', 'org.apache.dubbo.common.utils.DubboAppenderTest', 'org.apache.dubbo.common.utils.ReflectUtilsTest', 'org.apache.dubbo.common.utils.LogUtilTest', 'org.apache.dubbo.common.utils.LogHelperTest', 'org.apache.dubbo.common.concurrent.CompletableFutureTaskTest', 'org.apache.dubbo.common.URLTest', 'org.apache.dubbo.common.threadpool.support.eager.TaskQueueTest', 'org.apache.dubbo.common.threadpool.support.limited.LimitedThreadPoolTest', 'org.apache.dubbo.common.threadpool.support.cached.CachedThreadPoolTest', 'org.apache.dubbo.common.extension.ExtensionLoader_Adaptive_UseJdkCompiler_Test', 'org.apache.dubbo.common.beanutil.JavaBeanSerializeUtilTest', 'org.apache.dubbo.common.threadlocal.NamedInternalThreadFactoryTest', 'org.apache.dubbo.common.lang.ShutdownHookCallbacksTest', 'org.apache.dubbo.event.EventDispatcherTest', 'org.apache.dubbo.event.GenericEventListenerTest', 'org.apache.dubbo.remoting.buffer.DynamicChannelBufferTest', 'org.apache.dubbo.remoting.buffer.DirectChannelBufferTest', 'org.apache.dubbo.remoting.handler.HeaderExchangeHandlerTest', 'org.apache.dubbo.remoting.PerformanceClientFixedTest', 'org.apache.dubbo.remoting.codec.ExchangeCodecTest', 'org.apache.dubbo.remoting.codec.TelnetCodecTest', 'org.apache.dubbo.remoting.PerformanceClientCloseTest', 'org.apache.dubbo.remoting.exchange.support.header.HeaderExchangeChannelTest', 'org.apache.dubbo.rpc.proxy.javassist.JavassistProxyFactoryTest', 'org.apache.dubbo.rpc.RpcContextTest', 'org.apache.dubbo.rpc.filter.ContextFilterTest', 'org.apache.dubbo.rpc.filter.GenericImplFilterTest', 'org.apache.dubbo.rpc.filter.ExceptionFilterTest', 'org.apache.dubbo.rpc.filter.DeprecatedFilterTest', 'org.apache.dubbo.rpc.filter.tps.TpsLimitFilterTest', 'org.apache.dubbo.rpc.filter.GenericFilterTest', 'org.apache.dubbo.rpc.filter.CompatibleFilterFilterTest', 'org.apache.dubbo.rpc.cluster.router.condition.ConditionRouterTest', 'org.apache.dubbo.rpc.cluster.router.script.ScriptRouterTest', 'org.apache.dubbo.rpc.cluster.support.FailSafeClusterInvokerTest', 'org.apache.dubbo.rpc.cluster.configurator.parser.ConfigParserTest', 'org.apache.dubbo.rpc.cluster.configurator.override.OverrideConfiguratorTest']}"
-netty/netty,5a58f0431e286f2943de75738208b6403c22b722,13692,,,,{}
-netty/netty,dd2c2bbb723c9a10e3efc6d7bc2cc4a4720375e2,13313,,,,{}
-netty/netty,f67a55609d252e0eac9707df51997cc79ed22093,13268,,,,{}
-netty/netty,c353f4fea52559d09b3811492c92a38aa1887501,13153,,,,{}
-netty/netty,46524db7d885b73a55c3a49622237cdd7d39fd0a,12812,,,,{}
-netty/netty,423a385b05d706ace67a60ba48fc82b87a587502,12708,,,,{}
-netty/netty,824a0b803431c58bd8dfe25a30413d7ff9759e8f,12171,,,,{}
-netty/netty,4374612a4bedefd528d22daac5094e3c740baeb9,12123,,,,{}
-netty/netty,7b91edd8e43b0c97ba88ae78b11cd378a904f480,12107,,,,{}
-netty/netty,55cdaa75adfaff89c9929de9893c8ff7bd2891ae,11864,,,,{}
-netty/netty,d80a34ecf84bbe153b60123b059deabcc97a8935,11890,,,,{}
-netty/netty,613cfcb600316f324911ab7dd8e31b8ca8b03b6c,14739,,,,{}
-netty/netty,913cae6fef1f708238918cbdf3b25db03c805604,10123,,,,{}
-alibaba/nacos,8664a1aec6234fc9a31a1aca0421cd54532bf861,12323,,,,{}
-alibaba/nacos,4a5a6fd4de390b2d9c8eff86fb77ae6b41291ce0,11310,,,,{}
-alibaba/nacos,e3a18c6631a6d5bb8dcb7a76157d82334546c595,6798,,,,{}
-alibaba/nacos,46c1f7e6df711ac000a74435ac13214201afad9b,6433,,,,{}
-alibaba/nacos,b1e78b6f6d18cb9c8e7837a1ca370855b238ebab,5432,,,,{}
-alibaba/nacos,2f5fb235b28a7c90fe8edbd26f56f50029030d8f,3235,,,,{}
-keycloak/keycloak,afde8ece15aefc46f80e8efe30e1c9f81d66dd9a,37093,,,,{}
-keycloak/keycloak,41e0e3751c445ee0a3d73271dfde717cf11877c4,36919,,,,{}
-keycloak/keycloak,4bd29e257b90672b77309ed81b5e1febf37a85c0,33353,maven_execution_successful,0.0107790178296768,0.99999676330467,"{'original_outperforms_patched': ['org.keycloak.sdjwt.SdJwtUtilsTest'], 'patched_outperforms_original': ['org.keycloak.sdjwt.sdjwtvp.KeyBindingJwtVerificationOptsTest']}"
-keycloak/keycloak,c558bbe1183dfa0a55462513413aeecfd658f6c9,33353,maven_execution_successful,-0.0139662729366317,0.9999999404379508,"{'original_outperforms_patched': ['org.keycloak.common.util.MultivaluedHashMapTest', 'org.keycloak.sdjwt.JsonNodeComparisonTest'], 'patched_outperforms_original': ['org.keycloak.sdjwt.ArrayElementSerializationTest']}"
-keycloak/keycloak,c682536dae36e1aa35d90cf2cf24aa81864b46cd,33331,maven_execution_successful,0.0160017725040311,0.9998118600008646,"{'original_outperforms_patched': ['org.keycloak.common.util.URLEncodingTest', 'org.keycloak.sdjwt.SdJwtUtilsTest'], 'patched_outperforms_original': ['org.keycloak.common.util.StringPropertyReplacerTest', 'org.keycloak.sdjwt.JsonNodeComparisonTest', 'org.keycloak.sdjwt.SdJwtTest']}"
-keycloak/keycloak,f45529de8c812648eb36b185646f2e9a9c6afaeb,21954,,,,{}
-keycloak/keycloak,c16e88bcee1f1fb6cb7b55c49f095dc4f2b17dc5,21954,,,,{}
-keycloak/keycloak,8f72a77582c1e616a143a569bcf499de0f27aa4f,30087,,,,{}
-keycloak/keycloak,78eee0b145498c64e81cf64d66ad0883bc3ae319,30087,,,,{}
-keycloak/keycloak,eaeffe95ac791ae88731618904899f90e90c44a5,29392,maven_execution_successful,0.0325956570608182,0.6952142981262632,"{'original_outperforms_patched': ['org.keycloak.sdjwt.SdJwtUtilsTest'], 'patched_outperforms_original': ['org.keycloak.common.util.PathMatcherTest', 'org.keycloak.models.sessions.infinispan.initializer.InitializerStateTest']}"
-keycloak/keycloak,98be32d9fffbf8221c3a4e1993c1bc2895a2eecb,24245,,,,{}
-keycloak/keycloak,9e4fc3f49151cd32bb84dbe8e5bd57a1050d6a69,9871,,,,{}
-keycloak/keycloak,5b1b3ca11be8526482c1cfc3a441c747b107a991,25388,,,,{}
-keycloak/keycloak,e4be3ed2448ce1cfcdec6d0cb789eceaf102ebf1,24202,,,,{}
-keycloak/keycloak,b8467d80f1518f57486846f810c7815099472611,24860,,,,{}
-keycloak/keycloak,dee1cec290bfaaf004903f85e5c5d70b0c1dcc54,24295,,,,{}
-keycloak/keycloak,71777df3d9c60f62e23a6216b2ef0cd41805205c,22988,,,,{}
-keycloak/keycloak,6db0bc542830bec452a5cf4429538a910f061433,21868,,,,{}
-keycloak/keycloak,cf911075af65ee121b612b5e5348d0096ec222d3,22057,,,,{}
-keycloak/keycloak,9b0f4fb5813e49fb533aa99479a53c9592541a6b,21111,,,,{}
-keycloak/keycloak,bd0f87fc4d281b869ef067afc6bfd8f5eaf3848b,9871,,,,{}
-keycloak/keycloak,9b3effb4b8736293e579bbc7c99fa7ffdc379351,21521,,,,{}
-keycloak/keycloak,13a463f71ea24c7da1021ce50ad0a591d3968058,21109,,,,{}
-keycloak/keycloak,cd9e0be9f0f01f3561a57c914c124224e309a95d,20394,,,,{}
-keycloak/keycloak,c22972af9cc4170fd241d2a9208a3b26dec5a994,20613,,,,{}
-keycloak/keycloak,5cd0d51fa69e25913bcf2d6e34f9e31e2e52a501,20404,,,,{}
-keycloak/keycloak,7f64ca0048a16372bf2f8bbbcd33f1ea5c0d2022,16977,,,,{}
-keycloak/keycloak,053f774f13bd38ce8f9d67f480c520fd38e0c8eb,19193,,,,{}
-keycloak/keycloak,910021408ef0aef3696a47e9b19bd41e1f86efeb,20176,maven_execution_successful,-0.0205007015730005,0.9478948437886084,"{'original_outperforms_patched': ['org.keycloak.jose.JsonWebTokenTest', 'org.keycloak.models.MigrationVersionTest'], 'patched_outperforms_original': []}"
-keycloak/keycloak,bd7f62acc39e560291817b7a730c9c58eb1ac5bc,20176,,,,{}
-keycloak/keycloak,754aac2f4e37a2993b9f56626bc697138ecae579,20176,,,,{}
-keycloak/keycloak,0f481da77f494be423d2d934188279017f0c0d54,20176,,,,{}
-keycloak/keycloak,93373b93989171a15bf18f6ce2ae33bbf485d513,20176,,,,{}
-keycloak/keycloak,2758d7886531f43415a9a0269a87893ae15e34da,20176,maven_execution_successful,0.0338504106201983,0.6574940797474502,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
-keycloak/keycloak,81580908c3c1e21d50dae4526bf01327ca25474c,19990,,,,{}
-keycloak/keycloak,ad3b264088e46aec927325ee9298509d7645e312,17491,maven_execution_successful,0.0125876183851463,0.7865697481938294,"{'original_outperforms_patched': ['org.keycloak.models.KeycloakModelUtilsTest'], 'patched_outperforms_original': []}"
-keycloak/keycloak,9f15cf432b8d36d3d065d976dbd7708dfd60a5dd,10935,,,,{}
-keycloak/keycloak,a912558d29c685ef912baa04b8cc823a70c6fd2d,10376,maven_execution_successful,-0.0082386398310773,0.9548409242159096,"{'original_outperforms_patched': ['org.keycloak.common.util.URLEncodingTest'], 'patched_outperforms_original': ['org.keycloak.common.util.StringSerializationTest']}"
-keycloak/keycloak,fb554c09dbdc833176f2f7f7aa8d2a43d7ba1286,16224,,,,{}
-keycloak/keycloak,8478b01758b1229a2cb712bbbacaed36daaba51f,12497,maven_execution_successful,0.0116329832310417,0.8415903785224269,"{'original_outperforms_patched': ['org.keycloak.common.util.StringSerializationTest', 'org.keycloak.models.map.realm.RealmEntityUndefinedValuesTest', 'org.keycloak.models.map.storage.criteria.DefaultModelCriteriaTest'], 'patched_outperforms_original': ['org.keycloak.util.BasicAuthHelperTest']}"
-keycloak/keycloak,556146f961f7c8ddf64de15e2117a58d045f72b5,13340,,,,{}
-keycloak/keycloak,02a69561b56a77a916e69bc7b3ea083660e3bdf4,12280,,,,{}
-keycloak/keycloak,9fb9780f0274ec1283fbc37cbc67cea0726b5d1a,14938,,,,{}
-keycloak/keycloak,e494649a4e097be7a2fe8839987b158ec7d7b566,14938,,,,{}
-keycloak/keycloak,440077de424eec3f8213d0c5b0c421a16a4649b3,15038,,,,{}
-keycloak/keycloak,aea6d7da2737d1c8845ca936a8dff20d86dd1927,14384,,,,{}
-keycloak/keycloak,621da7b803c5130555772e22c9951f34c0adeb54,14309,,,,{}
-keycloak/keycloak,3f088bfd21b9a24913a72abb7dac5c5871175fc1,11695,,,,{}
-keycloak/keycloak,fb978de0d85d7c8b2f1f6ce4d9e11509f46d5266,12653,,,,{}
-keycloak/keycloak,8ed9ce29d159d10728ada8da708dab111921b024,13303,maven_execution_successful,0.0623061815174695,0.3509257295898905,"{'original_outperforms_patched': ['org.keycloak.models.map.storage.criteria.DefaultModelCriteriaTest'], 'patched_outperforms_original': []}"
-keycloak/keycloak,d048bf22fbf648f6b25f13223d7da0fc258ec5d2,12296,maven_execution_successful,-0.0086424051281002,0.9539551397281902,"{'original_outperforms_patched': ['org.keycloak.validate.ValidatorTest'], 'patched_outperforms_original': ['org.keycloak.common.util.StringPropertyReplacerTest', 'org.keycloak.storage.StorageIdTest']}"
-keycloak/keycloak,26c87af9f4829c05f81a3586e52240bef5dc7d5e,12148,,,,{}
-keycloak/keycloak,00ccc78360001e3451dea3e7472babd111d7f904,11069,maven_execution_successful,0.0107372020045899,0.8836112139363195,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
-keycloak/keycloak,e0d7ad1be5403d0143415df1f99f45d3b35f0cbf,11764,,,,{}
-keycloak/keycloak,8d3a4803bbb17f39ee8fd60f8a192a6c47fb2247,9563,,,,{}
-keycloak/keycloak,15b2f8e26dfbc05e82c7240c7777d2de362301ed,11263,,,,{}
-keycloak/keycloak,7058a123b117659f068ba9d23452377f1c1c75b4,11261,,,,{}
-keycloak/keycloak,2394855f48ce0e23c49c9727047559537b8a05b3,10829,,,,{}
-keycloak/keycloak,ad865e75c14f048e2de6748bab6af6c3b495de33,10411,,,,{}
-keycloak/keycloak,af7a040d54140e11bd489c1ef72320e75159a0ef,10132,,,,{}
-keycloak/keycloak,2b81e62b6b62f7ce6f6e3918bf0a237cc52d9b9a,9648,,,,{}
-keycloak/keycloak,ca58aa7b3d6c6dd9dc4331c69011826efbe97853,9250,,,,{}
-keycloak/keycloak,1adce39e1d26d9ffac58d61889e76a06019fcf61,8886,,,,{}
-keycloak/keycloak,3d8f152787713f92423a61ce268e5727bbd0e5c9,17754,,,,{}
-keycloak/keycloak,10f7ea01d4b429b05763c839db34e3f3c9c1e49c,16091,,,,{}
-keycloak/keycloak,60fac7c3c43175ebeef3aadb35c053cbc2a4631d,17477,,,,{}
-keycloak/keycloak,a09142c43a9a1986be38b7f89eb2dc689d6aaa36,17678,,,,{}
-keycloak/keycloak,2b3810606edb6dfec9766fc5dceabd211762d4cc,13303,,,,{}
-apolloconfig/apollo,f41a73b92d19383bbb542c51b0f6d062e9e80e3b,3698,final_clone_and_checkout_repo,,,{}
-apache/incubator-seata,80573c9daf8381cd63afd1228a2a8af5af3e3c3c,3571,maven_execution_successful,-0.2016513998193781,0.9824443340032608,"{'original_outperforms_patched': ['io.seata.common.util.CompressUtilTest', 'io.seata.common.util.DurationUtilTest', 'io.seata.common.util.BlobUtilsTest', 'io.seata.common.util.BeanUtilsTest', 'io.seata.common.util.NetUtilTest', 'io.seata.common.util.NumberUtilsTest', 'io.seata.common.exception.StoreExceptionTest', 'io.seata.common.exception.FrameworkExceptionTest', 'io.seata.common.thread.RejectedPoliciesTest', 'io.seata.common.rpc.RpcStatusTest', 'io.seata.config.RegistryConfigurationFactoryTest', 'io.seata.config.ProConfigurationFactoryTest'], 'patched_outperforms_original': ['io.seata.common.util.CollectionUtilsTest', 'io.seata.common.util.StringUtilsTest', 'io.seata.common.util.ReflectionUtilTest', 'io.seata.common.XIDTest', 'io.seata.common.loader.EnhancedServiceLoaderTest', 'io.seata.config.FileConfigurationTest']}"
-apache/incubator-seata,ea0d00b7643c6af8376ffbdca91207b64c005342,2689,,,,{}
-apache/incubator-seata,47b9b2cea57ce6b0d493d1d52e58242a21c53718,2467,,,,{}
-OpenAPITools/openapi-generator,196c2b1642453c15e33bbdb6677339468b1a5d7f,16490,,,,{}
-OpenAPITools/openapi-generator,84099eefdc7fe4f5a9b7726e376fc01189ae355d,5862,,,,{}
+bmarwell/jfmt,b0f139cdc99cfac45b9ddfdfc4ed1ffa41f2104f,85,maven_execution_successful,-0.0074609017068132,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+kadai-io/kadai,ba2bc94259a61282f7491622f9e9320a3acd92fd,1063,maven_execution_successful,0.0016394052342825,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+kadai-io/kadai,a3afea91d4418ba474c3a805de71350288f61ca9,786,maven_execution_successful,0.0070801940103092,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+google/guava,896541465f1cc99352e8fbfbba4d4617f19183d8,6087,final_clone_and_checkout_repo,,,{}
+google/guava,6193884f7bf96b468fb44bf03b904130d2926c2d,3984,final_clone_and_checkout_repo,,,{}
+google/guava,b6b4dc49b1ccfc4141181b24a26eadc689b48b43,3984,final_clone_and_checkout_repo,,,{}
+google/guava,aa18c74a25d31228d65894a28a6c049a743edc51,3984,final_clone_and_checkout_repo,,,{}
+google/guava,04997b1cf7b34ed2d93a6070a91d5c393ae7f1a7,3911,final_clone_and_checkout_repo,,,{}
+google/guava,2d346856c76dc80aac3be2fbe3fe58b99c64f210,3911,final_clone_and_checkout_repo,,,{}
+google/guava,bc7248bcb0a987e18cf7a4e7ef92ed458086f4b0,3873,final_clone_and_checkout_repo,,,{}
+apache/dubbo,42664b6ec27dd24da61dcb2347c58aefe43853cc,14539,final_clone_and_checkout_repo,,,{}
+apache/dubbo,5d76667808720eec49d6d970a57145142b228634,12493,final_clone_and_checkout_repo,,,{}
+apache/dubbo,b967d3c1f83265f99b1b86303ccf4899ec4ee072,11776,final_clone_and_checkout_repo,,,{}
+apache/dubbo,d6a1ff43a008b8a054bed11dca4f23a3c0d20ec0,9973,maven_execution_successful,-0.0008578867290602,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+apache/dubbo,06618160e76e134182a920d84a6b7234fe0350fd,9829,final_clone_and_checkout_repo,,,{}
+apache/dubbo,f00464324398a401afa4f1cc9628224d970a1983,8070,maven_execution_successful,0.0005419447992375,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+apache/dubbo,78d527788d6fdc2d27e33261299f20db65f74139,5892,maven_execution_successful,0.000776336650016,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+apache/dubbo,f3fb25282378271bb2b2b81d3a9e0e1e9446bbb7,5797,final_clone_and_checkout_repo,,,{}
+apache/dubbo,15297955404cb13d4bbb41b24dac67804a9661cc,5468,final_clone_and_checkout_repo,,,{}
+netty/netty,5a58f0431e286f2943de75738208b6403c22b722,13692,final_clone_and_checkout_repo,,,{}
+netty/netty,dd2c2bbb723c9a10e3efc6d7bc2cc4a4720375e2,13313,final_clone_and_checkout_repo,,,{}
+netty/netty,f67a55609d252e0eac9707df51997cc79ed22093,13268,final_clone_and_checkout_repo,,,{}
+netty/netty,c353f4fea52559d09b3811492c92a38aa1887501,13153,final_clone_and_checkout_repo,,,{}
+netty/netty,46524db7d885b73a55c3a49622237cdd7d39fd0a,12812,final_clone_and_checkout_repo,,,{}
+netty/netty,423a385b05d706ace67a60ba48fc82b87a587502,12708,final_clone_and_checkout_repo,,,{}
+netty/netty,824a0b803431c58bd8dfe25a30413d7ff9759e8f,12171,final_clone_and_checkout_repo,,,{}
+netty/netty,4374612a4bedefd528d22daac5094e3c740baeb9,12123,final_clone_and_checkout_repo,,,{}
+netty/netty,7b91edd8e43b0c97ba88ae78b11cd378a904f480,12107,final_clone_and_checkout_repo,,,{}
+netty/netty,55cdaa75adfaff89c9929de9893c8ff7bd2891ae,11864,final_clone_and_checkout_repo,,,{}
+netty/netty,d80a34ecf84bbe153b60123b059deabcc97a8935,11890,final_clone_and_checkout_repo,,,{}
+netty/netty,613cfcb600316f324911ab7dd8e31b8ca8b03b6c,14739,final_clone_and_checkout_repo,,,{}
+netty/netty,913cae6fef1f708238918cbdf3b25db03c805604,10123,final_clone_and_checkout_repo,,,{}
+alibaba/nacos,8664a1aec6234fc9a31a1aca0421cd54532bf861,12323,final_clone_and_checkout_repo,,,{}
+alibaba/nacos,4a5a6fd4de390b2d9c8eff86fb77ae6b41291ce0,11310,final_clone_and_checkout_repo,,,{}
+alibaba/nacos,e3a18c6631a6d5bb8dcb7a76157d82334546c595,6798,final_clone_and_checkout_repo,,,{}
+alibaba/nacos,46c1f7e6df711ac000a74435ac13214201afad9b,6433,final_clone_and_checkout_repo,,,{}
+alibaba/nacos,b1e78b6f6d18cb9c8e7837a1ca370855b238ebab,5432,final_clone_and_checkout_repo,,,{}
+alibaba/nacos,2f5fb235b28a7c90fe8edbd26f56f50029030d8f,3235,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,afde8ece15aefc46f80e8efe30e1c9f81d66dd9a,37093,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,41e0e3751c445ee0a3d73271dfde717cf11877c4,36919,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,4bd29e257b90672b77309ed81b5e1febf37a85c0,33353,maven_execution_successful,-0.0006073075206981,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,c558bbe1183dfa0a55462513413aeecfd658f6c9,33353,maven_execution_successful,0.0019497292732601,0.9999999990686774,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,c682536dae36e1aa35d90cf2cf24aa81864b46cd,33331,maven_execution_successful,-0.0044240111034004,0.9999999990686774,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,f45529de8c812648eb36b185646f2e9a9c6afaeb,21954,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,c16e88bcee1f1fb6cb7b55c49f095dc4f2b17dc5,21954,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,8f72a77582c1e616a143a569bcf499de0f27aa4f,30087,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,78eee0b145498c64e81cf64d66ad0883bc3ae319,30087,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,eaeffe95ac791ae88731618904899f90e90c44a5,29392,maven_execution_successful,-0.0103326515648516,0.999964715912938,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,98be32d9fffbf8221c3a4e1993c1bc2895a2eecb,24245,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,9e4fc3f49151cd32bb84dbe8e5bd57a1050d6a69,9871,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,5b1b3ca11be8526482c1cfc3a441c747b107a991,25388,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,e4be3ed2448ce1cfcdec6d0cb789eceaf102ebf1,24202,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,b8467d80f1518f57486846f810c7815099472611,24860,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,dee1cec290bfaaf004903f85e5c5d70b0c1dcc54,24295,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,71777df3d9c60f62e23a6216b2ef0cd41805205c,22988,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,6db0bc542830bec452a5cf4429538a910f061433,21868,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,cf911075af65ee121b612b5e5348d0096ec222d3,22057,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,9b0f4fb5813e49fb533aa99479a53c9592541a6b,21111,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,bd0f87fc4d281b869ef067afc6bfd8f5eaf3848b,9871,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,9b3effb4b8736293e579bbc7c99fa7ffdc379351,21521,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,13a463f71ea24c7da1021ce50ad0a591d3968058,21109,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,cd9e0be9f0f01f3561a57c914c124224e309a95d,20394,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,c22972af9cc4170fd241d2a9208a3b26dec5a994,20613,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,5cd0d51fa69e25913bcf2d6e34f9e31e2e52a501,20404,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,7f64ca0048a16372bf2f8bbbcd33f1ea5c0d2022,16977,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,053f774f13bd38ce8f9d67f480c520fd38e0c8eb,19193,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,910021408ef0aef3696a47e9b19bd41e1f86efeb,20176,maven_execution_successful,0.0340623829799037,0.8816738277673721,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,bd7f62acc39e560291817b7a730c9c58eb1ac5bc,20176,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,754aac2f4e37a2993b9f56626bc697138ecae579,20176,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,0f481da77f494be423d2d934188279017f0c0d54,20176,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,93373b93989171a15bf18f6ce2ae33bbf485d513,20176,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,2758d7886531f43415a9a0269a87893ae15e34da,20176,maven_execution_successful,0.0504424906521142,0.9179079588502644,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,81580908c3c1e21d50dae4526bf01327ca25474c,19990,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,ad3b264088e46aec927325ee9298509d7645e312,17491,maven_execution_successful,-0.0364755289083753,0.9992712615057826,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,9f15cf432b8d36d3d065d976dbd7708dfd60a5dd,10935,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,a912558d29c685ef912baa04b8cc823a70c6fd2d,10376,maven_execution_successful,0.0254974976874363,0.9666676456108688,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,fb554c09dbdc833176f2f7f7aa8d2a43d7ba1286,16224,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,8478b01758b1229a2cb712bbbacaed36daaba51f,12497,maven_execution_successful,0.0144134330539209,0.9989061122760176,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,556146f961f7c8ddf64de15e2117a58d045f72b5,13340,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,02a69561b56a77a916e69bc7b3ea083660e3bdf4,12280,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,9fb9780f0274ec1283fbc37cbc67cea0726b5d1a,14938,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,e494649a4e097be7a2fe8839987b158ec7d7b566,14938,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,440077de424eec3f8213d0c5b0c421a16a4649b3,15038,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,aea6d7da2737d1c8845ca936a8dff20d86dd1927,14384,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,621da7b803c5130555772e22c9951f34c0adeb54,14309,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,3f088bfd21b9a24913a72abb7dac5c5871175fc1,11695,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,fb978de0d85d7c8b2f1f6ce4d9e11509f46d5266,12653,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,8ed9ce29d159d10728ada8da708dab111921b024,13303,maven_execution_successful,-0.0419913419913419,0.9999504871666433,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,d048bf22fbf648f6b25f13223d7da0fc258ec5d2,12296,maven_execution_successful,-0.0209194520929908,0.9998841816559434,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,26c87af9f4829c05f81a3586e52240bef5dc7d5e,12148,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,00ccc78360001e3451dea3e7472babd111d7f904,11069,maven_execution_successful,0.0138024663423464,0.9966802317649126,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+keycloak/keycloak,e0d7ad1be5403d0143415df1f99f45d3b35f0cbf,11764,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,8d3a4803bbb17f39ee8fd60f8a192a6c47fb2247,9563,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,15b2f8e26dfbc05e82c7240c7777d2de362301ed,11263,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,7058a123b117659f068ba9d23452377f1c1c75b4,11261,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,2394855f48ce0e23c49c9727047559537b8a05b3,10829,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,ad865e75c14f048e2de6748bab6af6c3b495de33,10411,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,af7a040d54140e11bd489c1ef72320e75159a0ef,10132,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,2b81e62b6b62f7ce6f6e3918bf0a237cc52d9b9a,9648,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,ca58aa7b3d6c6dd9dc4331c69011826efbe97853,9250,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,1adce39e1d26d9ffac58d61889e76a06019fcf61,8886,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,3d8f152787713f92423a61ce268e5727bbd0e5c9,17754,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,10f7ea01d4b429b05763c839db34e3f3c9c1e49c,16091,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,60fac7c3c43175ebeef3aadb35c053cbc2a4631d,17477,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,a09142c43a9a1986be38b7f89eb2dc689d6aaa36,17678,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak,2b3810606edb6dfec9766fc5dceabd211762d4cc,13303,final_clone_and_checkout_repo,,,{}
+apolloconfig/apollo,f41a73b92d19383bbb542c51b0f6d062e9e80e3b,3698,final_docker_image_built,,,{}
+apache/incubator-seata,80573c9daf8381cd63afd1228a2a8af5af3e3c3c,3571,maven_execution_successful,-0.1997170781893005,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+apache/incubator-seata,ea0d00b7643c6af8376ffbdca91207b64c005342,2689,final_clone_and_checkout_repo,,,{}
+apache/incubator-seata,47b9b2cea57ce6b0d493d1d52e58242a21c53718,2467,final_clone_and_checkout_repo,,,{}
+OpenAPITools/openapi-generator,196c2b1642453c15e33bbdb6677339468b1a5d7f,16490,maven_execution_successful,0.0094089866678842,0.9999999990686774,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+OpenAPITools/openapi-generator,84099eefdc7fe4f5a9b7726e376fc01189ae355d,5862,maven_execution_successful,-0.007503237100014,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
 javaparser/javaparser,cfc1bcdf1fbd596ac11cbf14be565ffdee8903a5,3978,final_docker_image_built,,,{}
-javaparser/javaparser,994dfff5d74c9d13dc438dbf3062592105c80d22,3181,,,,{}
-liquibase/liquibase,a964357fcffa050356947093e20a5ce6e23b83a6,6096,,,,{}
-liquibase/liquibase,616c1da0959b7e4cc989af95975ad40a16ec8225,5171,,,,{}
-liquibase/liquibase,65076d8a32b0585ca2fd85348d2221b54f04bfa1,4312,,,,{}
-liquibase/liquibase,d972c214fb7794cf08def3ea276ae939b2bccfb3,4312,,,,{}
-liquibase/liquibase,b7d46697732240d282002aa06419367e9f951075,4312,,,,{}
-liquibase/liquibase,fac94e1fc45546d4baa15af0bfc45f919f2ea839,3791,,,,{}
-liquibase/liquibase,320978cf2d7ab743051916e8f85e402deb3c6bc2,3545,,,,{}
-liquibase/liquibase,454c4e7466b78aa6eef701cb1ff35d838609e733,2154,,,,{}
-liquibase/liquibase,9d6d14455e209fc60d1a7c9ce3477a56b42bf11e,3144,,,,{}
-liquibase/liquibase,a19df45802206163c26ed32b85709d699356b995,1856,,,,{}
+javaparser/javaparser,994dfff5d74c9d13dc438dbf3062592105c80d22,3181,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,a964357fcffa050356947093e20a5ce6e23b83a6,6096,maven_execution_successful,0.0095045898286136,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+liquibase/liquibase,616c1da0959b7e4cc989af95975ad40a16ec8225,5171,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,65076d8a32b0585ca2fd85348d2221b54f04bfa1,4312,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,d972c214fb7794cf08def3ea276ae939b2bccfb3,4312,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,b7d46697732240d282002aa06419367e9f951075,4312,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,fac94e1fc45546d4baa15af0bfc45f919f2ea839,3791,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,320978cf2d7ab743051916e8f85e402deb3c6bc2,3545,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,454c4e7466b78aa6eef701cb1ff35d838609e733,2154,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,9d6d14455e209fc60d1a7c9ce3477a56b42bf11e,3144,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,a19df45802206163c26ed32b85709d699356b995,1856,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,8adf046622516aa7fa88b62c5bd027698d9272ba,1984,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,a50e90b4c526521b516e548250c0fdeb415c3d92,1984,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,b73833644d942ae39517856d4bbf840ca23e91ba,1913,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,43ff08e4f2f9b67ba9a4a4ea2788f4508ba11063,6769,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,708f055b932a510c4f820eaf33935e9740dea278,1699,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,b26323414b3d5dc26911d36715354819372dd899,6769,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,ce2404302855c623926eeeb812c43d6fbdae679f,1699,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,fa004bc3c12003d46df7231eac15e58d0ad25087,1199,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,bebbb6eeec29f857b321704f3705eb8e683b4079,1199,final_clone_and_checkout_repo,,,{}
+liquibase/liquibase,efc12c55d3fe8d7b14e5ad221f2f9ca6bb46aaaa,3556,final_clone_and_checkout_repo,,,{}
+FasterXML/jackson-databind,fec520d8dea8ca8c47ff9d388b08c343193a62d0,3419,final_clone_and_checkout_repo,,,{}
+spring-cloud/spring-cloud-kubernetes,0293a7a013537b69223d277d3c345227873c833f,1225,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-jpa,13a4661bc0d07acb6b107c2ee5ca9b57504f0a64,3039,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-jpa,0b5ebdb79772c072169c5086c8a7e09f9b12be17,2860,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-jpa,fa41595818eeb0d1da7f271a7f0554eb544fc6e3,2594,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-jpa,45b860fd6d701b0394fc3f21510eb97ce3cb0bc2,2333,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-batch,30ce3326d1df40ff2dae5967fed20dbab34f828d,4024,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-batch,d24eb6a6eda857c9a6123795c76b11264622894e,3980,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-batch,0958cf4f3d515e819a02a44787e7e525311f40e2,3780,final_clone_and_checkout_repo,,,{}
+assertj/assertj,1b1c3a1ac06f7f46ecfd701782fc19f5ea75441e,3193,final_clone_and_checkout_repo,,,{}
+assertj/assertj,8a70b403490ba5799fc06b90dc8096c729b4da0e,2548,final_clone_and_checkout_repo,,,{}
+hapifhir/hapi-fhir,c637cec6228c7afb9dbfc2c588d24fc6fe44bf4c,4801,final_clone_and_checkout_repo,,,{}
+hapifhir/hapi-fhir,c03129f54501c4d504df1616a205e2425cbaae4b,4337,final_clone_and_checkout_repo,,,{}
+hapifhir/hapi-fhir,d407501071754bd32a871969143953ef52c7c92f,2765,final_clone_and_checkout_repo,,,{}
+eclipse-jdtls/eclipse.jdt.ls,5ba96401e288aaa44c55af9b8a16a063963916ce,3531,final_clone_and_checkout_repo,,,{}
+eclipse-jdtls/eclipse.jdt.ls,ed7e890fbfb3a2ed0755eae30819c864f916927d,3510,final_clone_and_checkout_repo,,,{}
+eclipse-jdtls/eclipse.jdt.ls,a01129ca27d68e641289bef43cb343a38c073f6e,2799,final_clone_and_checkout_repo,,,{}
+eclipse-jdtls/eclipse.jdt.ls,7116c645c46cb7f2e252ecf00b337bd4ac8afd40,2441,final_clone_and_checkout_repo,,,{}
+eclipse-jdtls/eclipse.jdt.ls,2afee438927cd9148a821db910199b45d326c936,1606,final_clone_and_checkout_repo,,,{}
+eclipse-jdtls/eclipse.jdt.ls,9519b764acfc8390311433ed48ff5afaae276a08,1469,final_clone_and_checkout_repo,,,{}
+fabric8io/docker-maven-plugin,ea3d0dce5d3b77ddfee233dca150ecb3fb5eab11,1267,maven_execution_successful,0.0013990846264547,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+apache/mina-sshd,0d65679ed8b6ac3df844fd8581d9b7f18f236d66,642,final_clone_and_checkout_repo,,,{}
+apache/mina-sshd,03cee942dcffecd6b735c13c4d3b51b734239b14,643,final_clone_and_checkout_repo,,,{}
+apache/mina-sshd,c2a476094e2119971aa07be457e8a0aa1c0a3ec6,524,final_clone_and_checkout_repo,,,{}
+apache/mina-sshd,2b93f5cf38ff1cf255d397f470a1008d701d787f,524,final_clone_and_checkout_repo,,,{}
+apache/mina-sshd,4160b6e3e394ff03f8439fb3202eb7cd7026a659,524,final_clone_and_checkout_repo,,,{}
+apache/mina-sshd,2e85df72c568215d11e8a6db9baca6c3b99c58d1,524,final_clone_and_checkout_repo,,,{}
+apache/mina-sshd,c5e34ddcefbda5835fa023adf3740aaef1b78091,524,final_clone_and_checkout_repo,,,{}
+apache/mina-sshd,145eef139acbff153a8f2203ca007470d27c9a0b,524,final_clone_and_checkout_repo,,,{}
+apache/mina-sshd,e754db9e2cfcfa5fbb8b75d1a845d8a9ef28e1ec,427,final_clone_and_checkout_repo,,,{}
+apache/mina-sshd,61576a548abf644d0f8d0e3b9157ead9065dc23d,427,final_clone_and_checkout_repo,,,{}
+apache/mina-sshd,3d7c09872634c9f81d7dbf41256081e3ccf68725,427,final_clone_and_checkout_repo,,,{}
+casid/jte,04c7014e8bc4329ca98089999a08c535deee6a26,78,final_docker_image_built,,,{}
+mediathekview/MediathekView,54f6ad9c4fbba6daad62d9f3071b8c745ff30aae,507,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,bf44942cf24a5abf990dbc538198e8ede6237807,2782,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,804a954a1a359f2d62eb38674d6407ff1608fb41,2750,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,1d21803d520193350348ed3e493e6941523e3f37,2668,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,773b6cce0d11b4674d316475a5e09ad8b1497b58,2501,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,e4d929760a451a6299c1d2c336b48e88078f1374,2487,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,e82975bca379707128af6a4ee288030541696762,2455,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,8eb2b14287f28eba54a99fb890c3ac51fdb9330b,2421,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,6b913faa98798f3f91d8f99e173e3c1aaebd8bb1,2417,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,49b7578176d657ad5a0360414234d5336609beb2,2391,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,dc27d5ceb8dec6e2a83f77313840e44c3e5ca3da,2387,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,91b57a0d390000bf8d2f0a492d4644e1ed2e0daa,2182,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,494f66360a9e676b263cc1dbffcb88628e15384e,2169,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-neo4j,c72ecc7b5f73290062a1a8b633923f9a5ee96527,1460,final_clone_and_checkout_repo,,,{}
+greenmail-mail-test/greenmail,e1a2e2264b8090687624e9cc8b982700bf0499fc,358,final_clone_and_checkout_repo,,,{}
+airlift/airlift,5a69c156f39785fbd49717e3c1994d77d065a60f,781,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,7f090c06ecaa0627e89c12e865f82c90aa5cf936,4753,maven_execution_successful,0.003593634528406,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+urlaubsverwaltung/urlaubsverwaltung,352f304910138bc79d680fd92c67838aadc4a69b,4753,maven_execution_successful,0.0002565308478344,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+urlaubsverwaltung/urlaubsverwaltung,acef23ad0b59b133293b150058b29fc9b44c0370,4753,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,14c43ad2e60496cc6bdb6aa3cd20aac87c8c416e,4753,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,3db2bca5333079a3505826b8b1ed4b0cb18b8f74,4753,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,eafe4bc089167591b685b30b8d768170ddd1c032,4753,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,82a691fbeb656fa4777161193926e0df733cb995,4753,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,ba1aff2cc3ef36402b09fbfc173ed01a6e172915,4753,maven_execution_successful,0.0010690212901837,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+urlaubsverwaltung/urlaubsverwaltung,4c291edf3f158a8b4821fdce097935a49341f4cb,4753,maven_execution_successful,-0.0001114653749068,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+urlaubsverwaltung/urlaubsverwaltung,2635a2572ba2d9a71b7dceb1074407fcf302b0e2,2976,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,c13815d26f6bdea592d5a6725daac31b7526e2fd,2976,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,bc949745aa231600a44960bccb681a2ba1d23335,2976,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,c4876ee7418d3fec65f4c80bfec122b692920930,2976,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,67ce9c2a6344c456636bb5d3023c88e5a48e3b98,2976,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,5a48636c6e140031c197e18aa388a9c7511f6072,2976,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,8dee89ec9b575b079824b9b420ce4a301e4e287c,2976,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,acc2a7a110c99ab372b8aca323cce5c7efddd417,3125,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,4efca170169811a90de3411a912ba75088dfaaad,3125,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,58ad3214a7096ed979a768717f48cf5a134f986b,3125,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,a1ac9291bc1247d7252ac87c946ad5c20f5eba12,3125,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,b7a83f69803c3235b138e6e17d5715895c060e05,3125,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,1fb893b5de105f847229792ae22db30e27773701,3125,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,44a4729ddb8b788ab7bd1d149de48002c05b0482,3125,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,aa7946d2b63d96819eb30673155688b6c1101e82,3125,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,b980bbd5af68132069159947fa3990e6cbdda515,3125,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,f39ca4feea756fc6d07f9067572bf42421c05201,3125,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,b354c37fe2df49e617e2f0793b3fc15b261cfef3,3125,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,29ba448093cd873deb4a3d3284366372901d29b8,3125,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,7c603678112d10de0d73126b877f93eb9e95a4a7,2975,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,9b7211d158e4410baeabd329279836687264ad3a,2975,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,e19b38a0988f1dd711d4e934f3354e0a579565bb,2975,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,6eaa0fbc509b5ddcf79af481afe3499fde5e609f,2975,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,8dc1e01862399a78ed38692e0ceb14d0d9fc99d6,1579,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,8e9939b7dfb1e650db9a0844d2ec79154970b184,1522,final_clone_and_checkout_repo,,,{}
+urlaubsverwaltung/urlaubsverwaltung,15fbfd085328a9e813536d6a6b2947ade02f411c,1522,final_clone_and_checkout_repo,,,{}
+microsoft/azure-tools-for-java,db5fe0aa39d3720dcbd85f18a0cf377534c4153a,6476,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak-benchmark,2fc462e193ea98b5f32e73381dad2bb9193d923b,38,final_clone_and_checkout_repo,,,{}
+keycloak/keycloak-benchmark,839609cf7250ce31c2541e31f834abbd3694e610,38,final_clone_and_checkout_repo,,,{}
+apache/royale-compiler,6da4dc4c38ab80229765e8feb1c89f95804963f6,187,maven_execution_successful,0.0207624470522881,0.9999995008111,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+quarkiverse/quarkus-cxf,2cb48c64142928fc3274cbb5092e394d002fb42f,552,final_clone_and_checkout_repo,,,{}
+ita-social-projects/GreenCity,3394468f34935abc3732e4b7b1439fda622b251f,1704,final_clone_and_checkout_repo,,,{}
+ydb-platform/ydb-java-sdk,71da33bdb13801cd14bf88c1242e34cd3aca18e4,50,final_clone_and_checkout_repo,,,{}
+ydb-platform/ydb-java-sdk,fb819a7b5d1607e33350e2ca0ff983046b963b8c,50,final_clone_and_checkout_repo,,,{}
+ydb-platform/ydb-java-sdk,d734e6ffd84e5d14b158f2c8ffa8357f986507a0,50,final_clone_and_checkout_repo,,,{}
+ydb-platform/ydb-java-sdk,1e32b77ef84f7fe7e6c3d1225a6f20c997ae0c00,50,final_clone_and_checkout_repo,,,{}
+ydb-platform/ydb-java-sdk,4b92f3e082350e613e2fa8622b2ed3d42d128b56,50,final_clone_and_checkout_repo,,,{}
+ydb-platform/ydb-java-sdk,61010881c565323ace6ed73dfb10b7f884c6677c,50,final_clone_and_checkout_repo,,,{}
+ydb-platform/ydb-java-sdk,6837cc9e73da174410c8b618e627ac2b4153522c,50,final_clone_and_checkout_repo,,,{}
+ydb-platform/ydb-java-sdk,a50a1c2c09f2b39682ecb7a49ef934635005117c,50,final_clone_and_checkout_repo,,,{}
+ydb-platform/ydb-java-sdk,553c12945c309d50fd3a43e2982715678fdc43a4,50,final_clone_and_checkout_repo,,,{}
+quarkiverse/quarkus-vault,189c0c4201539282bb77836d962696c93ee3485e,278,final_clone_and_checkout_repo,,,{}
+obsidiandynamics/kafdrop,9d16be5da79b3f23e9076c22221dc93dd96ccc00,233,maven_execution_successful,0.0022026431718061,0.9975995684818382,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+orientechnologies/orientdb,62f1a95f666bebb2a96b5db9f0bccee1979a8d11,9603,final_clone_and_checkout_repo,,,{}
+orientechnologies/orientdb,06961eba7eda8a69e609dc6c02adec9c78f3b50d,9603,final_clone_and_checkout_repo,,,{}
+DTStack/chunjun,c6f20ace385e039b34166bbdb38bcf9c08907927,1619,final_clone_and_checkout_repo,,,{}
+DTStack/chunjun,72dedd533bd7db9537f2c53126f7fd552d76e901,1138,final_clone_and_checkout_repo,,,{}
+DTStack/chunjun,34ef687bbf284805f0c879763f398ccae5fc8779,1138,final_clone_and_checkout_repo,,,{}
+DTStack/chunjun,efd10114e394aa250c004781c97a53234c2409f2,1138,final_clone_and_checkout_repo,,,{}
+DTStack/chunjun,ac0c2ae5b1ff4cc973c7d5aa6a33fd1293e12bae,1138,final_clone_and_checkout_repo,,,{}
+GIScience/openrouteservice,c8c57a4b848e17bed8f3f8609a400d258b4018f9,2064,maven_execution_successful,-0.0014477754261924,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+GIScience/openrouteservice,65bfb9223029334a943e4d8c1beff9575f5f82e1,2064,maven_execution_successful,0.0017750243630793,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+GIScience/openrouteservice,dced459b586e22035edfbae8fbac14011789f78f,2064,maven_execution_successful,-0.0024675838629327,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+GIScience/openrouteservice,097bb7d37e1ab568794025816dca6e1b431eb54d,2064,maven_execution_successful,-0.0005358651017851,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+GIScience/openrouteservice,886291b9f4956d7b8604a52ec8ce9e60d7584f0e,1573,final_clone_and_checkout_repo,,,{}
+GIScience/openrouteservice,4d73454c8ced45ee1206a3b6ee52e49a347a21bf,1573,final_clone_and_checkout_repo,,,{}
+GIScience/openrouteservice,cd121c8957fdd146770c43e7604330fc56021719,1573,final_clone_and_checkout_repo,,,{}
+GIScience/openrouteservice,bab8bd63595779fd820bcc771fe54a87e387c3bf,1573,final_clone_and_checkout_repo,,,{}
+GIScience/openrouteservice,fe323ad5eb9e3101aea069f4e4b178188b3ba3b5,1573,final_clone_and_checkout_repo,,,{}
+GIScience/openrouteservice,c4f454eca13f305ecbfb9ed6b14e7e681d29417a,1573,final_clone_and_checkout_repo,,,{}
+GIScience/openrouteservice,0924189535a0e1f667a44a7ad99b2858086de73a,1573,final_clone_and_checkout_repo,,,{}
+GIScience/openrouteservice,f85bdeab7ed53025ba83a1740e05983e19309f78,1573,final_clone_and_checkout_repo,,,{}
+GIScience/openrouteservice,9c202574c588c45779876a94f0ef119bfa9595f7,585,final_clone_and_checkout_repo,,,{}
+GIScience/openrouteservice,c7cc8cf46b8416578798ca1793aaee8f99d2886f,585,final_clone_and_checkout_repo,,,{}
+dcm4che/dcm4che,3543c9dd8d3f101ba4f9b6099b02585fdd0f0c5b,1009,final_clone_and_checkout_repo,,,{}
+dcm4che/dcm4che,b87b7c40ce3123f936594ae5836dcbd6b488bb65,798,final_clone_and_checkout_repo,,,{}
+dcm4che/dcm4che,70263ff3a8b93fd559fe0bc46c0884ef214711a9,651,final_clone_and_checkout_repo,,,{}
+eclipse-xtext/xtext,2bce8b6c62b1da7c57d81cff6e699eedb19d90a9,3119,final_clone_and_checkout_repo,,,{}
+eclipse-xtext/xtext,4f5f3d6ff0828eda167e3e90ea6e3998cb7ba5e1,3119,final_clone_and_checkout_repo,,,{}
+eclipse-xtext/xtext,1f0f7d68e7a76c8768b0318a3cf2419686e1b97a,3119,final_clone_and_checkout_repo,,,{}
+opencast/opencast,a0b6211e652630f852f924b568b0c54bced73a8c,4748,final_clone_and_checkout_repo,,,{}
+opencast/opencast,e190fa88e14071b722e8cd6e0fc931c411077793,4748,final_clone_and_checkout_repo,,,{}
+opencast/opencast,3d18127d3a28abdc51ae4062587359f947825592,4748,final_clone_and_checkout_repo,,,{}
+opencast/opencast,ba77651271905b904bd9d8fb92b283d04b81ea01,4748,final_clone_and_checkout_repo,,,{}
+opencast/opencast,48632c753e65c95bb47fec0a729454ec4f770110,4748,final_clone_and_checkout_repo,,,{}
+opencast/opencast,8bba8872537c71f2c3e834b34b14eb6d00714bed,4748,final_clone_and_checkout_repo,,,{}
+opencast/opencast,3cc4e7344ed73064dee4f9725496754bebbfd935,3740,final_clone_and_checkout_repo,,,{}
+opencast/opencast,f2dfc0d388c7c3574f4140f08f3cba843ec56317,3740,final_clone_and_checkout_repo,,,{}
+eclipse-lemminx/lemminx,c26c2dfcac3dd88dc576e211fa523b9c8831ad1e,1368,final_clone_and_checkout_repo,,,{}
+eclipse-lemminx/lemminx,420076eb4d74cfce04cc201f76a16eb4d76a8277,1162,maven_execution_successful,-0.0009913080351647,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+eclipse-lemminx/lemminx,2342c603dfd1a8c171cd657c3c32d962adbe4f34,1175,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-vault,2e4aec67daf2ee13e16facce265c232ed8f47301,702,final_clone_and_checkout_repo,,,{}
+smallrye/smallrye-graphql,21fbb19de4bafe2240247d08f9bd8de8f05800ba,728,final_clone_and_checkout_repo,,,{}
+smallrye/smallrye-graphql,ecbcc1ed8cbd96a1fb33439351a62e1c6f2b4224,350,final_clone_and_checkout_repo,,,{}
+smallrye/smallrye-graphql,376d82e9514914f5fd6e6ee78ec7544a450a30d2,350,final_clone_and_checkout_repo,,,{}
+smallrye/smallrye-graphql,3a7f06f2ed60a64d1aa2740091b44c1095f65219,187,final_clone_and_checkout_repo,,,{}
+smallrye/smallrye-graphql,e4e48208ab9edf8612674d1472c47e3305801bfe,187,final_clone_and_checkout_repo,,,{}
+smallrye/smallrye-graphql,b52940e0868bd92357b05899417564b14580fd59,187,final_clone_and_checkout_repo,,,{}
+smallrye/smallrye-graphql,149ab4f97e0cda731af616fa43104e1c11aba9ef,187,final_clone_and_checkout_repo,,,{}
+smallrye/smallrye-graphql,0fc33abc8dc5a1646cd4c640b37eeca1d1d6b581,187,final_clone_and_checkout_repo,,,{}
+focus-shift/jollyday,f6215a93de6c430997428b682e9a1b73944f3c77,460,maven_execution_successful,0.00121525777084,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+focus-shift/jollyday,530b59a1c4e9ea987825465bdf011f725c17924f,460,maven_execution_successful,0.0044914714269299,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+mhewedy/spring-data-jpa-mongodb-expressions,45e0e1c3f1abff6c9a457905b80cb884f8a23487,30,maven_execution_successful,-0.0019883402185244,0.999999133346678,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+eclipse-esmf/esmf-semantic-aspect-meta-model,2f8b65d02c70333595839cd51b6a900ecb6130d8,338,final_clone_and_checkout_repo,,,{}
+deegree/deegree3,68a676c328cfeb52c3e32a7c847d512e4086b049,1633,final_clone_and_checkout_repo,,,{}
+deegree/deegree3,8e2d092297d143543a14ef15b44b7809d634c94b,1633,final_clone_and_checkout_repo,,,{}
+deegree/deegree3,341d26cc56e8ab7ed070ab9a9e9235fbe394a6e3,1633,maven_execution_successful,0.0037596945002164,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+GoogleCloudPlatform/cloud-opensource-java,0fb8ee7593659996912d0dc965369743f80613da,1422,maven_execution_successful,-0.0018068449151239,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+GoogleCloudPlatform/cloud-opensource-java,abfd8e4d3abdea3725039999fefc970f317ee825,1320,maven_execution_successful,0.00492081717458,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+GoogleCloudPlatform/cloud-opensource-java,3ad0b432db218f3417db5451040e80a8d5d475bd,1204,final_clone_and_checkout_repo,,,{}
+philterd/phileas,5d0a6d3854c4e8511b1a9860aec4fb6379c6c6ca,112,final_clone_and_checkout_repo,,,{}
+philterd/phileas,32f4990c69f70cb004f36322851025506b5a8c7a,111,final_clone_and_checkout_repo,,,{}
+philterd/phileas,fc2083b1d47e71deaff81094de99d91685b437bf,111,final_clone_and_checkout_repo,,,{}
+philterd/phileas,dae8769c1ed81890a9e31a048dfdebde91b81f7d,121,final_clone_and_checkout_repo,,,{}
+philterd/phileas,a0618b28ea7547bf0049d5c1c8e59b20a19d89d1,112,final_clone_and_checkout_repo,,,{}
+philterd/phileas,4f1283742204a0bd7f6cdbe7e20298314cf8f5a3,118,final_clone_and_checkout_repo,,,{}
+philterd/phileas,79b4baebc26058a84bb57436492668cd45c918f5,112,final_clone_and_checkout_repo,,,{}
+philterd/phileas,1c7b27d54a88e58b87b5588bdce8cc918a98fb39,112,final_clone_and_checkout_repo,,,{}
+eclipse-lemminx/lemminx-maven,28d641185b02f86164c61d5a7cb526627ffa307c,462,final_clone_and_checkout_repo,,,{}
+eclipse-xpanse/xpanse,5ddebaedcb0d49ceb4ce90d8d0f238ac72a07229,2089,final_clone_and_checkout_repo,,,{}
+eclipse-xpanse/xpanse,2484cb37dd37525ec69435fd0b2a44fa17182b13,1190,final_clone_and_checkout_repo,,,{}
+eclipse-xpanse/xpanse,778984aeb9ef9603110139f6a0b514ba69d8de32,1190,final_clone_and_checkout_repo,,,{}
+networknt/light-4j,ca3ba4b24ce2d9e89de3b04dfdd48be6c3ca5980,2058,maven_execution_successful,-0.002305941750262,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+networknt/light-4j,1e7a7e899e2246603043fa119ed87f02aaa4ebfa,1603,final_clone_and_checkout_repo,,,{}
+networknt/light-4j,6cb7894a3ced260e473d2070e911d0a3baca9234,1598,final_clone_and_checkout_repo,,,{}
+networknt/light-4j,0897ed5ad1527fa9372fa09de1ec950b579c2ef7,1572,final_clone_and_checkout_repo,,,{}
+networknt/light-4j,61ae5d969b6516dba8c13df349bdb58717da49e6,1137,final_clone_and_checkout_repo,,,{}
+networknt/light-4j,75bc7e7a88d54063a0db4b026ebac5d70a60446f,861,final_clone_and_checkout_repo,,,{}
+networknt/light-4j,54150a956756c245e8c23c8676327f5c80e1b7c9,730,final_clone_and_checkout_repo,,,{}
+networknt/light-4j,6111200e21219ac99ba380227e432f209388add3,726,final_clone_and_checkout_repo,,,{}
+MarginallyClever/Makelangelo-software,5a68f86539e66bfca584b0f5dba4617fe1c0178e,336,final_clone_and_checkout_repo,,,{}
+zowe/zowe-client-java-sdk,6e8cf351b9e9dd57d685b4a11a5007d01327759f,202,final_clone_and_checkout_repo,,,{}
+zowe/zowe-client-java-sdk,60f3163ab8980d4529d5793b556d29c3d1128d4a,177,final_clone_and_checkout_repo,,,{}
+hyperxpro/Brotli4j,f2e0978a171fa19de2b0dec0b5098e75eb8a0c5d,123,final_clone_and_checkout_repo,,,{}
+apache/linkis,19efbe4529d08d7f0e528e9408ab63b02cdb8001,2929,final_clone_and_checkout_repo,,,{}
+apache/linkis,de16b80be8457a53fdcf8003e0cf5b3538a30602,1419,final_clone_and_checkout_repo,,,{}
+apache/linkis,38d17ad475788f43c9174d70b03ecee6f2a9bd2e,1384,final_clone_and_checkout_repo,,,{}
+apache/linkis,54dad0ee724079b8f30bfd42b5ed6407b21f9bbe,1443,final_clone_and_checkout_repo,,,{}
+apache/linkis,dbb40f17fa0733b58d358452fbac5c249956675b,1384,final_clone_and_checkout_repo,,,{}
+apache/linkis,21fedc47f7b5977b93302746d57f8caf11784e73,1384,final_clone_and_checkout_repo,,,{}
+apache/linkis,fa497a4f6e654db61d70c38fb3d8869454703483,1384,final_clone_and_checkout_repo,,,{}
+apache/linkis,973e9b217f01dd487090721c45334df478561f9d,1384,final_clone_and_checkout_repo,,,{}
+apache/linkis,f5a38398dded9132449c4787a94f845dd256bef4,1384,final_clone_and_checkout_repo,,,{}
+apache/linkis,4cdf4262f4381499d79182a2ac5b799905db7942,1443,final_clone_and_checkout_repo,,,{}
+apache/linkis,d56411ba74ef8c987240513bce8504e4018dcf72,938,final_clone_and_checkout_repo,,,{}
+beehive-lab/TornadoVM,960b2fdb673012d364052820b747eda77bad5935,21,final_clone_and_checkout_repo,,,{}
+beehive-lab/TornadoVM,6481642fe661692348486d4c891546006d0a7ad4,21,final_clone_and_checkout_repo,,,{}
+beehive-lab/TornadoVM,1a6aaf0c432b795f5fd94cfbdfa5f07496334920,21,final_clone_and_checkout_repo,,,{}
+beehive-lab/TornadoVM,8d1cac1739ae2d235c9ec5fde152b63ea94f7cfc,21,final_clone_and_checkout_repo,,,{}
+beehive-lab/TornadoVM,349fdb0bda0436f3093331f09e681144bed7f985,21,final_clone_and_checkout_repo,,,{}
+beehive-lab/TornadoVM,260c78de18a7992cec85b058d5a5c77839c6a40d,21,final_clone_and_checkout_repo,,,{}
+spring-io/spring-javaformat,48edcc3d14b71064d1d8e2d37f532a157ca77a46,319,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-data-couchbase,33fdffab2fcec6ecd14e4e476f47d3f33ac90ce5,539,final_clone_and_checkout_repo,,,{}
+OpenAS2/OpenAs2App,db8e291506a538801fb248daceed4de759f29d43,283,final_clone_and_checkout_repo,,,{}
+uppnrise/distributed-rate-limiter,6c73f3c275ed1dfdff684aab6f5ae3f4fbe35dd7,14,final_clone_and_checkout_repo,,,{}
+uppnrise/distributed-rate-limiter,037d100502cec920fab774b4340f586cd2463bd7,14,final_clone_and_checkout_repo,,,{}
+uppnrise/distributed-rate-limiter,a9577cd47243164beed6731ced8f9f6e07feba24,11,final_clone_and_checkout_repo,,,{}
+micronaut-projects/micronaut-maven-plugin,e302e0f8c1f40f4c04ab3c9ff32de608c7e0860d,94,final_docker_image_built,,,{}
+power721/alist-tvbox,19ca406bde49f2a620a41c9fed2b6d1bc040aaf2,581,final_docker_image_built,,,{}
+pgjdbc/r2dbc-postgresql,9078212d0723467dd6dbfcf1f62511fc4733fa0d,243,maven_execution_successful,-0.0068173544693384,0.9999999990686774,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+OpenLiberty/ci.maven,b03668fa38459b1c6f10bcb4c52c77918068b13e,1851,final_clone_and_checkout_repo,,,{}
+OpenLiberty/ci.maven,a01559d74e4ef56bdfdfcadc57c8f72c6b47165d,1646,final_clone_and_checkout_repo,,,{}
+OpenLiberty/ci.maven,c70f49d4bb1358409ddf4b6d8ea93b59e12ee69c,1354,final_clone_and_checkout_repo,,,{}
+OpenLiberty/ci.maven,8c313e79076d840e83a518b63f0d7c07d8ff9f3c,1162,final_clone_and_checkout_repo,,,{}
+OpenLiberty/ci.maven,934e41d9edf09d581156da6990973fcda712fcb9,1162,final_clone_and_checkout_repo,,,{}
+OpenLiberty/ci.maven,cf4ea876e26bcc12ac478cca1d143a13915bbf70,843,final_clone_and_checkout_repo,,,{}
+OpenLiberty/ci.maven,15e27c85f53f565462e4a470667d19c2d449e1a0,909,final_clone_and_checkout_repo,,,{}
+OpenLiberty/ci.maven,2a11b8352b15cfa97ddb4d7dad8dea8088fe5271,748,final_clone_and_checkout_repo,,,{}
+OpenLiberty/ci.maven,1668b6ffe77ca1816d1b0ee706e0b9180e9bbe1f,407,final_clone_and_checkout_repo,,,{}
+Unleash/unleash-java-sdk,6d5d867f6da4766a57e74ed75117acb056f770f3,10,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-modulith,01d7a35d2dc2b340462ab38b4f2a6e1031d991b6,1338,maven_execution_successful,0.0016522370364556,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+spring-projects/spring-modulith,711c8449fa8f0494650d95ff6d23d8c3e474a8df,1146,maven_execution_successful,0.0019976942911705,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+spring-projects/spring-modulith,5f725621c6b6f83404168784fae772508e21a21b,1149,maven_execution_successful,-0.0018828758715732,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+spring-projects/spring-modulith,4cf9b5c7072e9e88f1c0897f9f7d8bf703c0fdae,1149,maven_execution_successful,0.0011227831412409,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+spring-projects/spring-modulith,083ce7beae11f7872e5f143dd860dc39a0eb9f7f,1098,maven_execution_successful,0.0554842230282796,0.999999807216227,"{'original_outperforms_patched': [], 'patched_outperforms_original': ['org.springframework.modulith.core.ApplicationModulesUnitTests', 'org.springframework.modulith.core.ModuleUnitTest']}"
+spring-projects/spring-modulith,0de48790d7e98785d82f7e0668f1a75036f9c152,261,maven_execution_successful,-0.0058281564178746,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+spring-projects/spring-modulith,868fddca504dfd42b667dfa00ee30e1b8e80213c,119,final_clone_and_checkout_repo,,,{}
+spacious-team/investbook,be2e444713e897ef651f2d59f32ac2b1af04267c,430,final_clone_and_checkout_repo,,,{}
+spacious-team/investbook,d9d2b504f317e0b029277cb0e35a5166a6b38f7d,430,final_clone_and_checkout_repo,,,{}
+spacious-team/investbook,53203c6170e4d4d0a2d4916aaa3c7d073bcb6acb,430,final_clone_and_checkout_repo,,,{}
+spacious-team/investbook,91f015b08adf47727bf05cb3c2fa1b14e3954607,430,final_clone_and_checkout_repo,,,{}
+spacious-team/investbook,9084c8f01d4a81aa35dd1c20bd9df546ee3af788,430,final_clone_and_checkout_repo,,,{}
+spacious-team/investbook,2ed8f7e036d82fd75fe5c8b9d1cea707d73490f0,430,final_clone_and_checkout_repo,,,{}
+spacious-team/investbook,6e44bc495d8261fc995b2cdded1ed54ffd07c287,430,final_clone_and_checkout_repo,,,{}
+spacious-team/investbook,44c03ecbf217b7f4c31135b41107a471b9792181,374,maven_execution_successful,0.0098925343391928,0.999999133346678,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+spacious-team/investbook,12c82e401af3c9aaa8d8ba74ca2c11311eb33189,249,maven_execution_successful,-0.000384733764235,0.999999135525782,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+spacious-team/investbook,0fe121b3233e5bded71374ee3eaa6e65fba24041,180,final_clone_and_checkout_repo,,,{}
+spacious-team/investbook,30a4dc79a6b93ee8830b02c7b3c0a5b0cd3c1f36,180,final_clone_and_checkout_repo,,,{}
+spacious-team/investbook,cb693efd149240bad1c2c86ebf5683e9939df561,180,final_clone_and_checkout_repo,,,{}
+spacious-team/investbook,d9044f4994f125ef67f63dd3d30dcfce35e05c91,180,final_clone_and_checkout_repo,,,{}
+Altinity/ice,070667223d22ecf3455260f51afb355c1d178b08,20,maven_execution_successful,-0.001277207173647,0.9999991338918834,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+Altinity/ice,2eab476ae1380e3d8dfc3121efd644033742921d,20,maven_execution_successful,-0.0005093502146547,0.999999133346678,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+Altinity/ice,3775b5ecebd8d8d860cbfbed9b130ccc5052442a,20,final_clone_and_checkout_repo,,,{}
+Altinity/ice,2ee036804b554a87345af66153b9c5570495c1f3,2,maven_execution_successful,0.0027950197829321,0.999999133346678,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+Altinity/ice,3078e59ca36351442558362539748991c18166d1,2,maven_execution_successful,-0.0032322045103945,0.9999991349814352,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+Altinity/ice,c500040179dbb6a12aa1e1e7a545cfb5f248dd98,2,maven_execution_successful,-7.319572536959784e-05,0.9999991344368026,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+Altinity/ice,ea830de2a90cb4e911d1d8ef02b0903f65fe695f,2,final_clone_and_checkout_repo,,,{}
+Altinity/ice,2dd678defe7e35bc50c156d1beb9e8f680028069,2,final_clone_and_checkout_repo,,,{}
+Altinity/ice,ed4f40241f1080b1c4e25f1ef336f714a15b3edc,2,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,d8315b1e292013fdce691e71635adbea2e89e39d,4307,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,f9003bdd65bcebcaa8a40c1654c8c1c8c7d3a3ab,4281,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,23a84842337c3d17dd5590abf834605f22330e42,4267,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,af10791284df10935426cb2d6cd0f2f7f7fba50d,4244,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,af7b599d180370a704cfb330e5a1e2472af22de0,4142,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,55a0a9e45b73db1ae5dfcdb8e463afafe7f504ff,4142,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,f85ee6e58ea69e93b22234d7796b589615dc62f1,4142,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,4757cad7e7e52148c0ef6fca3bea83b719a6a5a6,4092,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,c98fd4be98e4413dbee234b879e5be7bb98f3959,4064,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,2123e367efe7f83c1a2d942961d318a57c18f630,3157,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,e92cec67491a347b48a5429a882f72582e04165b,3698,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,c62b3ec16dfef6035df571caab31e01e0904514d,3542,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,09c2f120983a847a7dcb1edd0e13e6eac530db40,3509,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,aab14584fe1a150b7bf5fd332f8d534482c494d1,3383,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,e0761810f7a51fa6f918f02124f4dc1ac9a80923,3509,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,d1d45fe1afc4093e19cc135be2b8db7d5b50d8f4,3383,final_clone_and_checkout_repo,,,{}
+oracle/opengrok,75a28789b3c6ae7fa46382d1b7fea6578cbf7cc0,3247,final_clone_and_checkout_repo,,,{}
+subclipse/subclipse,b76c575781f6e3fbdf4611ba826c7bad5aa0d314,173,final_docker_image_built,,,{}
+microsoft/semantic-kernel-java,612e5a515b67af7f33ad607cb81702f2da47d469,267,final_clone_and_checkout_repo,,,{}
+microsoft/semantic-kernel-java,49e5ff58199d0442078a48b564a189c5927fb0c7,267,final_clone_and_checkout_repo,,,{}
+microsoft/semantic-kernel-java,4c9c2190a090f4f061bd65ccfc6b90f08f67830f,267,final_clone_and_checkout_repo,,,{}
+microsoft/semantic-kernel-java,29c59b5284d22772a4089e590fd3a546d56609b7,267,final_clone_and_checkout_repo,,,{}
+apache/camel-kafka-connector,1b22bc74609d46db2283c9c022012e1574225075,226,final_docker_image_built,,,{}
+tcheeric/nostr-java,5c8b190e369c80f986ca767488a1412082602f60,46,final_clone_and_checkout_repo,,,{}
+tcheeric/nostr-java,e2aa47c0fc7e3d0d9436f66cae510f49ef891e32,46,final_clone_and_checkout_repo,,,{}
+jnr/jnr-ffi,407630d695676b145623c5b16103c7654c18a78c,228,final_clone_and_checkout_repo,,,{}
+gluonhq/rich-text-area,c908f7f43d2ad05aa504a006dbd84801e662d89a,399,final_clone_and_checkout_repo,,,{}
+gluonhq/rich-text-area,501ff698918b55dac4e016a989df179a6cfa6b99,377,final_clone_and_checkout_repo,,,{}
+gluonhq/rich-text-area,da373db7e35c216e3b30e79277d5e6653fbb2af1,316,final_clone_and_checkout_repo,,,{}
+gluonhq/rich-text-area,4bfda0aeee99e29af06d711c60f465daa3044261,3,maven_execution_successful,0.7128443927046952,8.628428940029018e-07,"{'original_outperforms_patched': [], 'patched_outperforms_original': ['com.gluonhq.richtext.model.PieceTableTests']}"
+diennea/carapaceproxy,e38d49001bf053602b3a18acc1802ed948376cb3,181,final_clone_and_checkout_repo,,,{}
+diennea/carapaceproxy,4b80f50a572e7dbc25f26f189926f656bc5dbd56,181,final_clone_and_checkout_repo,,,{}
+diennea/carapaceproxy,12e4a9103401296f9366f826f5bc198a5887ccec,181,final_clone_and_checkout_repo,,,{}
+diennea/carapaceproxy,74198be130be4158a870bd0c05cf7e7be942fddc,394,final_clone_and_checkout_repo,,,{}
+cmu-db/benchbase,c9f2bd6d22b0f3fb454f1cd04341b36ad5dc03f1,125,final_docker_image_built,,,{}
+quarkiverse/quarkus-quinoa,63b34b55a687f3400c61ffd2d5b4ffdff7945b9b,52,final_clone_and_checkout_repo,,,{}
+iluwatar/java-design-patterns,4e8cdc7c960ce991fce94cfb0143466e9526a6a6,2459,final_clone_and_checkout_repo,,,{}
+cloudsimplus/cloudsimplus,815993900d4c16ddd1849e9762b82fafe3f3c7e2,338,final_clone_and_checkout_repo,,,{}
+cloudsimplus/cloudsimplus,b6c496afded81a59fc31d93fd9caa471a41a9a58,325,final_clone_and_checkout_repo,,,{}
+cloudsimplus/cloudsimplus,08a626a00a068def645f9b49e29beb1932a4ec9f,323,final_clone_and_checkout_repo,,,{}
+cloudsimplus/cloudsimplus,af19ed4b38ac84d14d94a9e2057cdf3f7f5355a7,308,final_clone_and_checkout_repo,,,{}
+cloudsimplus/cloudsimplus,026f7c0b080fd2f09445b53609d56aa374c673af,273,final_clone_and_checkout_repo,,,{}
+cloudsimplus/cloudsimplus,10a421d239fa8fefd1e66c39b550c74373b9d380,236,final_clone_and_checkout_repo,,,{}
+Blazebit/blaze-persistence,09ebc89e00992524a244209f52255f5c95925169,2017,final_clone_and_checkout_repo,,,{}
+Blazebit/blaze-persistence,2a90da3adc6cbcf8ccc7af04acca5abf81a35268,1058,final_clone_and_checkout_repo,,,{}
+oceanbase/odc,fca5e9f585a75a1dc55a5e057abc09ffbad04806,2270,final_clone_and_checkout_repo,,,{}
+oceanbase/odc,01a9365390fe0f00c30df4b4f61e6da205215d97,842,final_clone_and_checkout_repo,,,{}
+oceanbase/odc,2209a40af5e17b2a937bf48fe1275257ca92c91a,842,final_clone_and_checkout_repo,,,{}
+oceanbase/odc,8dffddf93c97b11f19dd58c0553f1c116494fd6b,550,final_clone_and_checkout_repo,,,{}
+paulcwarren/spring-content,af9e7041766c39f62ee1388cde6d0b9f3598d79c,320,final_docker_image_built,,,{}
+paulcwarren/spring-content,9fbdd14e21bb31cab583216603afbd2f82d17735,320,final_docker_image_built,,,{}
+paulcwarren/spring-content,dc4d5b2b5c9d55948b8c78a16decc270a15b77af,320,final_docker_image_built,,,{}
+paulcwarren/spring-content,e85bde20b432b1939cf2b6de5ce84fe95929b6b0,1,final_docker_image_built,,,{}
+streamthoughts/kafka-connect-file-pulse,ce329c0713fad5bcf6ee07ca0a182276b3583b07,490,maven_execution_successful,0.0042400234741783,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+DominoKit/domino-ui,71e252ef792b27d3ab6a39462e1857e2158e52ec,630,final_clone_and_checkout_repo,,,{}
+DominoKit/domino-ui,40e59e900bb8792b23c66af7eaad2af185f735b0,630,final_clone_and_checkout_repo,,,{}
+DominoKit/domino-ui,d9e8c0e23c9ff3078eea391ed1d184df2463b853,456,final_clone_and_checkout_repo,,,{}
+DominoKit/domino-ui,0bbab446a24df4c02859a5996d1632db00439223,456,final_clone_and_checkout_repo,,,{}
+warmuuh/milkman,ef687963b85cafd263cc18ac61b8733782aa8ce1,72,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-retry,8b87e8a646712b8c33e82d7765978d4299214020,212,final_clone_and_checkout_repo,,,{}
+apache/curator,39ed945af4147289d98cd2089e39954d09448577,585,final_clone_and_checkout_repo,,,{}
+apache/curator,003f6f0082163889d9a1d423ad62095cc41a1366,525,final_clone_and_checkout_repo,,,{}
+apache/incubator-baremaps,0d0dd7d92354419ea1014574d6014894e7e0c8ef,98,final_clone_and_checkout_repo,,,{}
+quarkusio/quarkus-github-bot,b2d827911c57495328ab5a2f03d18fdfd95e55a7,80,maven_execution_successful,-0.0046152764870796,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+quarkusio/quarkus-github-bot,b2dcb6204446b1af198f740a5d2347d15ab88f51,80,maven_execution_successful,-0.011007647252799,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+mock-server/mockserver,4509035c3c0f09a80571bab2878c6a622a08462e,1010,maven_execution_successful,0.0174717181255632,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': ['org.mockserver.mock.HttpStateTest']}"
+jenkinsci/opentelemetry-plugin,655db77b4c3c86ef46a57046fb921a0a5dc0a4e2,197,final_clone_and_checkout_repo,,,{}
+jenkinsci/opentelemetry-plugin,1f0085ecb05b7c0930199dabfda31c5e96c455a2,21,final_clone_and_checkout_repo,,,{}
+tarantool/cartridge-java,c4785884c979aa69c08201dff964674e91106321,432,maven_execution_successful,-0.0066902876198417,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+tarantool/cartridge-java,67318e745dd0748e21723866f1ea0e149a94dcfa,207,maven_execution_successful,0.0041955490696827,0.999999133346678,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+tarantool/cartridge-java,3daebaa65e6212c879288067c5970810afa5341a,22,maven_execution_successful,0.0006478257348772,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+tarantool/cartridge-java,3c9df2ac7a92b3f4078ca4221a34bab65507a7c2,25,final_clone_and_checkout_repo,,,{}
+tarantool/cartridge-java,8236adb9aefb32421868815b95bb82050dc1ffb3,25,final_clone_and_checkout_repo,,,{}
+gdela/socomo,df721d27ebf497d7a7174ba9fafb6db25685aa21,22,final_clone_and_checkout_repo,,,{}
+ajaynegi45/LibraryMan-API,c362ae53c181b09295f553703dbfb90f7582ab38,38,final_clone_and_checkout_repo,,,{}
+moditect/moditect,e66d7941f237ac649d5ecd218e3dfe594c150060,95,maven_execution_successful,0.009541463414634,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+martinpaljak/apdu4j,40db3e8e75e591cd37dc52af705e937551719902,67,final_docker_image_built,,,{}
+apache/doris-flink-connector,ba0f97a6d7a00b90342241ab0462116f60af5f49,518,final_clone_and_checkout_repo,,,{}
+salesforce/bazel-eclipse,3165324c0bc0750b7786ef37af2307ea2de550d3,156,final_clone_and_checkout_repo,,,{}
+rworsnop/vertx-beans,844c9534865f9852dcab84bb4a6c3c330e18ac5e,15,final_clone_and_checkout_repo,,,{}
+apache/camel-k-runtime,8a1162d62892d3f122a0307a20680a951f912f38,544,maven_execution_successful,-0.004609377293679,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+apache/camel-k-runtime,c74f47ee26d68adf8c7578a3141f3d5434708ced,246,maven_execution_successful,-0.003337675024422,0.9999991344368026,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+jstachio/jstachio,b1dc7c1a1ba65394d3f4dc518530c4bb5d7b93ef,296,maven_execution_successful,-0.0038910505836575,0.9999987638373898,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+jstachio/jstachio,941c70be4a83fa1b5a2e50259087068c66044065,296,maven_execution_successful,-0.0451866404715128,0.999999135525782,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+jstachio/jstachio,56d99c490893dfeafbfa867fa3b594f7189c496d,296,maven_execution_successful,-0.0219780219780219,0.9999985641707764,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+jstachio/jstachio,8b9eaa2bd84df500b53ecfcc8a7cb69417d758ec,296,maven_execution_successful,-0.0078125,0.999983006258693,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+jstachio/jstachio,07aa4ff465cda533ed64b92dd85b6e58ba3a263e,126,maven_execution_successful,0.0,0.9999991360698426,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+jstachio/jstachio,b6701a4e2878ed429c1d551b28854f85c26515c6,126,maven_execution_successful,-0.0095980803839232,0.9999991349814352,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+jchambers/pushy,cc99a46f683dbce6c1e5d757e3572ce7b6c99e25,732,final_clone_and_checkout_repo,,,{}
+patrickfav/bcrypt,729c45177d0ffb267807cb5a5ed6fd67088be4d5,1,final_clone_and_checkout_repo,,,{}
+jruby/joni,9dc793533ce27fa9f05f2c1b916c176e28a6bb60,36,final_clone_and_checkout_repo,,,{}
+spring-cloud/spring-cloud-sleuth,354549035b559fa691814c02eb81362eb06bcf11,1742,final_clone_and_checkout_repo,,,{}
+spring-cloud/spring-cloud-sleuth,382f4a0da786bea63159fa4e9593906b729c7b88,1742,maven_execution_successful,0.0027523879791933,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+spring-cloud/spring-cloud-sleuth,d85331124c45104f6c6620214e6422e70a47f8a7,1760,final_clone_and_checkout_repo,,,{}
+spring-projects-experimental/spring-boot-thin-launcher,3d1091a9eeae87c789695c28017bdea3494882b3,22,maven_execution_successful,-0.004370197743372,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+r2dbc/r2dbc-pool,18c355727c1137ee8d3004661b7bef0cad361529,190,final_clone_and_checkout_repo,,,{}
+r2dbc/r2dbc-pool,f6e63b8d415671484bac402d11035e6d0723330d,116,maven_execution_successful,7.490476394288824e-05,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+apiman/apiman,29fb6a19c683ca5edba4a283209bb89026dc0f47,1153,maven_execution_successful,0.0010968629719003,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+cryostatio/cryostat-legacy,0f133926d4132cc83f79c375403471105e14a5a1,929,final_clone_and_checkout_repo,,,{}
+cryostatio/cryostat-legacy,175dd3cd3df48e36e8f182cd5e5b67492aca0051,793,final_clone_and_checkout_repo,,,{}
+spring-projects/spring-guice,e536f4ac9d502ef925de8647a77e4dbeecbfc94d,78,final_docker_image_built,,,{}
+provectus/kafka-ui,0cc39fcd7f2c48fa9102e4bcfa1049a3a00f5804,874,final_clone_and_checkout_repo,,,{}
+openlookeng/hetu-core,fbaee6d06e0bfde096c4582b1832c90c7e18ef41,198,final_clone_and_checkout_repo,,,{}
+openlookeng/hetu-core,dfdf3e33ff7a227861ba4da3893a7c4e426e32b3,198,final_clone_and_checkout_repo,,,{}
+openlookeng/hetu-core,7fac5236a8f20580232d89b98556b5667ca67e1d,277,final_clone_and_checkout_repo,,,{}
+apache/shardingsphere-elasticjob-ui,04a53a39450139b8a17987a93708ae6bbf607fdd,72,maven_execution_successful,0.0016678894034572,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+apache/shardingsphere-elasticjob-ui,19bb6f6d7d2b5ec8847b9657c0984fbcf2ac381f,72,maven_execution_successful,-0.0037771807765607,1.0,"{'original_outperforms_patched': [], 'patched_outperforms_original': []}"
+McFoggy/cssfx,a8bd3cbdf60811baa79f744213dab6cb4306ede5,34,final_clone_and_checkout_repo,,,{}
+McFoggy/cssfx,6aa0027cea46f3452f842d006691ac7dc45fa6ad,24,final_clone_and_checkout_repo,,,{}
+Judge-Girl/Judge-Girl,68caaa7fa13d35ff684bbac131371fca39226e85,335,final_clone_and_checkout_repo,,,{}
+apache/dubbo,a89b24c5d1d4c8636b37e6a5d59169087338f89f,4694,,,,
+apache/dubbo,cb1331e04ff9eb7dd9ea94fcbb17d13c6f959134,4694,,,,
+apache/dubbo,1173b400949ceccc76182f7df9b39d35290d9148,4556,,,,
+apache/dubbo,d663ad45b1eed609308d098a2cd616474eefaa7e,4569,,,,
+apache/dubbo,8534f48f61bfa0134a0eacf042a4f3269f779f0e,4279,,,,
+apache/dubbo,b7e4f3842f39f978bfa49dcee61d7d590b765760,3746,,,,
+netty/netty,efce8e5363db53c640119eecda9e5c60273c7a6a,9710,,,,
+netty/netty,cb739b26194ebaf89f99d83bc6c573723a225173,9481,,,,
+netty/netty,97361fa2c89da57e88762aaca9e2b186e8c148f5,9426,,,,
+netty/netty,91d6e0ea8ff7b076e6b9aeada233c75ced4a59f4,9322,,,,
+alibaba/nacos,b9c3b545baf9b60ad4cb4323ef90abe32a71af24,1842,,,,
+alibaba/nacos,c7800b42bd15644e954f1723f7ff0f8ad6e95927,587,,,,
+keycloak/keycloak,2acfd41b19b7fbe459450145debf547aed375b4b,44447,,,,
+keycloak/keycloak,f7ee930a2718ac1bcf3f65d713b3863d675341c8,44048,,,,
+keycloak/keycloak,1ac76fde5986d78f34f6a73cd157487bc26d8b36,12280,,,,
+keycloak/keycloak,61561968ed8dcda8c2e7521e2ed1bf746db4ad24,10266,,,,
+apache/incubator-seata,41a1b352a9929da0fba03d6e2b0fc3a791cbd7c1,1933,,,,
+apache/incubator-seata,00719431987a21ce92d3e9e32b957192d69e95f0,1126,,,,
+apache/incubator-seata,b52ad6dcc77b9b559d24ce759bae51955e4f1d3e,1085,,,,
+apache/incubator-seata,ec72f20649fc4506b3e4d59944a0c9a3ea3eb03a,753,,,,
+apache/skywalking,6fd85c83031d2c210717a1be9bb2c0f965c546ce,3382,,,,
+apache/shardingsphere,0b93ff5833f9ec47b49fba3bc8e623e80403a54c,28602,,,,
+apache/shardingsphere,8794a8f7ea105967279871f95fd80f01cb248990,25485,,,,
+apache/shardingsphere,7d18801fd0ebd68cfbc443768b0e02ea473a2b64,23200,,,,
+apache/shardingsphere,dbeef681f4ae3f3a48390864deab69942d246c34,19153,,,,
+apache/shardingsphere,0d17b4b9b04245196712b3c5686fc8a5fcc99540,15686,,,,
+apache/shardingsphere,1a1cb45a27dd605c1fd68802f3a7a18c937bb53c,17288,,,,
+apache/shardingsphere,0f4fb4f8a7ddd4b2c53a9c3753cfef0b3c1de66b,16958,,,,
+apache/shardingsphere,eb7f0a8159e8744222101d846ab914b822e80ac4,16753,,,,
+apache/shardingsphere,36d859e73b30d915f1c487f8f624cc1b73b745da,15113,,,,
+apache/shardingsphere,4138baf36517e0083c1876eb06bce567f5d8d0cd,14714,,,,
+apache/shardingsphere,758fe33446da1368d542a23909ae40ddcb83a9dc,14504,,,,
+apache/shardingsphere,5ded926cd46b9aefa4d5abb8e6e5dbb8e8f4d664,13278,,,,
+apache/shardingsphere,a6047d89a8447ec4b20897f9440154df413dd63d,13274,,,,
+apache/shardingsphere,da2df9814f7983d9ce7693dbe705324ac5f55a90,13263,,,,
+apache/shardingsphere,ef62da39c7778a2cf6a49186c9d590cc0ad5a47c,12709,,,,
+apache/shardingsphere,f6c1ef8a11b73e018100603cf0cb179e33d4323c,11824,,,,
+apache/shardingsphere,815f59e4d5460124cfa90d81240992e44ff4c62e,7809,,,,
+apache/shardingsphere,f8ef182bccc27969f82710a8277aa67312a408ce,5073,,,,
+apache/shardingsphere,fac29f5abfbf046a276e71cc8c98ae1a0ee879df,4786,,,,
+apache/shardingsphere,1f0f17fffa6391e72592e58d236cfd030463b601,3681,,,,
+apache/shardingsphere,a5d977a1237866d5897cbb3d8d169f50ccd98b2e,3979,,,,
+apache/shardingsphere,faa7544933cba3aae0b5a4f00deb2dcaadf374d3,3979,,,,
+apache/shardingsphere,ecd060cb933e6f3106c45ffa0d5f7e5a72971050,3979,,,,
+apache/shardingsphere,676367f6645671ce46990b47d5430590948f09ba,3979,,,,
+apache/shardingsphere,06135c64a74209838e0e8ed842b362a3ded32b0a,3979,,,,
+apache/shardingsphere,c0da29876b4f3c30153a97aa5403c56a59080403,2997,,,,
+apache/shardingsphere,64e88a82e5d5553c3da57fb308e4346401ea9347,2682,,,,
+apache/shardingsphere,ebbc2f7f0f642f6628a229dd95635f08bb4b4126,2682,,,,
+apache/shardingsphere,f76bbc2c1d3d0c21cb9d0fb005f84cb2a2fe6fb0,2682,,,,
+apache/shardingsphere,27ef2849380204fbb865b172b9d3e6213cf626e5,2167,,,,
+apache/shardingsphere,83b2bb3160df68b61d3c061c9097b88746dcbf62,2167,,,,
+apache/shardingsphere,f4547a33094eb27407119f69aeea05829be24f46,2167,,,,
+apache/shardingsphere,62478dcc2dfd58179a039023a7fe7d5143376bb5,2167,,,,
+apache/shardingsphere,e59928f8a54072073bda336addcf50f7762d65d4,2167,,,,
+apache/shardingsphere,0aaa3bf0643558c013caa10c54f5a61243e663a6,2167,,,,
+apache/shardingsphere,24fb59da689b3c5bdd96c370e12a35c361b91a24,2167,,,,
+apache/shardingsphere,840d0c890105557de8abaec7db2848f8ea3d6d38,2167,,,,
+apache/shardingsphere,114c0f593fa5f6664587821a9ad71dbc3667ac2e,2167,,,,
+apache/shardingsphere,4bc0964d48ff96da43aac7994afcf7cbf812b286,2167,,,,
+apache/shardingsphere,29de0987d2d9b150a46cf1f70823bcbe663d253c,2167,,,,
+apache/shardingsphere,10adc10e24cd556349016a594f1c16029f042516,2167,,,,
+apache/shardingsphere,5a56454967327aa6f5b2ddad75f62f3aec72339c,2167,,,,
+apache/shardingsphere,df2561145262b9dfae5115789115a5fbd37484d2,2167,,,,
+apache/shardingsphere,0d6012618679f95b55f15687ef3babd319b322b7,2167,,,,
+apache/shardingsphere,be143d11bc4baa3da03a0b4b603c56b6d65c65b9,2167,,,,
+apache/shardingsphere,33d1bd9fac93b19d31c570a94cd42ea9c7e20dc7,2167,,,,
+apache/shardingsphere,ad4b68e9bf0dcedd3b26bd7ad90c1bdc65c11572,2167,,,,
+apache/shardingsphere,375dd2be1d641b30bdc201dbfe9d7f65dfb73783,2167,,,,
+apache/shardingsphere,9ae9e7174e6bbf4453b740ff67315c060fbd6b1e,2167,,,,
+apache/shardingsphere,e925415665db553163b14d297972db1ef3f2467d,2161,,,,
+apache/shardingsphere,8557f8d0f1259a788745ca69337793ed79d669ef,2161,,,,
+apache/shardingsphere,42c9d03686bb06e2472a5f150703d534c0bf7b4c,2161,,,,
+apache/shardingsphere,50a56c7dbe8bd2b4918c55431c23ed711fd2ab3e,2161,,,,
+apache/shardingsphere,2301e37c920dda9561f0b99d179a362cf3e4625a,2161,,,,
+apache/shardingsphere,40d439abbcb6db2854a4049dd77fa9c6b92823c9,2161,,,,
+apache/shardingsphere,e407e028586ff7fe7acd3c5b8ee1b7688e779ee6,2161,,,,
+apache/shardingsphere,308a38790f70e6cfa1a6c4091f4a395f3ffebd99,2161,,,,
+apache/shardingsphere,7979d6f398ee2f295f00540e9c0c692bdb597d0c,2161,,,,
+apache/shardingsphere,f6c016e62b58f764144c1e3c9a1cb8a30fd3644d,2161,,,,
+apache/shardingsphere,1bb8431058d3c0f2b760d5def756c3c6ce5cf423,2161,,,,
+apache/shardingsphere,8272d701fb66f6a02feff1d8c97e63a50bc53386,2161,,,,
+apache/shardingsphere,61cdc8ebac5cd8212792199b220db7755b6094e8,2161,,,,
+apache/shardingsphere,2abf0ef803772d6686eb2f6753ec6adcc01d6c1b,2161,,,,
+apache/shardingsphere,d284ff8cfd72abd9b09a774a8cebc76a24c5cb09,2161,,,,
+apache/shardingsphere,85e61171a30cd87849374d61f91582c4dbbb3af4,2161,,,,
+apache/shardingsphere,ab48a41417bc1d4f2ded6ee13a301068e9f3b992,2161,,,,
+apache/shardingsphere,68b19fed972f5c5cbfdde28d81e5e282505e4494,2161,,,,
+apache/shardingsphere,7b6ab31948242b5a9fd9d461dcfe909ce17bf64e,2153,,,,
+apache/shardingsphere,9f59fff5603a9024ce304eae05952f9c7adc277a,2153,,,,
+apache/shardingsphere,8b99619f43ae941b85518222e651a5869f2e36da,2153,,,,
+apache/shardingsphere,ae817fc2b548ea60038801ac4681988ecc568220,1959,,,,
+apache/shardingsphere,5b247bad6da01b065d99013092dc6998b8bacb4a,1892,,,,
+apache/shardingsphere,128f5828d0e738c009a9e97445aa7311d3e960b6,1892,,,,
+apache/shardingsphere,ee894e44a0ca3047cd20ae60b9670e5c1dca14a8,1892,,,,
+apache/shardingsphere,2be3d6e1a0bf86a41cbdf8cf10ab888502f09d58,1892,,,,
+apache/shardingsphere,483c9e09898241749adc7da515afb190d2eb3993,1892,,,,
+apache/shardingsphere,8f7e745c48d94a9270192283b65dbd14ffe00cd6,1892,,,,
+apache/shardingsphere,729cf858c8ba6ef582525ecc16094608fedf3b80,1892,,,,
+apache/shardingsphere,3aba0cb84f1bbd6122e436c9edffdf79d19b44ea,1892,,,,
+apache/shardingsphere,58881fa8f0e4292b244999713c59a7bcc417f385,1892,,,,
+apache/shardingsphere,bc26134bd3e41a1ad4a8e350ab8c66e1f5e19410,1892,,,,
+apache/shardingsphere,495bb359e64c22ce67236a5154dc8206b8280002,1892,,,,
+apache/shardingsphere,45074aff9f90b18e738520bc1ffaa947ab5a5e7c,1892,,,,
+apache/shardingsphere,63f7be40e80af9b74c47959aff1e30553f4b2c8a,1892,,,,
+apache/shardingsphere,71751d597249d737e48e3a4b4cdd6773fcedd80e,1892,,,,
+apache/shardingsphere,09f36bffd55fe4332d5a5b4d8e7b4c91fc093f99,1892,,,,
+apache/shardingsphere,90c76c73312f39826e2ae31b00875e0080cfd2e9,1892,,,,
+apache/shardingsphere,278cd58736289cb9b8b03d8669e30ceab4a6bdf0,1892,,,,
+apache/shardingsphere,4a1c2f44f226ad3b02085ccdec8708db38f49a43,1892,,,,
+apache/shardingsphere,e77fac47a60b84102656063568b0fe52044933c2,1820,,,,
+prestodb/presto,f72d863cd9cbd17ed1ec2b4bdd3b358998f14449,24013,,,,
+prestodb/presto,aae9d9f352aff81595adb65184315f0c5039152d,17261,,,,
+prestodb/presto,b1b0597781387362355056508468be25c67bfc88,7586,,,,
+prestodb/presto,cd53bdcd9b471fd577541278a65f6c0777f9024e,7586,,,,
+prestodb/presto,d7ecb91915af0b534dc0f0c0177d6ab7898d83fc,16925,,,,
+prestodb/presto,247881d621aa26e4823e7a8a113100345ad923a3,16718,,,,
+prestodb/presto,3541380ee7f32dc8dd91864dc3b00ab843d7b24c,16718,,,,
+prestodb/presto,daf2a9e9d38798cdec1184409376bb7e12c9e218,16718,,,,
+prestodb/presto,2d0e848bc7fa4f5eb12c87b8d57c4faf5ace0941,16702,,,,
+prestodb/presto,5cb2b9139566b0321c30a0dd61ed4bfd61e7befb,16438,,,,
+prestodb/presto,6c161c1baa59c9ba3705872b8f2f64021e2a440b,16022,,,,
+prestodb/presto,04ed142e96e23a087dd541713ab40150ed278694,14517,,,,
+prestodb/presto,b13f60bd4d27395d059756dce944b86b6b419694,14433,,,,
+prestodb/presto,36df11f11116cc0a5f66ca0d9d49bd76aa7b3968,13751,,,,
+prestodb/presto,6525ea9b1ded94c34f0e93b210afa273f2ce0f4a,13438,,,,
+prestodb/presto,fe6ebcfea6d70f14264561cb9617c1c72eb2c700,13438,,,,
+prestodb/presto,4fd684b3609bdc9fd68e5af6d225aa8d6a62e8bc,13438,,,,
+prestodb/presto,f789c543fae3bf2afe7c589877df112c94a24221,13438,,,,
+prestodb/presto,b84f177d5fe37017123946cbefb3b5ffd2cf845d,13438,,,,
+prestodb/presto,e650db3092c8ac9da8bdb5210dbdfd4768335ed6,13438,,,,
+prestodb/presto,7a4a741e11d3c13bbc6521505ac35244c00beb5a,13438,,,,
+prestodb/presto,823da6f3e68121d8bbcbf310dffd8fa164e58cf8,13993,,,,
+prestodb/presto,d5ee715bb6b165fb6567b663c74ca5ecf21cc6ab,13993,,,,
+prestodb/presto,58b376713a6eaa49e3b1ffaf1ae441fe37d2609a,13865,,,,
+prestodb/presto,6f9d1c72d609e572e98c77506dbadc566c655080,11789,,,,
+prestodb/presto,7d4b32dc1f0d223df9ee3103d2861dd44dfd7177,11789,,,,
+prestodb/presto,36260337fba0f2245de6b1c85d2cf557d20a9913,11789,,,,

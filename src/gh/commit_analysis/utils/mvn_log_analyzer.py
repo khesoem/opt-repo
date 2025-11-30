@@ -2,6 +2,7 @@ from typing import Sequence
 import re
 import numpy as np
 from scipy import stats
+from scipy.stats import binomtest
 import src.config as conf
 
 class MvnwExecResults:
@@ -9,6 +10,7 @@ class MvnwExecResults:
         self.original_mvnw_log_paths = original_mvnw_log_paths
         self.patched_mvnw_log_paths = patched_mvnw_log_paths
         self.expected_exec_times = expected_exec_times
+        self.min_exec_time_improvement = conf.perf_commit['min-exec-time-improvement']
     
     def is_successful(self) -> bool:
         return all(self._is_exec_successful(log_path) for log_path in self.original_mvnw_log_paths) and all(self._is_exec_successful(log_path) for log_path in self.patched_mvnw_log_paths)
@@ -89,7 +91,7 @@ class MvnwExecResults:
         self, v1: list[float], v2: list[float]
     ) -> float:
         """
-        Test if the mean of v2 is significantly less than min-exec-time-improvement * the mean of v1.
+        Test if the median of v2 is significantly less than min-exec-time-improvement * the median of v1.
 
         Args:
             v1: List of values
@@ -104,13 +106,20 @@ class MvnwExecResults:
         v1_arr = np.asarray(v1, dtype=float)
         v2_arr = np.asarray(v2, dtype=float)
 
-        c = 1.0 - conf.perf_commit['min-exec-time-improvement']  # we test μ1 < c * μ2
+        c = 1.0 - conf.perf_commit['min-exec-time-improvement']  # we test μ2 < c * μ1
         v1_scaled = c * v1_arr
+        diff = v2_arr - v1_scaled
 
-        # Welch's t-test, one-sided: H1: mean(v1) < mean(v2_scaled)
-        res = stats.ttest_ind(v2_arr, v1_scaled, equal_var=False, alternative='less')
+        wins = np.sum(diff < 0)   # V2 achieves at least 'margin' speedup
+        losses = np.sum(diff > 0) # V2 fails to achieve the margin
+        n = wins + losses
 
-        # return pvalue as float
+        if n == 0:
+            raise ValueError("All pairs are ties or NaN after applying the margin; cannot perform sign test.")
+
+        # Exact one-sided binomial test: H1 is 'wins' > 0.5
+        res = binomtest(k=wins, n=n, p=0.5, alternative="greater")
+
         return float(res.pvalue)
     
     def get_significant_test_class_improvements(self) -> dict[str, list[str]]:
@@ -132,9 +141,26 @@ class MvnwExecResults:
 
         for test_class in all_original_test_times.keys():
             if len(all_original_test_times[test_class]) == self.expected_exec_times - 1 and len(all_patched_test_times[test_class]) == self.expected_exec_times - 1:
-                if self.get_improvement_p_value(all_original_test_times[test_class], all_patched_test_times[test_class]) < conf.perf_commit['min-p-value']:
-                    significant_test_time_changes['patched_outperforms_original'].append(test_class)
-                elif self.get_improvement_p_value(all_patched_test_times[test_class], all_original_test_times[test_class]) < conf.perf_commit['min-p-value']:
-                    significant_test_time_changes['original_outperforms_patched'].append(test_class)
+                if any(time < 0.01 for time in all_original_test_times[test_class]) or any(time < 0.01 for time in all_patched_test_times[test_class]):
+                    continue
 
+                # if self.get_improvement_p_value(all_original_test_times[test_class], all_patched_test_times[test_class]) < conf.perf_commit['min-p-value']:
+                #     significant_test_time_changes['patched_outperforms_original'].append(test_class)
+                # elif self.get_improvement_p_value(all_patched_test_times[test_class], all_original_test_times[test_class]) < conf.perf_commit['min-p-value']:
+                #     significant_test_time_changes['original_outperforms_patched'].append(test_class)
+
+                original_faster, patched_faster = True, True
+
+                for original_time in all_original_test_times[test_class]:
+                    for patched_time in all_patched_test_times[test_class]:
+                        if original_time > patched_time * (1- self.min_exec_time_improvement):
+                            original_faster = False
+                        if patched_time > original_time * (1- self.min_exec_time_improvement):
+                            patched_faster = False
+                
+                if original_faster:
+                    significant_test_time_changes['original_outperforms_patched'].append(test_class)
+                if patched_faster:
+                    significant_test_time_changes['patched_outperforms_original'].append(test_class)
+                    
         return significant_test_time_changes

@@ -21,9 +21,9 @@ class GPT5_Nano(LLMAdapter):
         self.save_cache(Invocation(prompt, response))
         return response
 
-class GPT5_Codex(LLMAdapter):
+class GPT_5_1_Codex_Mini(LLMAdapter):
     def __init__(self, read_from_cache: bool=False, save_to_cache: bool=False):
-        super().__init__(read_from_cache, save_to_cache, "openai/gpt-5-codex")
+        super().__init__(read_from_cache, save_to_cache, "openai/gpt-5.1-codex-mini")
 
     def get_response(self, prompt: Prompt) -> Response:
         cached_invocation = self.load_cache(prompt)

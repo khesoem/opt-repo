@@ -48,6 +48,7 @@ class CommitDockerizer:
         try:
             # copy the dockerfile to the working directory
             shutil.copy(config.docker['dockerfile'], self.working_dir)
+            shutil.copy(config.docker['mvn-settings-file'], self.working_dir)
             dockerfile_path = Path(self.working_dir) / 'Dockerfile'
             
             if not dockerfile_path.exists():
@@ -67,7 +68,8 @@ class CommitDockerizer:
                 "--build-arg", f"ORIGINAL_REPO_DIR={original_repo_path}",
                 "--build-arg", f"MODULE_NAMES={','.join(self.module_names)}",
                 "--build-arg", f"JAVA_VERSION={java_version}",
-                "--build-arg", f"EXEC_TIMES={self.exec_times}"
+                "--build-arg", f"EXEC_TIMES={self.exec_times}",
+                "--build-arg", f"MVN_SETTINGS_FILE=settings.xml"
             ]
 
             # Build the Docker image
