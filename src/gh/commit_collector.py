@@ -15,30 +15,6 @@ import logging
 from datetime import datetime, timedelta, timezone
 from typing import Set
 
-PREVIOUSLY_ASSESSED_COMMITS = set()
-prompted_by_gpt5_nano = set()
-with open('logs/commit-collection-log.log', 'r') as f:
-    for line in f:
-        if 'root INFO Commit ' in line:
-            commit_hash = line.split('root INFO Commit ')[1].split(' ')[0]
-            PREVIOUSLY_ASSESSED_COMMITS.add(commit_hash)
-            if 'GPT5_Nano' in line:
-                prompted_by_gpt5_nano.add(commit_hash)
-        elif 'root INFO Skipping commit ' in line:
-            commit_hash = line.split('root INFO Skipping commit ')[1].split(' ')[0]
-            PREVIOUSLY_ASSESSED_COMMITS.add(commit_hash)
-with open('logs/logging_2025-11-27-22-07.log', 'r') as f:
-    for line in f:
-        if 'root INFO Commit ' in line:
-            commit_hash = line.split('root INFO Commit ')[1].split(' ')[0]
-            PREVIOUSLY_ASSESSED_COMMITS.add(commit_hash)
-        elif 'root INFO Skipping commit ' in line:
-            commit_hash = line.split('root INFO Skipping commit ')[1].split(' ')[0]
-            PREVIOUSLY_ASSESSED_COMMITS.add(commit_hash)
-
-# remove commits that have been prompted by GPT5_Nano from PREVIOUSLY_ASSESSED_COMMITS
-PREVIOUSLY_ASSESSED_COMMITS = PREVIOUSLY_ASSESSED_COMMITS - prompted_by_gpt5_nano
-
 class CommitCollector:
     def __init__(self):
         access_token = conf.github['access-token']
@@ -51,7 +27,7 @@ class CommitCollector:
         self.max_stars = conf.perf_commit['max-stars']
         self.max_commit_files = conf.perf_commit['max-files']
         self.dataset = DatasetAdapter()
-        self.processed_commits = PREVIOUSLY_ASSESSED_COMMITS
+        self.processed_commits = set()
 
     def iter_popular_repos_segmented(self):
         """

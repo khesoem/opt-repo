@@ -11,11 +11,11 @@ spring-projects/spring-data-commons,7682b3cdea2e2f40f49763f4508b44d03e01bead,337
 google/guava,911661a9519815e4a132acd8ce2bd8ce42bd18dd,7143,clone_and_checkout_repo,,,{}
 google/guava,0e1aebf73ec48848b17b402a22f33f55756073e8,6845,clone_and_checkout_repo,,,{}
 netty/netty,092ce05a6533d563e88e647e71e649ea67d0bd8d,15723,maven_execution_successful,0.0037806601866216,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
-netty/netty,06f8920da07b3572dc0f06d3fb729414e408e5fa,15723,clone_and_checkout_repo,0.0015874942715642,1.0,"{""original_outperforms_patched"": [], ""patched_outperforms_original"": []}"
+netty/netty,06f8920da07b3572dc0f06d3fb729414e408e5fa,15723,maven_execution_successful,0.0013296262007164,0.9999999990686774,"""{\""original_outperforms_patched\"": [\""io.netty.util.internal.StringUtilTest\""], \""patched_outperforms_original\"": [\""io.netty.util.internal.NativeLibraryLoaderTest\"", \""io.netty.buffer.DuplicatedByteBufTest\""]}"""
 netty/netty,c4ac6613b3bc9c6c233fd89822c0d45fa295d0b0,15502,clone_and_checkout_repo,,,{}
 netty/netty,32a6a4ce4ee5381c1f14f28b68a180ca085d0b69,15510,clone_and_checkout_repo,,,{}
 netty/netty,15b8bbf864680ec2250c72d52b35ed46bfaf3a6f,15503,maven_execution_successful,-0.0002788419648937,1.0,"""{\""original_outperforms_patched\"": [\""io.netty.buffer.UnpooledTest\""], \""patched_outperforms_original\"": [\""io.netty.buffer.ReadOnlyUnsafeDirectByteBufferBufTest\""]}"""
-netty/netty,ab2bd1a1f12bda2f6aac0eee456461e52052df4e,14930,clone_and_checkout_repo,-0.005602530238415,1.0,"{""original_outperforms_patched"": [], ""patched_outperforms_original"": []}"
+netty/netty,ab2bd1a1f12bda2f6aac0eee456461e52052df4e,14930,maven_execution_successful,0.0020481885395671,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 netty/netty,f92a33c20df844a615719314f411b468f1ed6b39,14876,clone_and_checkout_repo,,,{}
 netty/netty,fbe14e13633fdd404f5cdbccce15e1fd1f7221e5,14165,clone_and_checkout_repo,-0.0003762487234418,1.0,"{""original_outperforms_patched"": [], ""patched_outperforms_original"": []}"
 netty/netty,48687be377c1e0b94acddca4ae54eff996c1ee2a,14268,maven_execution_successful,0.000594009427669,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
@@ -281,11 +281,11 @@ apolloconfig/apollo,f41a73b92d19383bbb542c51b0f6d062e9e80e3b,3698,clone_and_chec
 apache/incubator-seata,80573c9daf8381cd63afd1228a2a8af5af3e3c3c,3571,maven_execution_successful,-0.250475915777329,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 apache/incubator-seata,ea0d00b7643c6af8376ffbdca91207b64c005342,2689,clone_and_checkout_repo,,,{}
 apache/incubator-seata,47b9b2cea57ce6b0d493d1d52e58242a21c53718,2467,clone_and_checkout_repo,,,{}
-OpenAPITools/openapi-generator,196c2b1642453c15e33bbdb6677339468b1a5d7f,16490,maven_execution_successful,0.0047877906461168,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
-OpenAPITools/openapi-generator,84099eefdc7fe4f5a9b7726e376fc01189ae355d,5862,maven_execution_successful,0.0017040367023289,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+OpenAPITools/openapi-generator,196c2b1642453c15e33bbdb6677339468b1a5d7f,16490,maven_execution_successful,0.0023248452025956,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+OpenAPITools/openapi-generator,84099eefdc7fe4f5a9b7726e376fc01189ae355d,5862,maven_execution_successful,-0.001469759423589,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 javaparser/javaparser,cfc1bcdf1fbd596ac11cbf14be565ffdee8903a5,3978,docker_image_built,,,{}
 javaparser/javaparser,994dfff5d74c9d13dc438dbf3062592105c80d22,3181,clone_and_checkout_repo,,,{}
-liquibase/liquibase,a964357fcffa050356947093e20a5ce6e23b83a6,6096,clone_and_checkout_repo,0.0095045898286136,1.0,"{""original_outperforms_patched"": [], ""patched_outperforms_original"": []}"
+liquibase/liquibase,a964357fcffa050356947093e20a5ce6e23b83a6,6096,maven_execution_successful,-0.0076076521018465,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 liquibase/liquibase,616c1da0959b7e4cc989af95975ad40a16ec8225,5171,clone_and_checkout_repo,,,{}
 liquibase/liquibase,65076d8a32b0585ca2fd85348d2221b54f04bfa1,4312,clone_and_checkout_repo,,,{}
 liquibase/liquibase,d972c214fb7794cf08def3ea276ae939b2bccfb3,4312,clone_and_checkout_repo,,,{}
@@ -354,15 +354,15 @@ spring-projects/spring-data-neo4j,494f66360a9e676b263cc1dbffcb88628e15384e,2169,
 spring-projects/spring-data-neo4j,c72ecc7b5f73290062a1a8b633923f9a5ee96527,1460,clone_and_checkout_repo,,,{}
 greenmail-mail-test/greenmail,e1a2e2264b8090687624e9cc8b982700bf0499fc,358,clone_and_checkout_repo,,,{}
 airlift/airlift,5a69c156f39785fbd49717e3c1994d77d065a60f,781,clone_and_checkout_repo,,,{}
-urlaubsverwaltung/urlaubsverwaltung,7f090c06ecaa0627e89c12e865f82c90aa5cf936,4753,clone_and_checkout_repo,0.003593634528406,1.0,"{""original_outperforms_patched"": [], ""patched_outperforms_original"": []}"
-urlaubsverwaltung/urlaubsverwaltung,352f304910138bc79d680fd92c67838aadc4a69b,4753,clone_and_checkout_repo,0.0002565308478344,1.0,"{""original_outperforms_patched"": [], ""patched_outperforms_original"": []}"
+urlaubsverwaltung/urlaubsverwaltung,7f090c06ecaa0627e89c12e865f82c90aa5cf936,4753,maven_execution_successful,0.0019442486398174,1.0,"""{\""original_outperforms_patched\"": [\""org.synyx.urlaubsverwaltung.calendar.CalendarPropertiesTest\""], \""patched_outperforms_original\"": []}"""
+urlaubsverwaltung/urlaubsverwaltung,352f304910138bc79d680fd92c67838aadc4a69b,4753,maven_execution_successful,0.004385703022467,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 urlaubsverwaltung/urlaubsverwaltung,acef23ad0b59b133293b150058b29fc9b44c0370,4753,clone_and_checkout_repo,,,{}
 urlaubsverwaltung/urlaubsverwaltung,14c43ad2e60496cc6bdb6aa3cd20aac87c8c416e,4753,clone_and_checkout_repo,,,{}
 urlaubsverwaltung/urlaubsverwaltung,3db2bca5333079a3505826b8b1ed4b0cb18b8f74,4753,clone_and_checkout_repo,,,{}
 urlaubsverwaltung/urlaubsverwaltung,eafe4bc089167591b685b30b8d768170ddd1c032,4753,clone_and_checkout_repo,,,{}
 urlaubsverwaltung/urlaubsverwaltung,82a691fbeb656fa4777161193926e0df733cb995,4753,clone_and_checkout_repo,,,{}
-urlaubsverwaltung/urlaubsverwaltung,ba1aff2cc3ef36402b09fbfc173ed01a6e172915,4753,clone_and_checkout_repo,0.0010690212901837,1.0,"{""original_outperforms_patched"": [], ""patched_outperforms_original"": []}"
-urlaubsverwaltung/urlaubsverwaltung,4c291edf3f158a8b4821fdce097935a49341f4cb,4753,clone_and_checkout_repo,-0.0001114653749068,1.0,"{""original_outperforms_patched"": [], ""patched_outperforms_original"": []}"
+urlaubsverwaltung/urlaubsverwaltung,ba1aff2cc3ef36402b09fbfc173ed01a6e172915,4753,maven_execution_successful,0.0065373949410674,0.9998375428840518,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+urlaubsverwaltung/urlaubsverwaltung,4c291edf3f158a8b4821fdce097935a49341f4cb,4753,maven_execution_successful,0.0015843168535835,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 urlaubsverwaltung/urlaubsverwaltung,2635a2572ba2d9a71b7dceb1074407fcf302b0e2,2976,clone_and_checkout_repo,,,{}
 urlaubsverwaltung/urlaubsverwaltung,c13815d26f6bdea592d5a6725daac31b7526e2fd,2976,clone_and_checkout_repo,,,{}
 urlaubsverwaltung/urlaubsverwaltung,bc949745aa231600a44960bccb681a2ba1d23335,2976,clone_and_checkout_repo,,,{}
@@ -413,10 +413,10 @@ DTStack/chunjun,72dedd533bd7db9537f2c53126f7fd552d76e901,1138,clone_and_checkout
 DTStack/chunjun,34ef687bbf284805f0c879763f398ccae5fc8779,1138,clone_and_checkout_repo,,,{}
 DTStack/chunjun,efd10114e394aa250c004781c97a53234c2409f2,1138,clone_and_checkout_repo,,,{}
 DTStack/chunjun,ac0c2ae5b1ff4cc973c7d5aa6a33fd1293e12bae,1138,clone_and_checkout_repo,,,{}
-GIScience/openrouteservice,c8c57a4b848e17bed8f3f8609a400d258b4018f9,2064,maven_execution_successful,0.0068771405168575,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
-GIScience/openrouteservice,65bfb9223029334a943e4d8c1beff9575f5f82e1,2064,maven_execution_successful,0.0019170204025742,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
-GIScience/openrouteservice,dced459b586e22035edfbae8fbac14011789f78f,2064,maven_execution_successful,-0.0015270807858933,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
-GIScience/openrouteservice,097bb7d37e1ab568794025816dca6e1b431eb54d,2064,maven_execution_successful,-0.0041264179369016,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+GIScience/openrouteservice,c8c57a4b848e17bed8f3f8609a400d258b4018f9,2064,maven_execution_successful,-0.0008292796954484,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+GIScience/openrouteservice,65bfb9223029334a943e4d8c1beff9575f5f82e1,2064,maven_execution_successful,0.0365361561844414,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+GIScience/openrouteservice,dced459b586e22035edfbae8fbac14011789f78f,2064,maven_execution_successful,-0.0604710305174702,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+GIScience/openrouteservice,097bb7d37e1ab568794025816dca6e1b431eb54d,2064,maven_execution_successful,9.252355268669842e-05,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 GIScience/openrouteservice,886291b9f4956d7b8604a52ec8ce9e60d7584f0e,1573,clone_and_checkout_repo,,,{}
 GIScience/openrouteservice,4d73454c8ced45ee1206a3b6ee52e49a347a21bf,1573,clone_and_checkout_repo,,,{}
 GIScience/openrouteservice,cd121c8957fdd146770c43e7604330fc56021719,1573,clone_and_checkout_repo,,,{}
@@ -460,8 +460,8 @@ eclipse-esmf/esmf-semantic-aspect-meta-model,2f8b65d02c70333595839cd51b6a900ecb6
 deegree/deegree3,68a676c328cfeb52c3e32a7c847d512e4086b049,1633,clone_and_checkout_repo,,,{}
 deegree/deegree3,8e2d092297d143543a14ef15b44b7809d634c94b,1633,clone_and_checkout_repo,,,{}
 deegree/deegree3,341d26cc56e8ab7ed070ab9a9e9235fbe394a6e3,1633,maven_execution_successful,-0.0008118476224461,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
-GoogleCloudPlatform/cloud-opensource-java,0fb8ee7593659996912d0dc965369743f80613da,1422,maven_execution_successful,0.0051741742042192,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
-GoogleCloudPlatform/cloud-opensource-java,abfd8e4d3abdea3725039999fefc970f317ee825,1320,maven_execution_successful,0.0034920914558324,1.0,"""{\""original_outperforms_patched\"": [\""com.google.cloud.tools.opensource.classpath.ClassFileTest\""], \""patched_outperforms_original\"": []}"""
+GoogleCloudPlatform/cloud-opensource-java,0fb8ee7593659996912d0dc965369743f80613da,1422,maven_execution_successful,-0.002154392460803,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+GoogleCloudPlatform/cloud-opensource-java,abfd8e4d3abdea3725039999fefc970f317ee825,1320,maven_execution_successful,0.0043639438120987,1.0,"""{\""original_outperforms_patched\"": [\""com.google.cloud.tools.opensource.classpath.ClassFileTest\""], \""patched_outperforms_original\"": []}"""
 GoogleCloudPlatform/cloud-opensource-java,3ad0b432db218f3417db5451040e80a8d5d475bd,1204,clone_and_checkout_repo,,,{}
 philterd/phileas,5d0a6d3854c4e8511b1a9860aec4fb6379c6c6ca,112,clone_and_checkout_repo,,,{}
 philterd/phileas,32f4990c69f70cb004f36322851025506b5a8c7a,111,clone_and_checkout_repo,,,{}
@@ -543,12 +543,12 @@ spacious-team/investbook,0fe121b3233e5bded71374ee3eaa6e65fba24041,180,clone_and_
 spacious-team/investbook,30a4dc79a6b93ee8830b02c7b3c0a5b0cd3c1f36,180,clone_and_checkout_repo,,,{}
 spacious-team/investbook,cb693efd149240bad1c2c86ebf5683e9939df561,180,clone_and_checkout_repo,,,{}
 spacious-team/investbook,d9044f4994f125ef67f63dd3d30dcfce35e05c91,180,clone_and_checkout_repo,,,{}
-Altinity/ice,070667223d22ecf3455260f51afb355c1d178b08,20,maven_execution_successful,-0.0004077887654194,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
-Altinity/ice,2eab476ae1380e3d8dfc3121efd644033742921d,20,maven_execution_successful,0.009896878676725,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+Altinity/ice,070667223d22ecf3455260f51afb355c1d178b08,20,maven_execution_successful,-0.0019281510046681,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+Altinity/ice,2eab476ae1380e3d8dfc3121efd644033742921d,20,maven_execution_successful,-0.0008335648791331,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 Altinity/ice,3775b5ecebd8d8d860cbfbed9b130ccc5052442a,20,clone_and_checkout_repo,,,{}
-Altinity/ice,2ee036804b554a87345af66153b9c5570495c1f3,2,maven_execution_successful,-0.0046223890452854,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
-Altinity/ice,3078e59ca36351442558362539748991c18166d1,2,maven_execution_successful,0.0028661307235232,0.9999999711290002,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
-Altinity/ice,c500040179dbb6a12aa1e1e7a545cfb5f248dd98,2,maven_execution_successful,0.0013063806380638,0.99997026193887,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+Altinity/ice,2ee036804b554a87345af66153b9c5570495c1f3,2,maven_execution_successful,0.0030251399561876,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+Altinity/ice,3078e59ca36351442558362539748991c18166d1,2,maven_execution_successful,0.0062412342215989,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+Altinity/ice,c500040179dbb6a12aa1e1e7a545cfb5f248dd98,2,maven_execution_successful,0.0021755912695626,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 Altinity/ice,ea830de2a90cb4e911d1d8ef02b0903f65fe695f,2,clone_and_checkout_repo,,,{}
 Altinity/ice,2dd678defe7e35bc50c156d1beb9e8f680028069,2,clone_and_checkout_repo,,,{}
 Altinity/ice,ed4f40241f1080b1c4e25f1ef336f714a15b3edc,2,clone_and_checkout_repo,,,{}
@@ -692,9 +692,9 @@ apache/shardingsphere,1a1cb45a27dd605c1fd68802f3a7a18c937bb53c,17288,maven_execu
 apache/shardingsphere,0f4fb4f8a7ddd4b2c53a9c3753cfef0b3c1de66b,16958,clone_and_checkout_repo,,,{}
 apache/shardingsphere,eb7f0a8159e8744222101d846ab914b822e80ac4,16753,maven_execution_successful,-0.0039763196842624,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 apache/shardingsphere,36d859e73b30d915f1c487f8f624cc1b73b745da,15113,clone_and_checkout_repo,,,{}
-apache/shardingsphere,4138baf36517e0083c1876eb06bce567f5d8d0cd,14714,clone_and_checkout_repo,,,{}
+apache/shardingsphere,4138baf36517e0083c1876eb06bce567f5d8d0cd,14714,maven_execution_successful,0.0222630284287938,0.9999999711290002,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 apache/shardingsphere,758fe33446da1368d542a23909ae40ddcb83a9dc,14504,clone_and_checkout_repo,,,{}
-apache/shardingsphere,5ded926cd46b9aefa4d5abb8e6e5dbb8e8f4d664,13278,clone_and_checkout_repo,,,{}
+apache/shardingsphere,5ded926cd46b9aefa4d5abb8e6e5dbb8e8f4d664,13278,maven_execution_successful,-0.0237201377802867,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 apache/shardingsphere,a6047d89a8447ec4b20897f9440154df413dd63d,13274,maven_execution_successful,0.0024109915351567,0.9999999711290002,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 apache/shardingsphere,da2df9814f7983d9ce7693dbe705324ac5f55a90,13263,maven_execution_successful,0.0076838072025364,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 apache/shardingsphere,ef62da39c7778a2cf6a49186c9d590cc0ad5a47c,12709,maven_execution_successful,-0.004982450889699,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
@@ -1332,7 +1332,7 @@ quarkusio/quarkus,88ca9511cdbb51b20f63f678aea523d35ab9fd4f,6959,docker_image_bui
 quarkusio/quarkus,47d88097fec396914129b1e89b73ce9757ddc6dd,6761,clone_and_checkout_repo,,,{}
 quarkusio/quarkus,4af812bba979680bb3cd3ed77e3d958645d83f2c,6761,clone_and_checkout_repo,,,{}
 quarkusio/quarkus,d7e9de00d8d3d559da54a99a9e0cea347fd02a4d,6761,clone_and_checkout_repo,,,{}
-quarkusio/quarkus,82db6e06e60546d73d18b2bdd7cfc3b5791da8ac,4490,clone_and_checkout_repo,,,{}
+quarkusio/quarkus,82db6e06e60546d73d18b2bdd7cfc3b5791da8ac,4490,maven_execution_successful,-0.1020661554469383,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 quarkusio/quarkus,d3846e7716f23d6a728108d2013f7561322dabda,4490,maven_execution_successful,-0.0222693531283139,0.99997026193887,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 quarkusio/quarkus,cf4b14b4a593fbaba2803c7ead86ce12e97fd9b7,4243,clone_and_checkout_repo,,,{}
 quarkusio/quarkus,69c306de21e9bbb5d9723e7b59519edb0b1d1918,4294,clone_and_checkout_repo,,,{}
@@ -1405,8 +1405,8 @@ trinodb/trino,f094a5e2eb563d5b4d94f11ada0725715e6914c0,24751,clone_and_checkout_
 trinodb/trino,a52307bad7dc97c889d9e05485963fda385544aa,24751,clone_and_checkout_repo,,,{}
 trinodb/trino,2ddacf26b178ccf479b4e2bfc177279c63a3fcff,24751,clone_and_checkout_repo,,,{}
 trinodb/trino,841299d24352f30280ad2ee0e101b75d8c1b96de,25423,clone_and_checkout_repo,,,{}
-trinodb/trino,4585f81680f5c693d69dd26c67bcfd8b98a20d4c,11,clone_and_checkout_repo,,,{}
-trinodb/trino,32c9168a0b42bdb0fd21117ef79fd5d3a59802ca,11,clone_and_checkout_repo,,,{}
+trinodb/trino,4585f81680f5c693d69dd26c67bcfd8b98a20d4c,11,maven_execution_successful,-0.0001766941444786,0.9973885603249072,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": [\""io.trino.spi.block.TestRowBlockFieldExtraction\""]}"""
+trinodb/trino,32c9168a0b42bdb0fd21117ef79fd5d3a59802ca,11,maven_execution_successful,0.0332632565133694,0.8192026959732175,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 trinodb/trino,283b25780e74edd4043f2a4c72148c96fd114ab4,11,clone_and_checkout_repo,,,{}
 trinodb/trino,f735fc8f1d058863f84f80cf2b83c3a7186445a8,13115,clone_and_checkout_repo,,,{}
 trinodb/trino,715eb7bc8e10b62fca64f3583b4509f4dfbaca98,23468,clone_and_checkout_repo,,,{}
@@ -1631,11 +1631,11 @@ microsoft/java-debug,ece63b85f67fb84ffad032cfbafdb71dd6072a77,49,clone_and_check
 neo4j/neo4j-ogm,2c4c5c83f6850fa3793be5f55f105480fe316801,891,maven_execution_successful,-5.180228793438573e-05,0.9999999711290002,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 neo4j/neo4j-ogm,a26d814a4c50a3d20ac70daf16fd2bbdaa3bf544,889,maven_execution_successful,-0.0241154603105181,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 neo4j/neo4j-ogm,f20d9f02edf49a0968bbbf6fdc0e0a63c250449c,852,maven_execution_successful,-0.0052431312301261,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
-neo4j/neo4j-ogm,b160b9a56f5569e37df6c41ba78981fa3990ac33,853,clone_and_checkout_repo,,,{}
+neo4j/neo4j-ogm,b160b9a56f5569e37df6c41ba78981fa3990ac33,853,maven_execution_successful,-0.0035780449707581,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 neo4j/neo4j-ogm,81bf93a9547f41aa02552b80642cc1b03bdd1e2d,854,maven_execution_successful,0.0104713458520482,0.9999999711290002,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 neo4j/neo4j-ogm,502bf977ec4bbf9605b96c0bf8cd326892481e6f,849,maven_execution_successful,-0.0095723328701559,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
-neo4j/neo4j-ogm,730d885795942df5a75f1ea97255209872965353,840,clone_and_checkout_repo,,,{}
-neo4j/neo4j-ogm,2df1b3d6d5f96c8202afe760ef41da4af84d0b76,738,clone_and_checkout_repo,,,{}
+neo4j/neo4j-ogm,730d885795942df5a75f1ea97255209872965353,840,maven_execution_successful,0.0043787880172957,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
+neo4j/neo4j-ogm,2df1b3d6d5f96c8202afe760ef41da4af84d0b76,738,maven_execution_successful,0.0052509359745983,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""
 neo4j/neo4j-ogm,283be6de03a43e0247ccecb02c1cf9f89e6dae30,849,clone_and_checkout_repo,,,{}
 neo4j/neo4j-ogm,82711997160294c2ab90852a7f38ff652cd56ad5,849,clone_and_checkout_repo,,,{}
 spring-cloud/spring-cloud-circuitbreaker,acfc3b26f92a2be5727efa2c48a5342b05806497,96,maven_execution_successful,0.0008359028303147,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}"""

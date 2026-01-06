@@ -30,3 +30,5 @@ err*.err
 log*.log
 collected_commits/tmp_commits.csv
 results/dataset_bak.csv
+results/dataset_bak*.csv
+**/*.lock

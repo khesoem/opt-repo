@@ -10,14 +10,9 @@ from src.gh.commit_analysis.utils.mvn_log_analyzer import MvnwExecResults
 
 logger = logging.getLogger(__name__)
 
-def docker_image_exists(working_dir: str, repo: str, commit: str, image_suffix: str) -> bool:
-    # run_cmd returns the output of the command
-    ls_res = run_cmd(['docker', 'image', 'ls', f'{config.docker['image-name-prefix']}-{repo}-{commit}-{image_suffix}'], working_dir, capture_output=True)
-    return ls_res is not None and config.docker['image-name-prefix'] in ls_res
-
 class CommitDockerizer:
     
-    def __init__(self, working_dir: str, repo: str, commit: str, patched_repo_path: str, original_repo_path: str, module_names: list[str], builder_name: str, exec_times: int, image_suffix: str, timeout: int):
+    def __init__(self, working_dir: str, repo: str, commit: str, patched_repo_path: str, original_repo_path: str, module_names: list[str], builder_name: str, exec_times: int, timeout: int):
         self.working_dir = working_dir
         self.repo = repo
         self.commit = commit
@@ -26,12 +21,11 @@ class CommitDockerizer:
         self.module_names = module_names
         self.builder_name = builder_name
         self.exec_times = exec_times
-        self.image_suffix = image_suffix
         self.timeout = timeout
 
     @property
     def image_name(self):
-        return f"{config.docker['image-name-prefix']}-{self.repo}-{self.commit}-{self.image_suffix}".lower()
+        return f"{config.docker['image-name-prefix']}-{self.repo}-{self.commit}".lower()
     
     @property
     def tmp_dir(self):
@@ -42,19 +36,35 @@ class CommitDockerizer:
         return f"container-{self.image_name.replace('/', '__')}"
 
     def image_exists(self) -> bool:
-        return docker_image_exists(self.working_dir, self.repo, self.commit, self.image_suffix)
+        ls_res = run_cmd(['docker', 'image', 'ls', f'{config.docker['image-name-prefix']}-{self.repo}-{self.commit}'], self.working_dir, capture_output=True)
+        return ls_res is not None and config.docker['image-name-prefix'] in ls_res
 
     def build_commit_docker_image(self):
         try:
             # copy the dockerfile to the working directory
-            shutil.copy(config.docker['dockerfile'], self.working_dir)
-            shutil.copy(config.docker['mvn-settings-file'], self.working_dir)
+            if not os.path.exists(os.path.join(self.working_dir, 'Dockerfile')):
+                shutil.copy(config.docker['dockerfile'], self.working_dir)
+            if not os.path.exists(os.path.join(self.working_dir, config.docker['mvn-settings-file'])):
+                shutil.copy(config.docker['mvn-settings-file'], self.working_dir)
             dockerfile_path = Path(self.working_dir) / 'Dockerfile'
             
             if not dockerfile_path.exists():
                 raise FileNotFoundError(f"Dockerfile not found at {dockerfile_path}")
 
             java_version = get_java_version(Path(self.patched_repo_path))
+
+            # Determine base image based on Java version
+            # For JDK < 8, use azul/zulu-openjdk (eclipse-temurin doesn't support versions below 8)
+            # For JDK >= 8, use eclipse-temurin
+            try:
+                java_version_int = int(java_version)
+                if java_version_int < 8:
+                    base_image = f"azul/zulu-openjdk:{java_version}"
+                else:
+                    base_image = f"eclipse-temurin:{java_version}-jdk"
+            except ValueError:
+                # If version can't be parsed as int, default to eclipse-temurin
+                base_image = f"eclipse-temurin:{java_version}-jdk"
 
             original_repo_path = self.original_repo_path.replace(self.working_dir, '')
             patched_repo_path = self.patched_repo_path.replace(self.working_dir, '')
@@ -67,6 +77,7 @@ class CommitDockerizer:
                 "--build-arg", f"PATCHED_REPO_DIR={patched_repo_path}",
                 "--build-arg", f"ORIGINAL_REPO_DIR={original_repo_path}",
                 "--build-arg", f"MODULE_NAMES={','.join(self.module_names)}",
+                "--build-arg", f"BASE_IMAGE={base_image}",
                 "--build-arg", f"JAVA_VERSION={java_version}",
                 "--build-arg", f"EXEC_TIMES={self.exec_times}",
                 "--build-arg", f"MVN_SETTINGS_FILE=settings.xml"

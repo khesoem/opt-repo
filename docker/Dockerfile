@@ -1,12 +1,16 @@
+ARG BASE_IMAGE=eclipse-temurin:21-jdk
 ARG JAVA_VERSION=21
 
-FROM eclipse-temurin:${JAVA_VERSION}-jdk
+FROM ${BASE_IMAGE}
 
-# Set JAVA_HOME environment variable
+# Set JAVA_HOME
+# For eclipse-temurin images (JDK 8+): /opt/java/openjdk
 ENV JAVA_HOME=/opt/java/openjdk
 
-# Install git
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+# Install git only for JDK 8 or newer
+RUN if [ "$JAVA_VERSION" -ge 8 ] 2>/dev/null; then \
+        apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*; \
+    fi
 
 WORKDIR /app
 
@@ -77,11 +81,11 @@ COPY $MVN_SETTINGS_FILE /root/.m2/settings.xml
 
 # Download dependencies
 WORKDIR /app/patched_repo
-RUN ./mvnw -U -DskipTests install
+RUN ./mvnw -U -DskipTests -pl $MODULE_NAMES install || echo "Maven install failed"
 RUN ./mvnw -B dependency:go-offline || echo "Dependency download failed"
 
 WORKDIR /app/original_repo
-RUN ./mvnw -U -DskipTests install
+RUN ./mvnw -U -DskipTests -pl $MODULE_NAMES install || echo "Maven install failed"
 RUN ./mvnw -B dependency:go-offline || echo "Dependency download failed"
 
 # Run tests alternating between patched and original repos
@@ -90,23 +94,32 @@ RUN for i in $(seq 1 $EXEC_TIMES); do \
         # Odd iterations: run patched first, then original \
         cd /app/patched_repo && \
         LOG_FILE="/logs/patched_repo_mvnw_$i.log"; \
-        ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical 2>&1 | tee "$LOG_FILE"; \
+        ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical -DfailIfNoTests=false 2>&1 | tee "$LOG_FILE"; \
         /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
         \
         cd /app/original_repo && \
         LOG_FILE="/logs/original_repo_mvnw_$i.log"; \
-        ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical 2>&1 | tee "$LOG_FILE"; \
+        ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical -DfailIfNoTests=false 2>&1 | tee "$LOG_FILE"; \
         /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
       else \
         # Even iterations: run original first, then patched \
         cd /app/original_repo && \
         LOG_FILE="/logs/original_repo_mvnw_$i.log"; \
-        ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical 2>&1 | tee "$LOG_FILE"; \
+        ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical -DfailIfNoTests=false 2>&1 | tee "$LOG_FILE"; \
         /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
         \
         cd /app/patched_repo && \
         LOG_FILE="/logs/patched_repo_mvnw_$i.log"; \
-        ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical 2>&1 | tee "$LOG_FILE"; \
+        ./mvnw -pl $MODULE_NAMES -am test -Dsurefire.runOrder=alphabetical -DfailIfNoTests=false 2>&1 | tee "$LOG_FILE"; \
         /usr/local/bin/check_maven_success.sh "$LOG_FILE" || exit 1; \
       fi; \
     done
+
+# Download dependencies
+WORKDIR /app/patched_repo
+RUN ./mvnw -U -DskipTests -pl $MODULE_NAMES install || echo "Maven install failed"
+RUN ./mvnw -B dependency:go-offline || echo "Dependency download failed"
+
+WORKDIR /app/original_repo
+RUN ./mvnw -U -DskipTests -pl $MODULE_NAMES install || echo "Maven install failed"
+RUN ./mvnw -B dependency:go-offline || echo "Dependency download failed"

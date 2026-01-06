@@ -5,17 +5,13 @@ import re
 from src.utils import run_cmd
 from src.gh.commit_analysis.commit_static_analyzer import RepoAnalyzer
 from src.gh.commit_analysis.utils.pom_manipulator import add_tia_to_pom
-from src.reproducibility.dockerizer import CommitDockerizer, docker_image_exists
 import logging
 import src.config as conf
 import numpy as np
 from scipy import stats
 from src.gh.commit_analysis.utils.mvn_log_analyzer import MvnwExecResults
 from src.data.dataset_adapter import DatasetAdapter
-
-class AnalysisType(Enum):
-    INITIAL = "initial"
-    FINAL = "final"
+from src.reproducibility.dockerizer import CommitDockerizer
 
 class CommitPerfImprovementAnalyzer:
     class TestResult:
@@ -33,13 +29,12 @@ class CommitPerfImprovementAnalyzer:
             self.original_exec_times, self.patched_exec_times = mvnw_exec_results.get_total_execution_times()
             self.is_improvement_commit = mvnw_exec_results.is_improvement_commit()
     
-    def __init__(self, repo: str, commit: str, working_dir: str, builder_name: str, analysis_type: AnalysisType):
+    def __init__(self, repo: str, commit: str, working_dir: str, builder_name: str, dataset: DatasetAdapter):
         self.repo = repo
         self.commit = commit
         self.working_dir = working_dir
         self.builder_name = builder_name
-        self.dataset = DatasetAdapter()
-        self.analysis_type = analysis_type
+        self.dataset = dataset
 
     def _clone_and_checkout_repo(self) -> str:
         repo_dir = self.repo.replace('/', '__') + "_" + self.commit + '_patched'
@@ -347,45 +342,38 @@ class CommitPerfImprovementAnalyzer:
 
 
     def run_analysis(self) -> AnalysisResult | None:
-        # if self.analysis_type == AnalysisType.FINAL:
-        #     if not docker_image_exists(self.working_dir, self.repo, self.commit, AnalysisType.INITIAL.value):
-        #         raise Exception(f"{self.repo} - {self.commit} - {self.analysis_type.value} - Initial docker image does not exist")
-
-        logging.info(f"{self.repo} - {self.commit} - {self.analysis_type.value} - Running analysis")
+        logging.info(f"{self.repo} - {self.commit} - Running analysis")
 
         # clone the repo & checkout the commit & before commit
-        logging.info(f"{self.repo} - {self.commit} - {self.analysis_type.value} - Cloning and checking out the repo")
+        logging.info(f"{self.repo} - {self.commit} - Cloning and checking out the repo")
         patched_clone_path = self._clone_and_checkout_repo()
         original_clone_path = self._clone_and_checkout_original_commit(patched_clone_path)
-        logging.info(f"{self.repo} - {self.commit} - {self.analysis_type.value} - Cloned and checked out the repo")
-        self.dataset.add_or_update_commit(self.repo, self.commit, None, f"{self.analysis_type.value}_clone_and_checkout_repo", None, None, None)
+        logging.info(f"{self.repo} - {self.commit} - Cloned and checked out the repo")
+        self.dataset.add_or_update_commit(self.repo, self.commit, None, "clone_and_checkout_repo", None, None, None)
 
 
         # identify modified modules
         modified_modules = self._get_modified_modules(patched_clone_path)
 
         # build docker image containing the modified repos and run tests in docker
-        self.dockerizer = CommitDockerizer(self.working_dir, self.repo, self.commit, patched_clone_path, original_clone_path, modified_modules, self.builder_name, conf.docker[f'{self.analysis_type.value}-exec-times'], self.analysis_type.value, conf.docker[f'{self.analysis_type.value}-timeout'])
+        self.dockerizer = CommitDockerizer(self.working_dir, self.repo, self.commit, patched_clone_path, original_clone_path, modified_modules, self.builder_name, conf.docker[f'exec-times'], conf.docker[f'timeout'])
         if self.dockerizer.image_exists():
-            logging.info(f"{self.repo} - {self.commit} - {self.analysis_type.value} - Docker image already exists")
+            logging.info(f"{self.repo} - {self.commit} - Docker image already exists")
         else:
             self.dockerizer.build_commit_docker_image()
-        logging.info(f"{self.repo} - {self.commit} - {self.analysis_type.value} - Built docker image")
-        self.dataset.add_or_update_commit(self.repo, self.commit, None, f"{self.analysis_type.value}_docker_image_built", None, None, None)
-
-        if self.analysis_type == AnalysisType.INITIAL:
-            return None
+        logging.info(f"{self.repo} - {self.commit} - Built docker image")
+        self.dataset.add_or_update_commit(self.repo, self.commit, None, "docker_image_built", None, None, None)
 
         # get the results of executing maven
         mvnw_exec_results = self.dockerizer.get_mvnw_exec_results()
-        logging.info(f"{self.repo} - {self.commit} - {self.analysis_type.value} - Got the results of executing maven")
+        logging.info(f"{self.repo} - {self.commit} - Got the results of executing maven")
 
         # check if maven runs successfully on both versions
         if not mvnw_exec_results.is_successful():
-            logging.error(f"{self.repo} - {self.commit} - {self.analysis_type.value} - Maven execution failed")
-            raise Exception(f"{self.repo} - {self.commit} - {self.analysis_type.value} - Maven execution failed")
-        logging.info(f"{self.repo} - {self.commit} - {self.analysis_type.value} - Maven execution successful")
+            logging.error(f"{self.repo} - {self.commit} - Maven execution failed")
+            raise Exception(f"{self.repo} - {self.commit} - Maven execution failed")
+        logging.info(f"{self.repo} - {self.commit} - Maven execution successful")
         self.dataset.add_or_update_commit(self.repo, self.commit, None, "maven_execution_successful", mvnw_exec_results.get_execution_improvement(), mvnw_exec_results.get_execution_improvement_p_value(), mvnw_exec_results.get_significant_test_class_improvements())
 
-        logging.info(f"{self.repo} - {self.commit} - {self.analysis_type.value} - Running analysis complete")
+        logging.info(f"{self.repo} - {self.commit} - Running analysis complete")
         return self.AnalysisResult(self.repo, self.commit, self.dockerizer.image_name, mvnw_exec_results)
