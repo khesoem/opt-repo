@@ -60,6 +60,7 @@ class CommitDockerizer:
                 java_version_int = int(java_version)
                 if java_version_int < 8:
                     base_image = f"azul/zulu-openjdk:{java_version}"
+                    raise ValueError(f"Java version {java_version} is not supported")
                 else:
                     base_image = f"eclipse-temurin:{java_version}-jdk"
             except ValueError:

@@ -22,13 +22,13 @@ logging.basicConfig(filename=LOG_FILE,
                     level=logging.INFO)
 
 def define_new_builder(builder_index: int):
-    builder_name = f"builder-{builder_index}"
+    builder_name = f"builder{builder_index}"
     cpu_core_per_exec = conf.docker[f'cpu-core-per-exec']
     memory_per_exec = conf.docker[f'memory-per-exec']
     run_cmd(['docker', 'builder', 'create', '--name', builder_name, '--driver=docker-container', f'--driver-opt=memory={memory_per_exec}g', f'--driver-opt=cpuset-cpus={builder_index*cpu_core_per_exec}-{(builder_index+1)*cpu_core_per_exec-1}'], WORKING_DIR, capture_output=False)
     return builder_name
 
-def run_analysis(repo: str, commit: str, builder_queue: mp.Queue, dataset: DatasetAdapter):
+def run_analysis(repo: str, before_commit: str, commit: str, pr_number: int, builder_queue: mp.Queue, dataset: DatasetAdapter):
     builder_name = None
     analyzer = None
     try:
@@ -38,7 +38,7 @@ def run_analysis(repo: str, commit: str, builder_queue: mp.Queue, dataset: Datas
         
         logging.info(f"{repo} - {commit} - Running analysis")
 
-        analyzer = CommitPerfImprovementAnalyzer(repo, commit, WORKING_DIR, builder_name, dataset)
+        analyzer = CommitPerfImprovementAnalyzer(repo, before_commit, commit, pr_number, WORKING_DIR, builder_name, dataset)
 
         analysis_result = analyzer.run_analysis()
         if analysis_result is not None:
@@ -85,9 +85,10 @@ def run():
     df = dataset.get_dataset()
     for _, row in df.iterrows():
         repo = row['repo']
-        commit = row['commit_hash']
-
-        pool.apply_async(run_analysis, (repo, commit, builder_queue, dataset))
+        commit = row['after_commit']
+        before_commit = row['before_commit']
+        pr_number = row['pr_number']
+        pool.apply_async(run_analysis, (repo, before_commit, commit, pr_number, builder_queue, dataset))
 
     pool.close()
     pool.join()

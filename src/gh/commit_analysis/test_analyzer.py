@@ -1,6 +1,7 @@
 from enum import Enum
 import os
 import json
+import math
 import re
 from src.utils import run_cmd
 from src.gh.commit_analysis.commit_static_analyzer import RepoAnalyzer
@@ -29,9 +30,11 @@ class CommitPerfImprovementAnalyzer:
             self.original_exec_times, self.patched_exec_times = mvnw_exec_results.get_total_execution_times()
             self.is_improvement_commit = mvnw_exec_results.is_improvement_commit()
     
-    def __init__(self, repo: str, commit: str, working_dir: str, builder_name: str, dataset: DatasetAdapter):
+    def __init__(self, repo: str, before_commit: str, commit: str, pr_number: int, working_dir: str, builder_name: str, dataset: DatasetAdapter):
         self.repo = repo
+        self.before_commit = before_commit
         self.commit = commit
+        self.pr_number = pr_number
         self.working_dir = working_dir
         self.builder_name = builder_name
         self.dataset = dataset
@@ -43,6 +46,11 @@ class CommitPerfImprovementAnalyzer:
 
         if not os.path.exists(clone_path):
             run_cmd(["git", "clone", repo_url, repo_dir], self.working_dir)
+
+        if self.pr_number is not None and not math.isnan(self.pr_number):
+            self.pr_number = int(self.pr_number)
+            run_cmd(["git", "fetch", "origin", f"pull/{self.pr_number}/head:pr-{self.pr_number}"], clone_path)
+
         run_cmd(["git", "checkout", self.commit], clone_path)
 
         return clone_path
@@ -52,8 +60,11 @@ class CommitPerfImprovementAnalyzer:
         if not os.path.exists(original_clone_path):
             run_cmd(["cp", "-r", clone_path, original_clone_path], self.working_dir)
 
-        parent_commit = run_cmd(["git", "rev-parse", f"{self.commit}^"], original_clone_path).strip()
-        run_cmd(["git", "checkout", parent_commit], original_clone_path)
+        if self.before_commit is not None and isinstance(self.before_commit, str):
+            run_cmd(["git", "checkout", self.before_commit], original_clone_path)
+        else:
+            parent_commit = run_cmd(["git", "rev-parse", f"{self.commit}^"], original_clone_path).strip()
+            run_cmd(["git", "checkout", parent_commit], original_clone_path)
 
         return original_clone_path
 
@@ -349,7 +360,7 @@ class CommitPerfImprovementAnalyzer:
         patched_clone_path = self._clone_and_checkout_repo()
         original_clone_path = self._clone_and_checkout_original_commit(patched_clone_path)
         logging.info(f"{self.repo} - {self.commit} - Cloned and checked out the repo")
-        self.dataset.add_or_update_commit(self.repo, self.commit, None, "clone_and_checkout_repo", None, None, None)
+        self.dataset.add_or_update_commit(self.repo, self.commit, None, "clone_and_checkout_repo", None, None, None, self.before_commit, self.pr_number)
 
 
         # identify modified modules
@@ -362,7 +373,7 @@ class CommitPerfImprovementAnalyzer:
         else:
             self.dockerizer.build_commit_docker_image()
         logging.info(f"{self.repo} - {self.commit} - Built docker image")
-        self.dataset.add_or_update_commit(self.repo, self.commit, None, "docker_image_built", None, None, None)
+        self.dataset.add_or_update_commit(self.repo, self.commit, None, "docker_image_built", None, None, None, self.before_commit, self.pr_number)
 
         # get the results of executing maven
         mvnw_exec_results = self.dockerizer.get_mvnw_exec_results()
@@ -373,7 +384,7 @@ class CommitPerfImprovementAnalyzer:
             logging.error(f"{self.repo} - {self.commit} - Maven execution failed")
             raise Exception(f"{self.repo} - {self.commit} - Maven execution failed")
         logging.info(f"{self.repo} - {self.commit} - Maven execution successful")
-        self.dataset.add_or_update_commit(self.repo, self.commit, None, "maven_execution_successful", mvnw_exec_results.get_execution_improvement(), mvnw_exec_results.get_execution_improvement_p_value(), mvnw_exec_results.get_significant_test_class_improvements())
+        self.dataset.add_or_update_commit(self.repo, self.commit, None, "maven_execution_successful", mvnw_exec_results.get_execution_improvement(), mvnw_exec_results.get_execution_improvement_p_value(), mvnw_exec_results.get_significant_test_class_improvements(), self.before_commit, self.pr_number)
 
         logging.info(f"{self.repo} - {self.commit} - Running analysis complete")
         return self.AnalysisResult(self.repo, self.commit, self.dockerizer.image_name, mvnw_exec_results)

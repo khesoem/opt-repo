@@ -13,7 +13,7 @@ from github.Repository import Repository
 from github.Commit import Commit
 import logging
 from datetime import datetime, timedelta, timezone
-from typing import Set
+from typing import Set, Optional
 
 class CommitCollector:
     def __init__(self):
@@ -348,3 +348,49 @@ class CommitCollector:
 
     def close(self):
         self.g.close()
+    
+    def is_source_of_perf_message(self, repo_name: str, commit_hash: str) -> bool:
+        repo = self.g.get_repo(repo_name)
+        commit = repo.get_commit(commit_hash)
+        msg = commit.commit.message or ""
+
+        issue_refs = self.extract_fixed_issues(msg, repo)
+
+        if issue_refs:
+            for number in issue_refs:
+                try:
+                    if self.is_performance_issue(repo, commit, repo.get_issue(number)):
+                        return True
+
+                except UnknownObjectException:
+                    continue
+        
+        return False
+    
+    def get_pr_before_after_commits(self, repo_name: str, commit_hash: str) -> Optional[tuple[int, tuple[str, str]]]:
+        repo = self.g.get_repo(repo_name)
+        commit = repo.get_commit(commit_hash)
+        pulls = commit.get_pulls()
+
+        relevant_pr = None
+        for pr in pulls:
+            # Extract issues fixed by the PR from its body and title
+            pr_message = (pr.title or "") + "\n" + (pr.body or "")
+            pr_issue_refs = self.extract_fixed_issues(pr_message, repo)
+            
+            if pr_issue_refs:
+                for number in pr_issue_refs:
+                    try:
+                        if self.is_performance_issue(repo, commit, repo.get_issue(number)):
+                            relevant_pr = pr
+                            break
+                    except UnknownObjectException:
+                        continue
+
+            if relevant_pr is not None:
+                break
+
+        if relevant_pr is None:
+            return None
+
+        return (relevant_pr.number, (relevant_pr.base.sha, relevant_pr.head.sha))
