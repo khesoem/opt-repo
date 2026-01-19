@@ -1,0 +1,54 @@
+You are at '/workspace/project/', which is the root of the 'keycloak' project. The project uses uses the Maven wrapper ./mvnw. The unit tests for the 'services' module of the project can be executed as follows:
+  ./mvnw -pl services -am test -DfailIfNoTests=false -DskipITs
+
+Note that running the test with the command above should usually take less than 300 seconds, including compiling, building, and executing the tests.
+
+In this project, there is a performance issue in terms of execution time. The issue appears in the 'services' module of the project and can be described as follows:
+###ISSUE DESCRIPTION BEGINS###
+ISSUE TITLE: Role Mapper is updating the user every time on login
+ISSUE DESCRIPTION:
+Before reporting an issue
+
+I have read and understood the above terms for submitting issues, and I understand that my issue may be closed without action if I do not follow them.
+Area
+identity-brokering
+
+Describe the bug
+Whenever a user logs in, the mappers will update and remove the role every time, even though the user doesn't need updating.
+
+This is a smaller variant of #43682 which might be more appropriate to backport
+
+Version
+26.4
+
+Regression
+
+The issue is a regression
+Expected behavior
+The user should not be updated in the database if their role settings match what is expected.
+
+Actual behavior
+The role mapper attempts to delete the role. When doing this, it issues a select-for-update, and too many of them seem to lead to row lock contention and eventually deadlocks.
+
+In addition to that, the user is invalidated in the cache.
+
+How to Reproduce?
+Look at the code and the logs
+
+Anything else?
+I'll prepare a PR. There is already #43682 with a more general approach, but which might be more risky for backporting.
+###ISSUE DESCRIPTION ENDS###
+
+This issue can be fixed by changing the following file(s) of the project:
+services/src/main/java/org/keycloak/broker/saml/mappers/AbstractAttributeToRoleMapper.java
+
+Your task is to generate a patch that fixes the issue described above by changing the mentioned files.
+
+Follow this loop:
+1) Plan: make a plan of the steps you will take.
+2) Fault localization: identify which parts of the code should be changed.
+3) Patch generation: patch the project to fix the issue by modifying the detected faulty lines.
+4) Patch validation: run the tests with the './mvnw -pl services -am test -DfailIfNoTests=false -DskipITs' command and ensure the project successfully builds and all tests pass. If this validation step fails, revert to the original version and start again from the fault localization step.
+5) Summarize: save your the patch in a file 'patch.diff'.
+
+Note that you should not look for the code in a different directory. You are starting at '/workspace/project/', which is exactly the root of the project and there is no need to look for files in the parent directory.

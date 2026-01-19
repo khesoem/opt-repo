@@ -32,3 +32,5 @@ collected_commits/tmp_commits.csv
 results/dataset_bak.csv
 results/dataset_bak*.csv
 **/*.lock
+auxiliary/openhands-files/command.sh
+auxiliary/openhands-files/config.toml
