@@ -50,6 +50,7 @@ class DatasetAdapter:
                 "test_class_improvements": pd.Series(dtype="object"),
                 "before_commit": pd.Series(dtype="string"),
                 "pr_number": pd.Series(dtype="Int64"),
+                "is_improvement_per_manual_analysis": pd.Series(dtype="string"),
             })
             # Create directory if it doesn't exist
             os.makedirs(os.path.dirname(DATASET_PATH), exist_ok=True)
@@ -73,6 +74,7 @@ class DatasetAdapter:
         test_class_improvements: dict[str, float] | None,
         before_commit: str | None,
         pr_number: int | None,
+        is_improvement_per_manual_analysis: bool | None,
     ):
         """Process-safe add or update of a commit record using file locking."""
         new_row = {
@@ -85,6 +87,7 @@ class DatasetAdapter:
             "test_class_improvements": json.dumps(test_class_improvements) if test_class_improvements is not None else None,
             "before_commit": before_commit,
             "pr_number": pr_number,
+            "is_improvement_per_manual_analysis": is_improvement_per_manual_analysis,
         }
 
         # Acquire file lock for cross-process synchronization

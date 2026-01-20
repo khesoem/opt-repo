@@ -37,13 +37,13 @@ docker = {
     'patched-repo-path': '/app/patched_repo',
     'host-mvnw-log-path': get_mvnw_log_file_name,
     'exec-times': 31,
-    'cpu-core-per-exec': 12,
-    'memory-per-exec': 24,
+    'cpu-core-per-exec': 32,
+    'memory-per-exec': 80,
     'timeout': 10000,
 }
 
 run_analysis = {
-    'num-processes': 5,
+    'num-processes': 1,
     'log-file': 'logs/logging_{:%Y-%m-%d-%H-%M}.log'.format(datetime.now()),
     'log-format': '%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
     'log-datefmt': '%H:%M:%S',

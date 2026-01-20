@@ -360,7 +360,7 @@ class CommitPerfImprovementAnalyzer:
         patched_clone_path = self._clone_and_checkout_repo()
         original_clone_path = self._clone_and_checkout_original_commit(patched_clone_path)
         logging.info(f"{self.repo} - {self.commit} - Cloned and checked out the repo")
-        self.dataset.add_or_update_commit(self.repo, self.commit, None, "clone_and_checkout_repo", None, None, None, self.before_commit, self.pr_number)
+        self.dataset.add_or_update_commit(self.repo, self.commit, None, "clone_and_checkout_repo", None, None, None, self.before_commit, self.pr_number, None)
 
 
         # identify modified modules
@@ -373,7 +373,7 @@ class CommitPerfImprovementAnalyzer:
         else:
             self.dockerizer.build_commit_docker_image()
         logging.info(f"{self.repo} - {self.commit} - Built docker image")
-        self.dataset.add_or_update_commit(self.repo, self.commit, None, "docker_image_built", None, None, None, self.before_commit, self.pr_number)
+        self.dataset.add_or_update_commit(self.repo, self.commit, None, "docker_image_built", None, None, None, self.before_commit, self.pr_number, None)
 
         # get the results of executing maven
         mvnw_exec_results = self.dockerizer.get_mvnw_exec_results()
@@ -384,7 +384,7 @@ class CommitPerfImprovementAnalyzer:
             logging.error(f"{self.repo} - {self.commit} - Maven execution failed")
             raise Exception(f"{self.repo} - {self.commit} - Maven execution failed")
         logging.info(f"{self.repo} - {self.commit} - Maven execution successful")
-        self.dataset.add_or_update_commit(self.repo, self.commit, None, "maven_execution_successful", mvnw_exec_results.get_execution_improvement(), mvnw_exec_results.get_execution_improvement_p_value(), mvnw_exec_results.get_significant_test_class_improvements(), self.before_commit, self.pr_number)
+        self.dataset.add_or_update_commit(self.repo, self.commit, None, "maven_execution_successful", mvnw_exec_results.get_execution_improvement(), mvnw_exec_results.get_execution_improvement_p_value(), mvnw_exec_results.get_significant_test_class_improvements(), self.before_commit, self.pr_number, None)
 
         logging.info(f"{self.repo} - {self.commit} - Running analysis complete")
         return self.AnalysisResult(self.repo, self.commit, self.dockerizer.image_name, mvnw_exec_results)
