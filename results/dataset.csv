@@ -149,7 +149,7 @@ langchain4j/langchain4j,c369bb2837f339568f0542dff525942cc4fc0ff3,,clone_and_chec
 langchain4j/langchain4j,498145cb44c1ee2e515595a0dd52d8809ff0a755,,clone_and_checkout_repo,,,{},,,False
 chrisvest/stormpot,4b19486b33c0ca16353588c1ea758ccd34646a60,,clone_and_checkout_repo,,,{},,,False
 oracle/opengrok,ab6c4a3c48bc24a9f720bd183d015d86524c0b92,,clone_and_checkout_repo,,,{},,,False
-subclipse/subclipse,3f6b53a74f30d10d1a37dd153eb1c04f31466298,,docker_image_built,,,{},faec73788333473572ebb1cc1d2c2986d6ba7fe9,295.0,False
+subclipse/subclipse,3f6b53a74f30d10d1a37dd153eb1c04f31466298,,docker_image_built,,,{},,,False
 DominoKit/domino-ui,510cfaf43a0b244843898caad2b1506d06a5420a,,docker_image_built,,,{},,,False
 eclipse-aspectj/aspectj,975671fa81f823643adf892f2af0e8120322e682,,clone_and_checkout_repo,,,{},,,False
 spring-cloud/spring-cloud-sleuth,71a141a70227ea85a48fc51b23cadcc6d134e963,,docker_image_built,,,{},,,False
@@ -551,7 +551,7 @@ neo4j/neo4j-ogm,730d885795942df5a75f1ea97255209872965353,,maven_execution_succes
 neo4j/neo4j-ogm,2df1b3d6d5f96c8202afe760ef41da4af84d0b76,,maven_execution_successful,0.0254809290494152,0.8997557889670134,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 neo4j/neo4j-ogm,283be6de03a43e0247ccecb02c1cf9f89e6dae30,,clone_and_checkout_repo,,,{},,,False
 neo4j/neo4j-ogm,82711997160294c2ab90852a7f38ff652cd56ad5,,clone_and_checkout_repo,,,{},,,False
-spring-cloud/spring-cloud-circuitbreaker,7a9b097e0be96c8954924f4b6aa550e6ac3862fe,,maven_execution_successful,0.0004979968167613,0.9999957848340272,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",98b78ef2dc75a54311cb74a612f5ad7cae3465a9,99.0,True
+spring-cloud/spring-cloud-circuitbreaker,7a9b097e0be96c8954924f4b6aa550e6ac3862fe,,maven_execution_successful,0.0004979968167613,0.9999957848340272,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 tbsalling/aismessages,642ca0d490c21f0d35399bca6ee1458c7649f8b6,,clone_and_checkout_repo,,,{},,,False
 tbsalling/aismessages,aeed1e519b243d3e4e0ef5523d388d016b47b20b,,clone_and_checkout_repo,,,{},,,False
 mojohaus/wagon-maven-plugin,a898fa5f4ebe5b502777cf0e4dee3d7f81bda535,,clone_and_checkout_repo,,,{},,,False
@@ -707,7 +707,6 @@ beehive-lab/TornadoVM,6481642fe661692348486d4c891546006d0a7ad4,,clone_and_checko
 OpenAS2/OpenAs2App,aeae47ae4b5a1dbcf7d92169dc10d038f0ca6951,,clone_and_checkout_repo,,,{},039102d96d2a8a39a1a830073ac5a1d839253088,293.0,False
 spacious-team/investbook,30a4dc79a6b93ee8830b02c7b3c0a5b0cd3c1f36,,clone_and_checkout_repo,,,{},6c4da76c800a8caccc10db5cf06812da76d77bb3,187.0,False
 Altinity/ice,3078e59ca36351442558362539748991c18166d1,,maven_execution_successful,0.0007972169879692,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",8d42470b3c6c241da08c761c745814d76836731e,24.0,True
-subclipse/subclipse,3f6b53a74f30d10d1a37dd153eb1c04f31466298,,docker_image_built,,,{},faec73788333473572ebb1cc1d2c2986d6ba7fe9,295.0,False
 microsoft/semantic-kernel-java,49e5ff58199d0442078a48b564a189c5927fb0c7,,clone_and_checkout_repo,,,{},dcd795c5c449c0718f51d3f6f20f62ffe344c3cc,268.0,False
 gluonhq/rich-text-area,12c8c4dbca56d7f43d7b98fe55799abc0617f696,,clone_and_checkout_repo,,,{},fc307883754571b936ee883c10593caf0a75ba80,400.0,False
 gluonhq/rich-text-area,61e5a0de3f1fbaac73d256803f15ba4cdd8d2d4d,,clone_and_checkout_repo,,,{},5e43e95fdfb7ba06a943a26e14562917519a39d0,378.0,False
@@ -840,7 +839,6 @@ onthegomap/planetiler,17a4a30648053373e5e8b70060d27ff6d7a70d9c,,maven_execution_
 Pi4J/pi4j,c083dc8903244ff04eb284cd24923cda1b065e2a,,clone_and_checkout_repo,,,{},1c1540aade740aeba03be9e3a258f46fc6029718,518.0,False
 microsoft/java-debug,5c2a0bbb276447d390842e9019610fee866e5e11,,clone_and_checkout_repo,,,{},c7642bc738b2dbfeefa0ea85e338d9eefd0ebc25,596.0,False
 microsoft/java-debug,7a679f3d97f86fd3463ad67e6271f33ce213991e,,clone_and_checkout_repo,,,{},ad02d8f3184afb832e92b9b294c80349bbb57f46,88.0,False
-spring-cloud/spring-cloud-circuitbreaker,7a9b097e0be96c8954924f4b6aa550e6ac3862fe,,maven_execution_successful,0.0004979968167613,0.9999957848340272,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",98b78ef2dc75a54311cb74a612f5ad7cae3465a9,99.0,True
 OpenLiberty/ci.maven,d987dd900958a2990b9f7a7090f5f1b5e64cc721,,clone_and_checkout_repo,,,{},a595c9a9bc90e4f6a7823725ec73223f6dcac3b8,1378.0,False
 eclipse-xpanse/xpanse,f6d5af200778b46284dc179098be233ef1e13810,,clone_and_checkout_repo,,,{},acb63a3dd13098d4344571bf1bc142b1d46ec8d0,380.0,False
 camunda-community-hub/spring-zeebe,0964527df570216c152e1aab2dff906cafd450ab,,maven_execution_successful,-0.0037790835426241,0.9786130273714662,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",3dadf8485225366b67753035086498b0285d6fb0,656.0,True
