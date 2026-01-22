@@ -387,8 +387,8 @@ apache/shardingsphere,6ef1a0ffa2dd36e575a6b518c62daf35168e802e,,clone_and_checko
 apache/shardingsphere,37c264ded004797bea9c1a1547bb0b42ab5dae9d,,clone_and_checkout_repo,,,{},,,False
 apache/shardingsphere,b59bf4550e6483e7e0141acffaa65807092f5bb0,,clone_and_checkout_repo,,,{},,,False
 apache/shardingsphere,0e6c9602398fb278903fc2921042dbbdde41a2ee,,clone_and_checkout_repo,,,{},,,False
-mybatis/mybatis-3,ddd931bd095923ccdb199dedd1fd82065bf5d6a7,,maven_execution_successful,0.0040196733567345,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": [\""org.apache.ibatis.submitted.foreach_map.ForEachMapTest\""]}""",,,False
-mybatis/mybatis-3,8690d60cad1f397102859104fee1f6e6056a0593,,maven_execution_successful,-0.00153719644361,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": [\""org.apache.ibatis.parsing.XPathParserTest\""]}""",,,False
+mybatis/mybatis-3,ddd931bd095923ccdb199dedd1fd82065bf5d6a7,,maven_execution_successful,0.0040196733567345,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": [\""org.apache.ibatis.submitted.foreach_map.ForEachMapTest\""]}""",,,True
+mybatis/mybatis-3,8690d60cad1f397102859104fee1f6e6056a0593,,maven_execution_successful,-0.00153719644361,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": [\""org.apache.ibatis.parsing.XPathParserTest\""]}""",,,True
 mybatis/mybatis-3,92cef489facdce48bcbc17e34ec8083a854e9e14,,clone_and_checkout_repo,,,{},,,False
 prestodb/presto,136facf5cf97e36080110e10b2face7cadedfe76,,clone_and_checkout_repo,,,{},,,False
 prestodb/presto,acfe352844e9937e9b90e636032330614e349c20,,clone_and_checkout_repo,,,{},,,False
@@ -584,9 +584,9 @@ DataLinkDC/dinky,86ffb5a525b81f190de2b2429ce020a5ef6977f9,,clone_and_checkout_re
 DataLinkDC/dinky,3ea213033854a00f318f4e0ada18cbd98108f432,,clone_and_checkout_repo,,,{},,,False
 DataLinkDC/dinky,6a862447465a3701465fcd1b050b910e19b4bf73,,clone_and_checkout_repo,,,{},,,False
 DataLinkDC/dinky,b91d42b72f0fede6f23e5989aff5ec387bcb1e4a,,clone_and_checkout_repo,,,{},,,False
-alibaba/spring-cloud-alibaba,5162d02b4ea39ef8629b9638fe22ce51b99e6d0f,,maven_execution_successful,-0.0044778940191712,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,False
-alibaba/spring-cloud-alibaba,d2684c288201a62b3eded20dfe5b7e3f4df0c7fb,,maven_execution_successful,-0.0030710043775011,0.99997026193887,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,False
-alibaba/spring-cloud-alibaba,63e160560c49c75a24e5c49e2c933d2aaf53a34e,,maven_execution_successful,-0.0071964818031657,0.9999999711290002,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,False
+alibaba/spring-cloud-alibaba,5162d02b4ea39ef8629b9638fe22ce51b99e6d0f,,maven_execution_successful,-0.0044778940191712,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
+alibaba/spring-cloud-alibaba,d2684c288201a62b3eded20dfe5b7e3f4df0c7fb,,maven_execution_successful,-0.0030710043775011,0.99997026193887,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
+alibaba/spring-cloud-alibaba,63e160560c49c75a24e5c49e2c933d2aaf53a34e,,maven_execution_successful,-0.0071964818031657,0.9999999711290002,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 alibaba/spring-cloud-alibaba,cc4379a27146fb75b09a506ce850c37e2b6c6ae0,,maven_execution_successful,-0.0343441561341611,0.9786130273714662,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,False
 apache/royale-compiler,522cd0ef61a11474cf80578f7f317cc9354b9be1,,clone_and_checkout_repo,,,{},,,False
 apache/royale-compiler,e75745a10fa02f5e2506b3cb0da0e28b8f996cba,,clone_and_checkout_repo,,,{},,,False
@@ -699,7 +699,7 @@ opencast/opencast,e190fa88e14071b722e8cd6e0fc931c411077793,,clone_and_checkout_r
 eclipse-lemminx/lemminx,77a19a8c4f70940993817173488dcf9f7a5adbcb,,clone_and_checkout_repo,,,{},b11ed6b6fa20e141ef7bbe28b883b5b51986be13,1372.0,False
 smallrye/smallrye-graphql,376d82e9514914f5fd6e6ee78ec7544a450a30d2,,clone_and_checkout_repo,,,{},0d9ff4e1e10baff2a1236dceddbb03bd4b567161,351.0,False
 smallrye/smallrye-graphql,52a531344ae6fdc9ff3df3dbe269f0e0eea957a7,,clone_and_checkout_repo,,,{},b50ac7de7cc10e333a391f7821cf98d66f196d7f,193.0,False
-GoogleCloudPlatform/cloud-opensource-java,5b50571dd6d40a0327b42b60868c8c85406631a1,,maven_execution_successful,0.0032432226764761,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",8831cbe1d9152f8351007e6e152bcbc5d314096c,1394.0,False
+GoogleCloudPlatform/cloud-opensource-java,5b50571dd6d40a0327b42b60868c8c85406631a1,,maven_execution_successful,0.0032432226764761,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",8831cbe1d9152f8351007e6e152bcbc5d314096c,1394.0,True
 eclipse-xpanse/xpanse,1c61eedafd6b3a5d6a9a0e6d60391883f42219fc,,clone_and_checkout_repo,,,{},a4000909e2d528f3dd680c7b61bfbd03c8a7febe,2090.0,False
 eclipse-xpanse/xpanse,778984aeb9ef9603110139f6a0b514ba69d8de32,,clone_and_checkout_repo,,,{},1387448190cdf3d5a39379291bfe532e08f28eab,1196.0,False
 hyperxpro/Brotli4j,f856ebd965b2d483e498dcd463a46307228a6c66,,clone_and_checkout_repo,,,{},3575fd79fa95e448fcacfe0c32befd03845fb2fc,124.0,False
@@ -731,7 +731,7 @@ apache/skywalking,a06302627872ae2e4041ba4e95398013e7fc653e,,clone_and_checkout_r
 apache/shardingsphere,2c89f897def51ae7df1c953b55e268aee4d357ca,,maven_execution_successful,0.0210175010175009,0.8997557889670134,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",77325f0bbfac48070efb668dec8250b314f79bec,23201.0,True
 apache/shardingsphere,dd11b3a590f9d5ddfd392cbe70b348a43d368b96,,clone_and_checkout_repo,,,{},0fe7f4016ad5d4d2776411ee313fef6997e4ccee,19159.0,False
 apache/shardingsphere,e6c38494831854640a3f1ed96291454bbf15ddea,,clone_and_checkout_repo,,,{},1b77c33983198a420e974a302d2a891ca05ae664,18152.0,False
-apache/shardingsphere,70c03e10c026734033e6c146df0414e65daa7a9d,,maven_execution_successful,-0.0021761272993801,1.0,"""{\""original_outperforms_patched\"": [\""org.apache.shardingsphere.infra.eventbus.ShardingSphereEventBusTest\""], \""patched_outperforms_original\"": []}""",f37aba24021cecb2f1460add62d701ce9e3e5f1b,14717.0,False
+apache/shardingsphere,70c03e10c026734033e6c146df0414e65daa7a9d,,maven_execution_successful,-0.0021761272993801,1.0,"""{\""original_outperforms_patched\"": [\""org.apache.shardingsphere.infra.eventbus.ShardingSphereEventBusTest\""], \""patched_outperforms_original\"": []}""",f37aba24021cecb2f1460add62d701ce9e3e5f1b,14717.0,True
 apache/shardingsphere,6795ba6cfb2be78956f348bd43fda7ee0e4bd51e,,maven_execution_successful,0.0029185455235836,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",a6047d89a8447ec4b20897f9440154df413dd63d,13282.0,True
 apache/shardingsphere,49a13e9aaf8074cf4eba87defe9db6e95c60896d,,maven_execution_successful,0.01913368142632,0.9992845468223096,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": [\""org.apache.shardingsphere.infra.state.StateContextTest\""]}""",3b840b339ac580a7247b866f5904c514b169065f,13275.0,True
 apache/shardingsphere,85d70b778bd21610bf31651a76dcdd463546be18,,maven_execution_successful,0.0015508540290424,0.9786130273714662,"""{\""original_outperforms_patched\"": [\""org.apache.shardingsphere.infra.metadata.resource.CachedDatabaseMetaDataTest\""], \""patched_outperforms_original\"": []}""",09b27c273d3a7c7fd31a6853b8e4c95c9b669cb0,13264.0,True

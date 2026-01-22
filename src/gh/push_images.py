@@ -72,25 +72,8 @@ def push_image_to_ghcr(ghcr_image: str):
         raise
 
 
-def make_package_public(username: str, image_name: str):
-    """Make a package public using gh CLI."""
-    try:
-        # Extract the image name without tag for the package name
-        package_name = image_name.split(':')[0].split('/')[-1]
-        # Make the package public
-        run_cmd([
-            'gh', 'api',
-            f'user/packages/container/{package_name}/visibility',
-            '-X', 'PUT',
-            '-f', 'visibility=public'
-        ], '.', capture_output=False)
-        print(f"Made package {package_name} public")
-    except Exception as e:
-        print(f"Error making package public: {e}", file=sys.stderr)
-        # Continue even if making public fails, as the image is already pushed
-
-
 def main():
+
     print("Getting GitHub username...")
     username = get_github_username()
     print(f"GitHub username: {username}\n")
@@ -118,9 +101,6 @@ def main():
             # Push to ghcr
             push_image_to_ghcr(ghcr_image)
             
-            # Make public
-            make_package_public(username, ghcr_image)
-            
             print(f"✓ Successfully processed {repo}:{tag}\n")
         except Exception as e:
             print(f"✗ Failed to process {repo}:{tag}: {e}\n", file=sys.stderr)
@@ -131,4 +111,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
