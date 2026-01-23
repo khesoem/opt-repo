@@ -7,7 +7,10 @@ from pathlib import Path
 
 class RepoAnalyzer:
     def __init__(self, repo_path: str):
-        self.repo_path = Path(repo_path)
+        if repo_path is None:
+            self.repo_path = None
+        else:
+            self.repo_path = Path(repo_path)
 
     def parse_name_status(self, line: str) -> Dict[str, str]:
         """
@@ -72,17 +75,9 @@ class RepoAnalyzer:
         
         return entries
 
-    def get_changed_java_src_files(self, commit: str) -> Set[str]:
-        # Use diff-tree to get paths changed by exactly this commit.
-        # -r: recurse, --no-commit-id: don’t show commit id,
-        # -M/-C: detect renames/copies, -m: handle merges (per-parent); we’ll dedupe.
-        out = run_cmd(
-            cmd=["git", "diff-tree", "-r", "--no-commit-id", "--name-status", "-M", "-C", "-m", commit],
-            path=str(self.repo_path)
-        )
-
+    def diff_to_java_src_files(self, diff_output: str) -> Set[str]:
         entries = set()
-        for line in out.splitlines():
+        for line in diff_output.splitlines():
             rec = self.parse_name_status(line)
             if not rec:
                 continue
@@ -100,6 +95,17 @@ class RepoAnalyzer:
             entries.add(path)
 
         return entries
+
+    def get_changed_java_src_files(self, commit: str) -> Set[str]:
+        # Use diff-tree to get paths changed by exactly this commit.
+        # -r: recurse, --no-commit-id: don’t show commit id,
+        # -M/-C: detect renames/copies, -m: handle merges (per-parent); we’ll dedupe.
+        diff_output = run_cmd(
+            cmd=["git", "diff-tree", "-r", "--no-commit-id", "--name-status", "-M", "-C", "-m", commit],
+            path=str(self.repo_path)
+        )  
+
+        return self.diff_to_java_src_files(diff_output)
 
     def get_commit_line_changes(self, commit: str) -> Dict[str, Dict[str, list[int]]]:
         """
