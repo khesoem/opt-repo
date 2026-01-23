@@ -394,3 +394,15 @@ class CommitCollector:
             return None
 
         return (relevant_pr.number, (relevant_pr.base.sha, relevant_pr.head.sha))
+
+    def get_issue_number_from_commit(self, repo_name: str, commit_hash: str) -> Optional[int]:
+        repo = self.g.get_repo(repo_name)
+        commit = repo.get_commit(commit_hash)
+        issue_number = self.fixed_performance_issue(repo, commit)
+        return issue_number
+    
+    def get_commit_linked_prs(self, repo_name: str, commit_hash: str) -> list[int]:
+        repo = self.g.get_repo(repo_name)
+        commit = repo.get_commit(commit_hash)
+        pulls = commit.get_pulls()
+        return [pr.number for pr in pulls]
