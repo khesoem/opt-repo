@@ -1,0 +1,48 @@
+*** Begin Patch
+*** Update File: liquibase-standard/src/main/java/liquibase/statement/ExecutablePreparedStatementBase.java
+@@
+-    protected void executePreparedStatement(PreparedStatement stmt) throws SQLException {
+-        if (database instanceof PostgresDatabase) {
+-            //postgresql's default prepared statement setup is slow for normal liquibase usage. Calling with QUERY_ONESHOT seems faster, even when we keep re-calling the same prepared statement for many rows in loadData
+-            try {
+-                if (EXECUTE_WITH_FLAGS_METHOD.get() == null) {
+-                    Method executeWithFlags = stmt.getClass().getMethod("executeWithFlags", int.class);
+-                    executeWithFlags.setAccessible(true);
+-                    EXECUTE_WITH_FLAGS_METHOD.set(executeWithFlags);
+-                }
+-
+-                EXECUTE_WITH_FLAGS_METHOD.get().invoke(stmt, 1); //QueryExecutor.QUERY_ONESHOT
+-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+-                stmt.execute();
+-            }
+-        } else {
+-            stmt.execute();
+-        }
+-    }
++    protected void executePreparedStatement(PreparedStatement stmt) throws SQLException {
++        if (database instanceof PostgresDatabase) {
++            // For Postgres, using executeWithFlags(QueryExecutor.QUERY_ONESHOT) can speed up typical prepared
++            // statement usage. However, when LOB streams are attached to the statement (valueBlobFile/valueClobFile),
++            // using executeWithFlags can cause a performance regression with the Postgres driver. In that case fall
++            // back to the standard stmt.execute() which avoids the regression.
++            if (!closeables.isEmpty()) {
++                stmt.execute();
++                return;
++            }
++
++            try {
++                if (EXECUTE_WITH_FLAGS_METHOD.get() == null) {
++                    Method executeWithFlags = stmt.getClass().getMethod("executeWithFlags", int.class);
++                    executeWithFlags.setAccessible(true);
++                    EXECUTE_WITH_FLAGS_METHOD.set(executeWithFlags);
++                }
++
++                EXECUTE_WITH_FLAGS_METHOD.get().invoke(stmt, 1); //QueryExecutor.QUERY_ONESHOT
++            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
++                stmt.execute();
++            }
++        } else {
++            stmt.execute();
++        }
++    }
+*** End Patch
