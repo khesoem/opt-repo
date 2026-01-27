@@ -44,7 +44,6 @@ keycloak/keycloak,c0da1468731761b435813a2b03bcebdca5f9db30,34364.0,clone_and_che
 keycloak/keycloak,221d21639d363e20f5f23af65694ee2250d6417c,38195.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,491b7861ed1c47a45003cb92ddbf2fc3cae1bdc6,33953.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,1cb7a4736c198988b3d84c50b0a3d9b0b54ed71b,37062.0,clone_and_checkout_repo,,,{},,,False
-keycloak/keycloak,a357589c148742ecf2240b75fc74d3218c8b78fc,36919.0,maven_execution_successful,-0.0244025864492549,0.9998375428840518,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 keycloak/keycloak,c8078fa2afe635655c07d36fae6cdc895d27c88d,35834.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,a43b65281d6f3631366b71858cad25676aaf635d,35796.0,maven_execution_successful,0.0185342440465201,0.9786130273714662,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 keycloak/keycloak,45a6b5c6572279269b322ecc41e128db8d4d1c27,35758.0,clone_and_checkout_repo,,,{},,,False
@@ -56,10 +55,7 @@ keycloak/keycloak,d66030fcadf48eab8b2f8dc34a3d30921283c5e3,34412.0,clone_and_che
 keycloak/keycloak,4690e00d910cdd64fb447fbcdf3a336af4b8b76c,34050.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,ef48a3a360cc0c96faeef3ecbedd42b8e88d36bd,33424.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,3887ee3006fce7af5e6321f4aefe062e9cdd20c7,33439.0,maven_execution_successful,0.0143006870851287,0.9998375428840518,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
-keycloak/keycloak,8769fed585c7482e7d648cadf392213cc16e5e0f,33353.0,maven_execution_successful,0.0089217346915099,0.9973885603249072,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
-keycloak/keycloak,fd1f3c52d39537da6091bf8200db37d487ea613e,33353.0,maven_execution_successful,-0.0117518256676644,0.9998375428840518,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 keycloak/keycloak,5c503a55e9f44a5283cb321e97c2f611cc2b22b3,33353.0,clone_and_checkout_repo,,,{},,,False
-keycloak/keycloak,0becdaa2a92382de1ea2b98eb3125dc173f33c22,33331.0,maven_execution_successful,-0.0221327967806842,0.9999995660036802,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 keycloak/keycloak,5bb23eb0fc711c626ead010c0aa70fbc029c6f97,32906.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,bf19ec11cfd7189141a0ed67f57b464b55fd54d1,32761.0,maven_execution_successful,-0.0285881644673684,0.9992845468223096,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,False
 keycloak/keycloak,866101e72e8d45a52980cdab9a121c661df039e7,32683.0,clone_and_checkout_repo,,,{},,,False
@@ -68,7 +64,6 @@ keycloak/keycloak,079242c398d0a1290d3370eae2626e2534eb49df,32091.0,clone_and_che
 keycloak/keycloak,5bd3da657b75dcc163809cd5ec3f81f7c3c88f73,32428.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,04d2126c7358ca3b069ea9909a07e549a07aca95,32273.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,5740f8836aa489e87a8084c716bbec78b7e66c25,32273.0,clone_and_checkout_repo,,,{},,,False
-keycloak/keycloak,a7964a588baafd6e8b83f6485204b22ce8704005,32273.0,maven_execution_successful,-0.0073137669052047,0.9999957848340272,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 keycloak/keycloak,aa91f6027801d198e68409bc8b907761fe08c776,31519.0,maven_execution_successful,-0.0065077997894536,0.9992845468223096,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 keycloak/keycloak,00d8e06f7995eafe061ac2d407869372d3be3c3e,31701.0,maven_execution_successful,0.0013308739405543,0.9999957848340272,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 keycloak/keycloak,557cf1e60e2ab67d43f1ea02c8037078705cc0a6,31699.0,maven_execution_successful,0.0034494048315053,0.9999957848340272,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
@@ -153,7 +148,6 @@ subclipse/subclipse,3f6b53a74f30d10d1a37dd153eb1c04f31466298,173.0,docker_image_
 DominoKit/domino-ui,510cfaf43a0b244843898caad2b1506d06a5420a,1017.0,docker_image_built,,,{},,,False
 eclipse-aspectj/aspectj,975671fa81f823643adf892f2af0e8120322e682,306.0,clone_and_checkout_repo,,,{},,,False
 spring-cloud/spring-cloud-sleuth,71a141a70227ea85a48fc51b23cadcc6d134e963,2318.0,docker_image_built,,,{},,,False
-bmarwell/jfmt,b0f139cdc99cfac45b9ddfdfc4ed1ffa41f2104f,85.0,maven_execution_successful,-0.0026304385716638,0.9999999990686774,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 kadai-io/kadai,ba2bc94259a61282f7491622f9e9320a3acd92fd,1063.0,maven_execution_successful,-0.0039866102025233,0.9999999711290002,"""{\""original_outperforms_patched\"": [\""acceptance.task.query.QueryTasksWithSortingAccTest$SortingTest$AttachmentClassificationName\""], \""patched_outperforms_original\"": []}""",,,True
 kadai-io/kadai,a3afea91d4418ba474c3a805de71350288f61ca9,786.0,maven_execution_successful,0.0063467724522125,0.9999999711290002,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 google/guava,896541465f1cc99352e8fbfbba4d4617f19183d8,6087.0,clone_and_checkout_repo,,,{},,,False
@@ -189,12 +183,10 @@ keycloak/keycloak,c22972af9cc4170fd241d2a9208a3b26dec5a994,20613.0,clone_and_che
 keycloak/keycloak,5cd0d51fa69e25913bcf2d6e34f9e31e2e52a501,20404.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,7f64ca0048a16372bf2f8bbbcd33f1ea5c0d2022,16977.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,053f774f13bd38ce8f9d67f480c520fd38e0c8eb,19193.0,clone_and_checkout_repo,,,{},,,False
-keycloak/keycloak,910021408ef0aef3696a47e9b19bd41e1f86efeb,20176.0,maven_execution_successful,-0.0257139183725946,0.9973885603249072,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 keycloak/keycloak,bd7f62acc39e560291817b7a730c9c58eb1ac5bc,20176.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,754aac2f4e37a2993b9f56626bc697138ecae579,20176.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,0f481da77f494be423d2d934188279017f0c0d54,20176.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,93373b93989171a15bf18f6ce2ae33bbf485d513,20176.0,clone_and_checkout_repo,,,{},,,False
-keycloak/keycloak,2758d7886531f43415a9a0269a87893ae15e34da,20176.0,maven_execution_successful,0.024390243902439,0.9506314266473056,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 keycloak/keycloak,81580908c3c1e21d50dae4526bf01327ca25474c,19990.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,fb554c09dbdc833176f2f7f7aa8d2a43d7ba1286,16224.0,clone_and_checkout_repo,,,{},,,False
 keycloak/keycloak,556146f961f7c8ddf64de15e2117a58d045f72b5,13340.0,clone_and_checkout_repo,,,{},,,False
@@ -454,7 +446,6 @@ apache/ignite,96fa3002904fcad50dafc1f19655c2d44eaece40,10469.0,clone_and_checkou
 oracle/opengrok,72e022e05706525d645cfe4db9ca6ad26da2815a,3442.0,clone_and_checkout_repo,,,{},,,False
 oracle/opengrok,8b49f667690a6fc9bc15da0b12b2b293c31bc408,3442.0,clone_and_checkout_repo,,,{},,,False
 oracle/opengrok,fb531549e5a28b41f197de35ff9f75f08b6039e1,2953.0,clone_and_checkout_repo,,,{},,,False
-oracle/opengrok,ab9e24f1f4623493f435c948852db70c1542723d,2593.0,maven_execution_successful,0.0749047042838676,0.9786130273714662,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 oracle/opengrok,cfa7dbbb2eb40be6d1d88b403c8a19bbcc58a615,2118.0,docker_image_built,,,{},,,False
 oracle/opengrok,eb07e699672f7a70d96f508a228bbc450a8b2bbb,2118.0,docker_image_built,,,{},,,False
 oracle/opengrok,4a77faddf69e7be7e49a475f33e3197ac8b6bbfb,1863.0,clone_and_checkout_repo,,,{},,,False
@@ -470,7 +461,6 @@ apache/maven-mvnd,417ed7ec8b71b32837c4f7a907ee540a3adea5f3,758.0,clone_and_check
 apache/maven-mvnd,06fa4fd227479ff697f4c05e872da34ac6129b0a,527.0,clone_and_checkout_repo,,,{},,,False
 apache/maven-mvnd,692df3eceaffefbf4e24c0e53900e3e08d51e68d,464.0,clone_and_checkout_repo,,,{},,,False
 apache/maven-mvnd,41a380bff174bded7e042e80b2cb75afb33b1ad1,419.0,clone_and_checkout_repo,,,{},,,False
-apache/maven-mvnd,cf5c5126528ccbb49dab3a11a1b864df19996e46,224.0,maven_execution_successful,-0.0156109276493545,0.8997557889670134,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 apache/maven-mvnd,a95ac9e4dc97379ebb9f6e6d03a40377506b23cd,162.0,clone_and_checkout_repo,,,{},,,False
 langgraph4j/langgraph4j,f678778c8fb836fe84f8b1e86c7b0a901c61d159,106.0,clone_and_checkout_repo,,,{},,,False
 smallrye/smallrye-mutiny,4c72ceb7b328af313b483db60eb2b40a924eefde,1080.0,clone_and_checkout_repo,,,{},,,False
@@ -584,9 +574,6 @@ DataLinkDC/dinky,86ffb5a525b81f190de2b2429ce020a5ef6977f9,1210.0,clone_and_check
 DataLinkDC/dinky,3ea213033854a00f318f4e0ada18cbd98108f432,564.0,clone_and_checkout_repo,,,{},,,False
 DataLinkDC/dinky,6a862447465a3701465fcd1b050b910e19b4bf73,545.0,clone_and_checkout_repo,,,{},,,False
 DataLinkDC/dinky,b91d42b72f0fede6f23e5989aff5ec387bcb1e4a,397.0,clone_and_checkout_repo,,,{},,,False
-alibaba/spring-cloud-alibaba,5162d02b4ea39ef8629b9638fe22ce51b99e6d0f,859.0,maven_execution_successful,-0.0044778940191712,1.0,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
-alibaba/spring-cloud-alibaba,d2684c288201a62b3eded20dfe5b7e3f4df0c7fb,859.0,maven_execution_successful,-0.0030710043775011,0.99997026193887,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
-alibaba/spring-cloud-alibaba,63e160560c49c75a24e5c49e2c933d2aaf53a34e,859.0,maven_execution_successful,-0.0071964818031657,0.9999999711290002,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 alibaba/spring-cloud-alibaba,cc4379a27146fb75b09a506ce850c37e2b6c6ae0,11.0,maven_execution_successful,-0.0343441561341611,0.9786130273714662,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,False
 apache/royale-compiler,522cd0ef61a11474cf80578f7f317cc9354b9be1,83.0,clone_and_checkout_repo,,,{},,,False
 apache/royale-compiler,e75745a10fa02f5e2506b3cb0da0e28b8f996cba,83.0,clone_and_checkout_repo,,,{},,,False
