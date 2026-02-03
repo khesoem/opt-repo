@@ -20,6 +20,6 @@ Follow this loop:
 2) Fault localization: identify which parts of the code should be changed.
 3) Patch generation: patch the project to fix the issue by modifying the detected faulty lines.
 4) Patch validation: run the tests with the './mvnw -pl {buggy-module} -am test -DfailIfNoTests=false -DskipITs' command and ensure the project successfully builds and all tests pass. If this validation step fails, revert to the original version and start again from the fault localization step.
-5) Summarize: save your the patch in a file 'patch.diff'.
+5) Summarize: save your the patch in a file at '/workspace/project/patch.diff'.
 
 Note that you should not look for the code in a different directory. You are starting at '/workspace/project/', which is exactly the root of the project and there is no need to look for files in the parent directory.

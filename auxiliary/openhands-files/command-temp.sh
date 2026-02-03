@@ -1,4 +1,4 @@
-docker run -it \
+docker run \
 	--pull=always \
 	-e SANDBOX_BASE_CONAINER_IMAGE={image} \
 	-e SANDBOX_VOLUMES=/home/khesoem/postdoc-eth/projects/optimization-dataset/code/tmp/patched_repo:/workspace/project:rw \

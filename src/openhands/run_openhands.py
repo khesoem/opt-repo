@@ -1,27 +1,19 @@
-import logging
-import argparse
 import os
+import shutil
 from src.gh.commit_analysis.commit_static_analyzer import RepoAnalyzer
 from src.utils import run_cmd
-from datetime import datetime
 from src import config
-from github import Commit, Github, Auth, Repository
-
-logging.basicConfig(filename='../../logs/openhands/logging_{:%Y-%m-%d-%H-%M}.log'.format(datetime.now()),
-                    filemode='a',
-                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
-                    datefmt='%H:%M:%S',
-                    level=logging.INFO)
+from github import Github, Auth, Repository
 
 class OpenHandsRunner:
     def __init__(self, working_dir: str):
         self.working_dir = config.openhands['working-dir']
-        self.gh_token = config.github['access_token']
+        self.gh_token = config.github['access-token']
         auth = Auth.Token(self.gh_token)
         self.g = Github(auth=auth)
 
-    def pull_docker_image(self, repo: str, commit_id: str) -> str:
-        image_name = f'ghcr.io/khesoem/{repo}-{commit_id}:latest'
+    def _pull_docker_image(self, repo: str, commit: str) -> str:
+        image_name = f'ghcr.io/khesoem/{repo.split("/")[-1]}-{commit}:latest'
         
         cmd = [
             "docker",
@@ -31,10 +23,29 @@ class OpenHandsRunner:
         run_cmd(cmd, self.working_dir)
         return image_name
     
-    def create_tmp_container(self, image_name: str) -> str:
+    def _create_tmp_container(self, image_name: str) -> str:
         cmd = [
             "docker",
-            "create",
+            "ps",
+            "-a",
+            "--filter",
+            "name=tmp-cont",
+            "--format",
+            "{{.Names}}",
+        ]
+        result = run_cmd(cmd, self.working_dir)
+        if "tmp-cont" in result:
+            cmd = [
+                "docker",
+                "rm",
+                "tmp-cont",
+            ]
+            run_cmd(cmd, self.working_dir)
+        
+        cmd = [
+            "docker",
+            "run",
+            "-d",
             "--name",
             "tmp-cont",
             image_name,
@@ -42,7 +53,17 @@ class OpenHandsRunner:
         run_cmd(cmd, self.working_dir)
         return "tmp-cont"
 
-    def _prepare_original_repo(self, container_name: str) -> str:
+    def _prepare_original_repo(self, container_name: str, commit: str) -> str:
+        repo_path = os.path.join(self.working_dir, 'original_repo')
+
+        if os.path.exists(repo_path):
+            cmd = [
+                "mv",
+                "original_repo",
+                os.path.join(self.working_dir, f'original_repo_{commit}_leftover'),
+            ]
+            run_cmd(cmd, self.working_dir)
+
         cmd = [
             "docker",
             "cp",
@@ -51,9 +72,13 @@ class OpenHandsRunner:
         ]
         run_cmd(cmd, self.working_dir)
 
-        repo_path = os.path.join(self.working_dir, 'original_repo')
-
-        self._remove_git_dir(repo_path)
+        cmd = [
+            "docker",
+            "cp",
+            f"{container_name}:/app/original_repo",
+            self.working_dir,
+        ]
+        run_cmd(cmd, self.working_dir)
         
         return repo_path
     
@@ -61,7 +86,6 @@ class OpenHandsRunner:
         cmd = [
             "docker",
             "rm",
-            "-f",
             container_name,
         ]
         run_cmd(cmd, self.working_dir)
@@ -78,34 +102,26 @@ class OpenHandsRunner:
         issue = repo.get_issue(issue_id)
         return issue.title, issue.body
     
-    def get_modified_modules_and_files(self, container_name: str, commit: str) -> tuple[set[str], set[str]]:
-        cmd = [
-            "docker",
-            "exec",
-            container_name,
-            "git", "diff-tree", "-r", "--no-commit-id", "--name-status", "-M", "-C", "-m", commit,
-        ]
-        diff_output = run_cmd(cmd, self.working_dir)
-        
-        analyzer = RepoAnalyzer(None)
-        changed_java_files = analyzer.diff_to_java_src_files(diff_output)
+    def get_modified_modules_and_files(self, commit: str, repo_path: str) -> tuple[set[str], set[str]]:    
+        analyzer = RepoAnalyzer(repo_path)
+        changed_java_files = analyzer.get_changed_java_src_files(commit)
         modified_modules = analyzer.get_modules_for_java_files(changed_java_files)
         return modified_modules, changed_java_files
 
 
-    def _create_task_file(self, repo: Repository, commit_id: str, issue_id: int, container_name: str, openhands_files_path: str) -> str:
+    def _create_task_file(self, repo: Repository, commit: str, issue_id: int, repo_path: str, openhands_files_path: str) -> str:
         issue_title, issue_description = self.get_issue_title_and_description(repo, issue_id)
 
         task_file_path = os.path.join(openhands_files_path, 'task-patch-generation.txt')
 
         task_template = open(os.path.join(config.openhands['openhands-files-dir'], 'task-patch-generation.txt')).read()
 
-        modified_modules, changed_java_files = self.get_modified_modules_and_files(container_name, commit_id)
+        modified_modules, changed_java_files = self.get_modified_modules_and_files(commit, repo_path)
 
         if len(modified_modules) > 1:
             raise ValueError('Multiple modified modules are not supported yet')
         else:
-            modified_module = modified_modules[0]
+            modified_module = modified_modules.pop()
 
         task_content = task_template.replace('{issue-title}', issue_title).replace('{issue-description}', issue_description).replace('{buggy-module}', modified_module).replace('{buggy-files}', '\n'.join(changed_java_files))
 
@@ -134,30 +150,120 @@ class OpenHandsRunner:
         return command_file_path
 
 
-    def _prepare_openhands_files(self, image_name: str, repo: Repository, commit_id: str, issue_id: int, container_name: str, repo_path: str) -> str:
-        openhands_files_path = os.path.join(self.working_dir, 'openhands-files')
-        os.makedirs(openhands_files_path, exist_ok=True)
-        task_file_path = self._create_task_file(repo, commit_id, issue_id, container_name, openhands_files_path)
-        config_file_path = self._create_config_file(openhands_files_path)
-        command_file_path = self._create_command_file(image_name, repo_path, openhands_files_path)
-
-        return openhands_files_path
+    def _prepare_openhands_files(self, image_name: str, repo: Repository, commit: str, issue_id: int, repo_path: str):
+        openhands_files_dir = os.path.join(self.working_dir, 'openhands-files')
+        os.makedirs(openhands_files_dir, exist_ok=True)
+        self._create_task_file(repo, commit, issue_id, repo_path, openhands_files_dir)
+        self._create_config_file(openhands_files_dir)
+        self._create_command_file(image_name, repo_path, openhands_files_dir)
 
     def _run_openhands(self) -> None:
         cmd = [
+            "bash",
             "./command.sh",
+        ]
+        run_cmd(cmd, self.working_dir, capture_output=False)
+
+    def _backup_and_clean_openhands_files(self, commit: str) -> None:
+        cmd = [
+            "mv",
+            os.path.join(self.working_dir, 'original_repo'),
+            os.path.join(self.working_dir, f'original_repo_{commit}'),
         ]
         run_cmd(cmd, self.working_dir)
 
-    def run_patch_generation(self, repo: str, commit_id: str, issue_id: int) -> None:
-        image_name = self.pull_docker_image(repo, commit_id)
-        container_name = self.create_tmp_container(image_name)
-        repo_path = self._prepare_original_repo(container_name)
+        # Find containers with images that have 'openhands/runtime' in their name
+        cmd = [
+            "docker",
+            "ps",
+            "-a",
+            "--format",
+            "{{.ID}}\t{{.Image}}",
+        ]
+        result = run_cmd(cmd, self.working_dir)
+        workspace_container_ids = []
+        all_container_ids = []
+        for line in result.strip().split('\n'):
+            if line.strip():
+                parts = line.strip().split('\t')
+                if len(parts) == 2:
+                    container_id, image_name = parts
+                    if 'openhands/runtime' in image_name:
+                        workspace_container_ids.append(container_id)
+                    if 'openhands' in image_name:
+                        all_container_ids.append(container_id)
+        
+        
+        for container_id in workspace_container_ids:
+            # Start the stopped container
+            cmd = [
+                "docker",
+                "start",
+                container_id,
+            ]
+            run_cmd(cmd, self.working_dir)
+            
+            # Create destination directory
+            dest_dir = os.path.join(self.working_dir, commit)
+            os.makedirs(dest_dir, exist_ok=True)
+            
+            # Copy /workspace directory from container
+            cmd = [
+                "docker",
+                "cp",
+                f"{container_id}:/workspace",
+                dest_dir,
+            ]
+            run_cmd(cmd, self.working_dir)
+            
+        for container_id in all_container_ids:
+            # Force remove the container
+            cmd = [
+                "docker",
+                "rm",
+                "-f",
+                container_id,
+            ]
+            run_cmd(cmd, self.working_dir)
+        
+        # Remove all docker images that have 'openhands/runtime' in their name
+        cmd = [
+            "docker",
+            "images",
+            "--format",
+            "{{.ID}}\t{{.Repository}}:{{.Tag}}",
+        ]
+        result = run_cmd(cmd, self.working_dir)
+        image_ids = set()
+        for line in result.strip().split('\n'):
+            if line.strip():
+                parts = line.strip().split('\t')
+                if len(parts) == 2:
+                    image_id, image_ref = parts
+                    if 'openhands/runtime' in image_ref:
+                        image_ids.add(image_id)
+        
+        for image_id in image_ids:
+            cmd = [
+                "docker",
+                "rmi",
+                "-f",
+                image_id,
+            ]
+            run_cmd(cmd, self.working_dir)
+
+    def run_patch_generation(self, repo: str, commit: str, issue_id: int) -> None:
+        image_name = self._pull_docker_image(repo, commit)
+        container_name = self._create_tmp_container(image_name)
+        repo_path = self._prepare_original_repo(container_name, commit)
 
         repo = self.g.get_repo(repo)
 
-        openhands_files_path = self._prepare_openhands_files(image_name, repo, commit_id, issue_id, container_name, repo_path)
+        self._prepare_openhands_files(image_name, repo, commit, issue_id, repo_path)
         
         self._remove_tmp_container(container_name)
+        self._remove_git_dir(repo_path)
 
         self._run_openhands()
+
+        self._backup_and_clean_openhands_files(commit)
