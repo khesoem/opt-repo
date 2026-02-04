@@ -133,7 +133,7 @@ class OpenHandsRunner:
 
     def _create_config_file(self, openhands_files_path: str) -> str:
         config_template = open(os.path.join(config.openhands['openhands-files-dir'], 'config.toml')).read()
-        config_content = config_template.replace('{working-dir}', self.working_dir)
+        config_content = config_template.replace('{working-dir}', self.working_dir).replace('{api-key}', config.openhands['llm-api-key'])
         config_file_path = os.path.join(openhands_files_path, 'config.toml')
         with open(config_file_path, 'w') as f:
             f.write(config_content)

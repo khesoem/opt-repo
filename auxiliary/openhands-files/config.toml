@@ -108,7 +108,7 @@ workspace_base = "/workspace/project"
 #aws_secret_access_key = ""
 
 # API key to use (For Headless / CLI only -  In Web this is overridden by Session Init)
-api_key = ""
+api_key = "{api-key}"
 
 # API base URL (For Headless / CLI only -  In Web this is overridden by Session Init)
 #base_url = ""
