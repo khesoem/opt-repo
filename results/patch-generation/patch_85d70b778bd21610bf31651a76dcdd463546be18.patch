@@ -1,0 +1,24 @@
+diff --git a/workspace/project_original/shardingsphere-infra/shardingsphere-infra-common/src/main/java/org/apache/shardingsphere/infra/metadata/schema/model/TableMetaData.java b/workspace/project/shardingsphere-infra/shardingsphere-infra-common/src/main/java/org/apache/shardingsphere/infra/metadata/schema/model/TableMetaData.java
+index c8d09a7..bbc79a1 100644
+--- a/workspace/project_original/shardingsphere-infra/shardingsphere-infra-common/src/main/java/org/apache/shardingsphere/infra/metadata/schema/model/TableMetaData.java
++++ b/workspace/project/shardingsphere-infra/shardingsphere-infra-common/src/main/java/org/apache/shardingsphere/infra/metadata/schema/model/TableMetaData.java
+@@ -72,7 +72,8 @@ public final class TableMetaData {
+                 primaryKeyColumns.add(lowerColumnName);
+             }
+         }
+-        return Collections.synchronizedMap(result);
++        // Return a plain LinkedHashMap to avoid unnecessary synchronization overhead while keeping mutable behavior
++        return result;
+     }
+     
+     private Map<String, IndexMetaData> getIndexes(final Collection<IndexMetaData> indexMetaDataList) {
+@@ -80,7 +81,8 @@ public final class TableMetaData {
+         for (IndexMetaData each : indexMetaDataList) {
+             result.put(each.getName().toLowerCase(), each);
+         }
+-        return Collections.synchronizedMap(result);
++        // Return a plain LinkedHashMap to avoid unnecessary synchronization overhead while keeping mutable behavior
++        return result;
+     }
+     
+     /**

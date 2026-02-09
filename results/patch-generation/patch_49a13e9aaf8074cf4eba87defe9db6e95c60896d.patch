@@ -1,0 +1,18 @@
+--- /workspace/project_original/shardingsphere-infra/shardingsphere-infra-executor/src/main/java/org/apache/shardingsphere/infra/executor/sql/prepare/driver/DriverExecutionPrepareEngine.java	2026-01-10 04:52:55.000000000 +0000
++++ shardingsphere-infra/shardingsphere-infra-executor/src/main/java/org/apache/shardingsphere/infra/executor/sql/prepare/driver/DriverExecutionPrepareEngine.java	2026-02-09 05:02:59.461494986 +0000
+@@ -62,7 +62,14 @@
+         super(maxConnectionsSizePerQuery, rules);
+         this.executorDriverManager = executorDriverManager;
+         this.option = option;
+-        sqlExecutionUnitBuilder = TYPE_TO_BUILDER_MAP.computeIfAbsent(type, key -> TypedSPIRegistry.getRegisteredService(SQLExecutionUnitBuilder.class, key, new Properties()));
++        // Avoid computing the SPI implementation while holding ConcurrentHashMap's compute lock to reduce contention under high concurrency.
++        SQLExecutionUnitBuilder sqlExecutionUnitBuilderLocal = TYPE_TO_BUILDER_MAP.get(type);
++        if (null == sqlExecutionUnitBuilderLocal) {
++            SQLExecutionUnitBuilder newBuilder = TypedSPIRegistry.getRegisteredService(SQLExecutionUnitBuilder.class, type, new Properties());
++            SQLExecutionUnitBuilder existing = TYPE_TO_BUILDER_MAP.putIfAbsent(type, newBuilder);
++            sqlExecutionUnitBuilderLocal = (existing == null) ? newBuilder : existing;
++        }
++        sqlExecutionUnitBuilder = sqlExecutionUnitBuilderLocal;
+     }
+     
+     @Override

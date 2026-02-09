@@ -1,0 +1,69 @@
+--- /workspace/project_original/src/main/java/kafdrop/service/KafkaMonitor.java	2026-01-10 01:41:20.000000000 +0000
++++ /workspace/project/src/main/java/kafdrop/service/KafkaMonitor.java	2026-02-09 00:46:59.744395357 +0000
+@@ -47,6 +47,15 @@
+   List<ConsumerVO> getConsumers(Collection<TopicVO> topicVos);
+ 
+   /**
++   * Get a single consumer by group id, constrained to the provided topics. This
++   * implementation should only resolve offsets for the single group which is
++   * significantly cheaper than resolving offsets for all groups.
++   * @param groupId consumer group id
++   * @param topicVos topics to constrain the offsets to
++   */
++  Optional<ConsumerVO> getConsumer(String groupId, Collection<TopicVO> topicVos);
++
++  /**
+    * Create topic
+    * @param createTopicDto topic params
+    */
+--- /workspace/project_original/src/main/java/kafdrop/service/KafkaMonitorImpl.java	2026-01-10 01:41:20.000000000 +0000
++++ /workspace/project/src/main/java/kafdrop/service/KafkaMonitorImpl.java	2026-02-09 00:47:26.744434055 +0000
+@@ -205,6 +205,17 @@
+   }
+ 
+   @Override
++  public Optional<ConsumerVO> getConsumer(String groupId, Collection<TopicVO> topicVos) {
++    final var topics = topicVos.stream().map(TopicVO::getName).collect(Collectors.toSet());
++    final var offsets = resolveOffsets(groupId).forTopics(topics);
++    if (offsets.isEmpty()) {
++      return Optional.empty();
++    }
++    final var consumers = convert(List.of(offsets), topicVos);
++    return consumers.stream().findAny();
++  }
++
++  @Override
+   public void createTopic(CreateTopicVO createTopicDto) {
+     var newTopic = new NewTopic(
+             createTopicDto.getName(), createTopicDto.getPartitionsNumber(), (short) createTopicDto.getReplicationFactor()
+--- /workspace/project_original/src/main/java/kafdrop/controller/ConsumerController.java	2026-01-10 01:41:20.000000000 +0000
++++ /workspace/project/src/main/java/kafdrop/controller/ConsumerController.java	2026-02-09 00:47:32.046441653 +0000
+@@ -38,11 +38,9 @@
+   @RequestMapping("/{groupId:.+}")
+   public String consumerDetail(@PathVariable("groupId") String groupId, Model model) throws ConsumerNotFoundException {
+     final var topicVos = kafkaMonitor.getTopics();
+-    final var consumer = kafkaMonitor.getConsumers(topicVos)
+-        .stream()
+-        .filter(c -> c.getGroupId().equals(groupId))
+-        .findAny();
+-    model.addAttribute("consumer", consumer.orElseThrow(() -> new ConsumerNotFoundException(groupId)));
++    final var consumer = kafkaMonitor.getConsumer(groupId, topicVos)
++        .orElseThrow(() -> new ConsumerNotFoundException(groupId));
++    model.addAttribute("consumer", consumer);
+     return "consumer-detail";
+   }
+ 
+@@ -54,10 +52,7 @@
+   @GetMapping(path = "/{groupId:.+}", produces = MediaType.APPLICATION_JSON_VALUE)
+   public @ResponseBody ConsumerVO getConsumer(@PathVariable("groupId") String groupId) throws ConsumerNotFoundException {
+     final var topicVos = kafkaMonitor.getTopics();
+-    final var consumer = kafkaMonitor.getConsumers(topicVos)
+-        .stream()
+-        .filter(c -> c.getGroupId().equals(groupId))
+-        .findAny();
+-    return consumer.orElseThrow(() -> new ConsumerNotFoundException(groupId));
++    return kafkaMonitor.getConsumer(groupId, topicVos)
++        .orElseThrow(() -> new ConsumerNotFoundException(groupId));
+   }
+ }
+\ No newline at end of file

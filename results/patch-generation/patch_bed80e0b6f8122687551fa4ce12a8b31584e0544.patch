@@ -1,0 +1,120 @@
+diff -u a/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/client/HotRodClientEntity.java b/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/client/HotRodClientEntity.java
+--- /workspace/project_original/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/client/HotRodClientEntity.java	2026-01-10 00:55:25.000000000 +0000
++++ /workspace/project/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/client/HotRodClientEntity.java	2026-02-08 23:50:17.441199750 +0000
+@@ -41,6 +41,7 @@
+ @ProtoDoc("@Indexed")
+ public class HotRodClientEntity extends AbstractHotRodEntity {
+ 
++    @ProtoDoc("@Field(index = Index.YES, store = Store.YES)")
+     @ProtoField(number = 1, required = true)
+     public int entityVersion = 1;
+ 
+
+diff -u a/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/realm/HotRodRealmEntity.java b/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/realm/HotRodRealmEntity.java
+--- /workspace/project_original/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/realm/HotRodRealmEntity.java	2026-01-10 00:55:25.000000000 +0000
++++ /workspace/project/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/realm/HotRodRealmEntity.java	2026-02-08 23:50:19.724199790 +0000
+@@ -70,6 +70,7 @@
+ )
+ @ProtoDoc("@Indexed")
+ public class HotRodRealmEntity extends AbstractHotRodEntity {
++    @ProtoDoc("@Field(index = Index.YES, store = Store.YES)")
+     @ProtoField(number = 1, required = true)
+     public int entityVersion = 1;
+ 
+
+diff -u a/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/user/HotRodUserEntity.java b/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/user/HotRodUserEntity.java
+--- /workspace/project_original/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/user/HotRodUserEntity.java	2026-01-10 00:55:25.000000000 +0000
++++ /workspace/project/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/user/HotRodUserEntity.java	2026-02-08 23:50:22.589199860 +0000
+@@ -50,6 +50,7 @@
+     @IgnoreForEntityImplementationGenerator
+     private static final Logger LOG = Logger.getLogger(HotRodUserEntity.class);
+ 
++    @ProtoDoc("@Field(index = Index.YES, store = Store.YES)")
+     @ProtoField(number = 1, required = true)
+     public int entityVersion = 1;
+ 
+
+diff -u a/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/clientscope/HotRodClientScopeEntity.java b/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/clientscope/HotRodClientScopeEntity.java
+--- /workspace/project_original/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/clientscope/HotRodClientScopeEntity.java	2026-01-10 00:55:25.000000000 +0000
++++ /workspace/project/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/clientscope/HotRodClientScopeEntity.java	2026-02-08 23:50:25.047199935 +0000
+@@ -40,6 +40,7 @@
+ @ProtoDoc("@Indexed")
+ public class HotRodClientScopeEntity extends AbstractHotRodEntity  {
+ 
++    @ProtoDoc("@Field(index = Index.YES, store = Store.YES)")
+     @ProtoField(number = 1, required = true)
+     public int entityVersion = 1;
+ 
+
+diff -u a/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/userSession/HotRodAuthenticatedClientSessionEntity.java b/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/userSession/HotRodAuthenticatedClientSessionEntity.java
+--- /workspace/project_original/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/userSession/HotRodAuthenticatedClientSessionEntity.java	2026-01-10 00:55:25.000000000 +0000
++++ /workspace/project/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/userSession/HotRodAuthenticatedClientSessionEntity.java	2026-02-08 23:50:27.713200036 +0000
+@@ -34,6 +34,7 @@
+ @ProtoDoc("@Indexed")
+ public class HotRodAuthenticatedClientSessionEntity extends AbstractHotRodEntity {
+ 
++    @ProtoDoc("@Field(index = Index.YES, store = Store.YES)")
+     @ProtoField(number = 1, required = true)
+     public int entityVersion = 1;
+ 
+
+diff -u a/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/role/HotRodRoleEntity.java b/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/role/HotRodRoleEntity.java
+--- /workspace/project_original/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/role/HotRodRoleEntity.java	2026-01-10 00:55:25.000000000 +0000
++++ /workspace/project/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/role/HotRodRoleEntity.java	2026-02-08 23:50:30.042200138 +0000
+@@ -58,6 +58,7 @@
+         }
+     }
+ 
++    @ProtoDoc("@Field(index = Index.YES, store = Store.YES)")
+     @ProtoField(number = 1, required = true)
+     public int entityVersion = 1;
+ 
+
+diff -u a/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/group/HotRodGroupEntity.java b/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/group/HotRodGroupEntity.java
+--- /workspace/project_original/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/group/HotRodGroupEntity.java	2026-01-10 00:55:25.000000000 +0000
++++ /workspace/project/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/group/HotRodGroupEntity.java	2026-02-08 23:50:32.473200261 +0000
+@@ -60,6 +60,7 @@
+         }
+     }
+ 
++    @ProtoDoc("@Field(index = Index.YES, store = Store.YES)")
+     @ProtoField(number = 1, required = true)
+     public int entityVersion = 1;
+ 
+
+diff -u a/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/loginFailure/HotRodUserLoginFailureEntity.java b/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/loginFailure/HotRodUserLoginFailureEntity.java
+--- /workspace/project_original/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/loginFailure/HotRodUserLoginFailureEntity.java	2026-01-10 00:55:25.000000000 +0000
++++ /workspace/project/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/loginFailure/HotRodUserLoginFailureEntity.java	2026-02-08 23:50:35.276200422 +0000
+@@ -31,6 +31,7 @@
+ @ProtoDoc("@Indexed")
+ public class HotRodUserLoginFailureEntity extends AbstractHotRodEntity {
+ 
++    @ProtoDoc("@Field(index = Index.YES, store = Store.YES)")
+     @ProtoField(number = 1, required = true)
+     public int entityVersion = 1;
+ 
+
+diff -u a/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/authSession/HotRodRootAuthenticationSessionEntity.java b/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/authSession/HotRodRootAuthenticationSessionEntity.java
+--- /workspace/project_original/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/authSession/HotRodRootAuthenticationSessionEntity.java	2026-01-10 00:55:25.000000000 +0000
++++ /workspace/project/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/authSession/HotRodRootAuthenticationSessionEntity.java	2026-02-08 23:50:37.611200572 +0000
+@@ -38,6 +38,7 @@
+ @ProtoDoc("@Indexed")
+ public class HotRodRootAuthenticationSessionEntity extends AbstractHotRodEntity {
+ 
++    @ProtoDoc("@Field(index = Index.YES, store = Store.YES)")
+     @ProtoField(number = 1, required = true)
+     public int entityVersion = 1;
+ 
+
+diff -u a/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/userSession/HotRodUserSessionEntity.java b/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/userSession/HotRodUserSessionEntity.java
+--- /workspace/project_original/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/userSession/HotRodUserSessionEntity.java	2026-01-10 00:55:25.000000000 +0000
++++ /workspace/project/model/map-hot-rod/src/main/java/org/keycloak/models/map/storage/hotRod/userSession/HotRodUserSessionEntity.java	2026-02-08 23:50:40.262200759 +0000
+@@ -35,6 +35,7 @@
+ @ProtoDoc("@Indexed")
+ public class HotRodUserSessionEntity extends AbstractHotRodEntity {
+ 
++    @ProtoDoc("@Field(index = Index.YES, store = Store.YES)")
+     @ProtoField(number = 1, required = true)
+     public int entityVersion = 1;
+ 
+

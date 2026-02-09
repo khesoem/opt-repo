@@ -1,0 +1,22 @@
+--- project_original/rm-datasource/src/main/java/io/seata/rm/datasource/exec/BaseTransactionalExecutor.java	2026-01-10 03:46:09.000000000 +0000
++++ project/rm-datasource/src/main/java/io/seata/rm/datasource/exec/BaseTransactionalExecutor.java	2026-02-09 03:12:41.694430854 +0000
+@@ -227,11 +227,17 @@
+         StringBuilder sb = new StringBuilder();
+         sb.append(rowsIncludingPK.getTableMeta().getTableName());
+         sb.append(":");
++        // cache pkRows list to avoid repeated traversal inside the loop
++        List<Field> pkRows = rowsIncludingPK.pkRows();
++        if (pkRows.isEmpty()) {
++            return sb.toString();
++        }
+         int filedSequence = 0;
+-        for (Field field : rowsIncludingPK.pkRows()) {
++        int pkSize = pkRows.size();
++        for (Field field : pkRows) {
+             sb.append(field.getValue());
+             filedSequence++;
+-            if (filedSequence < rowsIncludingPK.pkRows().size()) {
++            if (filedSequence < pkSize) {
+                 sb.append(",");
+             }
+         }

@@ -1,0 +1,27 @@
+From f346385421f3ffc2985bf1636c70995f2baa91d4 Mon Sep 17 00:00:00 2001
+From: openhands <openhands@all-hands.dev>
+Date: Mon, 9 Feb 2026 03:46:30 +0000
+Subject: [PATCH] Fix: avoid ServiceLoader iteration at runtime by preloading
+ service classes and eagerly instantiate singleton SPIs; reduce contention on
+ Java 8 monitor
+
+---
+ .../infra/util/spi/ShardingSphereServiceLoader.java             | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/infra/util/src/main/java/org/apache/shardingsphere/infra/util/spi/ShardingSphereServiceLoader.java b/infra/util/src/main/java/org/apache/shardingsphere/infra/util/spi/ShardingSphereServiceLoader.java
+index e3d250ab..4e5ddc12 100644
+--- a/infra/util/src/main/java/org/apache/shardingsphere/infra/util/spi/ShardingSphereServiceLoader.java
++++ b/infra/util/src/main/java/org/apache/shardingsphere/infra/util/spi/ShardingSphereServiceLoader.java
+@@ -76,7 +76,7 @@ public final class ShardingSphereServiceLoader<T> {
+                             continue;
+                         }
+                         @SuppressWarnings("unchecked")
+-                        Class<? extends T> implClass = (Class<? extends T>) Class.forName(line, false, classLoader);
++                        Class<? extends T> implClass = (Class<? extends T>) Class.forName(line, true, classLoader);
+                         result.add(implClass);
+                     }
+                 }
+-- 
+2.43.0
+

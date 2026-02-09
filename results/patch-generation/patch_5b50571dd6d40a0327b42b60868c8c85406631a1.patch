@@ -1,0 +1,36 @@
+--- /workspace/project_original/dependencies/src/main/java/com/google/cloud/tools/opensource/classpath/ClassPathEntry.java	2026-01-19 04:53:00.000000000 +0000
++++ /workspace/project/dependencies/src/main/java/com/google/cloud/tools/opensource/classpath/ClassPathEntry.java	2026-02-09 01:10:07.930100358 +0000
+@@ -99,16 +99,23 @@
+    * framework-specific prefix. Example: {@code BOOT-INF.classes.com.google.Foo}.
+    */
+   private void readClassFileNames() throws IOException {
+-    URL jarUrl = jar.toUri().toURL();
+-    // Setting parent as null because we don't want other classes than this jar file
+-    URLClassLoader classLoaderFromJar = new URLClassLoader(new URL[] {jarUrl}, null);
+-
+-    // Leveraging Google Guava reflection as BCEL doesn't have API to list classes in a jar file
+-    com.google.common.reflect.ClassPath classPath =
+-        com.google.common.reflect.ClassPath.from(classLoaderFromJar);
+-
+-    ImmutableSet<ClassInfo> allClasses = classPath.getAllClasses();
+-    classFileNames = allClasses.stream().map(ClassInfo::getName).collect(toImmutableSet());
++    // Read the JAR file directly instead of relying on Guava ClassPath, which
++    // creates a ClassLoader and can be slow. We iterate over entries in the
++    // JAR and collect names of .class files. This naturally includes inner
++    // classes (they appear as Outer$Inner.class).
++    try (java.util.jar.JarFile jarFile = new java.util.jar.JarFile(jar.toFile())) {
++      java.util.Enumeration<java.util.jar.JarEntry> entries = jarFile.entries();
++      com.google.common.collect.ImmutableSet.Builder<String> builder = ImmutableSet.builder();
++      while (entries.hasMoreElements()) {
++        java.util.jar.JarEntry entry = entries.nextElement();
++        String name = entry.getName();
++        if (!entry.isDirectory() && name.endsWith(".class")) {
++          String className = name.substring(0, name.length() - ".class".length()).replace('/', '.');
++          builder.add(className);
++        }
++      }
++      classFileNames = builder.build();
++    }
+   }
+   
+   /**

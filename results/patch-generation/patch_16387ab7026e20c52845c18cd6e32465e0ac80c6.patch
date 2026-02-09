@@ -1,0 +1,35 @@
+--- /workspace/project_original/liquibase-standard/src/main/java/liquibase/statement/ExecutablePreparedStatementBase.java	2026-01-10 01:10:23.000000000 +0000
++++ /workspace/project/liquibase-standard/src/main/java/liquibase/statement/ExecutablePreparedStatementBase.java	2026-02-09 00:20:12.637030118 +0000
+@@ -304,8 +304,8 @@
+         } else if (col.getValueBlobFile() != null) {
+             LOG.fine("value is blob = " + col.getValueBlobFile());
+             try {
+-                LOBContent<InputStream> lob = toBinaryStream(col.getValueBlobFile());
+-
++                // For Postgres bytea columns, avoid pre-reading the entire stream to determine length.
++                // Some drivers (Postgres) support streaming without a known length via setBinaryStream(InputStream).
+                 if (database instanceof PostgresDatabase) {
+                     String snapshotKeyName = String.format("%s-%s-%s-%s", getCatalogName(), getSchemaName(), getTableName(), col.getName());
+                     Column snapshot = (Column) this.getScratchData(snapshotKeyName);
+@@ -316,14 +316,16 @@
+                     }
+ 
+                     if (snapshot.getType().getTypeName().equalsIgnoreCase("bytea")) {
+-                        if (lob.length <= Integer.MAX_VALUE) {
+-                            stmt.setBinaryStream(i, lob.content, (int) lob.length);
+-                        } else {
+-                            stmt.setBinaryStream(i, lob.content, lob.length);
+-                        }
++                        InputStream in = getResourceAsStream(col.getValueBlobFile());
++                        InputStream buffered = createStream(in);
++                        closeables.add(buffered);
++                        // Use driver-supported streaming without pre-computing length to avoid expensive reads
++                        stmt.setBinaryStream(i, buffered);
+                         return;
+                     }
+                 }
++
++                LOBContent<InputStream> lob = toBinaryStream(col.getValueBlobFile());
+                 if (lob.length <= Integer.MAX_VALUE) {
+                     stmt.setBlob(i, lob.content, (int) lob.length);
+                 } else {

@@ -1,0 +1,11 @@
+--- /workspace/project_original/dubbo-common/src/main/java/org/apache/dubbo/common/utils/PojoUtils.java	2026-01-09 23:44:05.000000000 +0000
++++ dubbo-common/src/main/java/org/apache/dubbo/common/utils/PojoUtils.java	2026-02-08 22:58:45.446991730 +0000
+@@ -395,7 +395,7 @@
+ 
+         if (pojo instanceof Map<?, ?> && type != null) {
+             Object className = ((Map<Object, Object>) pojo).get("class");
+-            if (className instanceof String) {
++            if (className instanceof String && GENERIC_WITH_CLZ) {
+                 SerializeClassChecker.getInstance().validateClass((String) className);
+                 try {
+                     type = ClassUtils.forName((String) className);

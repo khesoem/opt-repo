@@ -1,0 +1,44 @@
+diff --git a/workspace/project_original/sharding-core/sharding-core-common/src/main/java/org/apache/shardingsphere/core/metadata/ShardingMetaDataLoader.java b/workspace/project/sharding-core/sharding-core-common/src/main/java/org/apache/shardingsphere/core/metadata/ShardingMetaDataLoader.java
+index cc8372f..ae6095c 100644
+--- a/workspace/project_original/sharding-core/sharding-core-common/src/main/java/org/apache/shardingsphere/core/metadata/ShardingMetaDataLoader.java
++++ b/workspace/project/sharding-core/sharding-core-common/src/main/java/org/apache/shardingsphere/core/metadata/ShardingMetaDataLoader.java
+@@ -75,11 +75,35 @@ public final class ShardingMetaDataLoader {
+         }
+         Map<String, List<DataNode>> dataNodeGroups = tableRule.getDataNodeGroups();
+         Map<String, TableMetaData> actualTableMetaDataMap = new HashMap<>(dataNodeGroups.size(), 1);
+-        // TODO use multiple threads to load meta data for different data sources
+-        for (Entry<String, List<DataNode>> entry : dataNodeGroups.entrySet()) {
+-            for (DataNode each : entry.getValue()) {
+-                actualTableMetaDataMap.put(each.getTableName(), TableMetaDataLoader.load(dataSourceMap.get(each.getDataSourceName()), each.getTableName(), databaseType.getName()));
++        // Use multiple threads to load meta data for different data sources
++        int threadCount = Math.min(Math.max(1, Math.min(maxConnectionsSizePerQuery, dataNodeGroups.size())), Runtime.getRuntime().availableProcessors());
++        java.util.concurrent.ExecutorService executor = java.util.concurrent.Executors.newFixedThreadPool(threadCount);
++        try {
++            java.util.List<java.util.concurrent.Future<java.util.Map.Entry<String, TableMetaData>>> futures = new java.util.ArrayList<>();
++            for (Entry<String, List<DataNode>> entry : dataNodeGroups.entrySet()) {
++                for (DataNode each : entry.getValue()) {
++                    final DataNode node = each;
++                    futures.add(executor.submit(() -> new java.util.AbstractMap.SimpleEntry<>(node.getTableName(),
++                            TableMetaDataLoader.load(dataSourceMap.get(node.getDataSourceName()), node.getTableName(), databaseType.getName()))));
++                }
+             }
++            for (java.util.concurrent.Future<java.util.Map.Entry<String, TableMetaData>> future : futures) {
++                try {
++                    java.util.Map.Entry<String, TableMetaData> e = future.get();
++                    actualTableMetaDataMap.put(e.getKey(), e.getValue());
++                } catch (InterruptedException ex) {
++                    Thread.currentThread().interrupt();
++                    throw new SQLException(ex);
++                } catch (java.util.concurrent.ExecutionException ex) {
++                    Throwable cause = ex.getCause();
++                    if (cause instanceof SQLException) {
++                        throw (SQLException) cause;
++                    }
++                    throw new SQLException(cause);
++                }
++            }
++        } finally {
++            executor.shutdownNow();
+         }
+         checkUniformed(logicTableName, actualTableMetaDataMap);
+         return actualTableMetaDataMap.values().iterator().next();

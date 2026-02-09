@@ -1,0 +1,38 @@
+--- /workspace/project_original/shardingsphere-features/shardingsphere-sharding/shardingsphere-sharding-core/src/main/java/org/apache/shardingsphere/sharding/algorithm/sharding/inline/InlineShardingAlgorithm.java	2026-01-11 17:16:26.000000000 +0000
++++ /workspace/project/shardingsphere-features/shardingsphere-sharding/shardingsphere-sharding-core/src/main/java/org/apache/shardingsphere/sharding/algorithm/sharding/inline/InlineShardingAlgorithm.java	2026-02-09 04:23:33.073031519 +0000
+@@ -45,16 +45,31 @@
+     @Setter
+     private Properties props = new Properties();
+     
++    // Cached prototype closure to avoid reparsing the expression on every sharding call which is costly in concurrent scenarios.
++    private volatile Closure<?> prototypeClosure;
++    
+     @Override
+     public void init() {
+         allowRangeQuery = isAllowRangeQuery();
+-    }
+-    
+-    private Closure<?> createClosure() {
++        // Initialize and cache the prototype closure once during init
+         String expression = props.getProperty(ALGORITHM_EXPRESSION_KEY);
+         Preconditions.checkNotNull(expression, "Inline sharding algorithm expression cannot be null.");
+         String algorithmExpression = InlineExpressionParser.handlePlaceHolder(expression.trim());
+-        Closure<?> result = new InlineExpressionParser(algorithmExpression).evaluateClosure().rehydrate(new Expando(), null, null);
++        prototypeClosure = new InlineExpressionParser(algorithmExpression).evaluateClosure();
++    }
++    
++    private Closure<?> createClosure() {
++        // Rehydrate the cached prototype closure with a fresh delegate for each call. This is lightweight compared to reparsing/evaluating the closure.
++        Closure<?> proto = prototypeClosure;
++        if (proto == null) {
++            // Fallback in case init was not called for any reason
++            String expression = props.getProperty(ALGORITHM_EXPRESSION_KEY);
++            Preconditions.checkNotNull(expression, "Inline sharding algorithm expression cannot be null.");
++            String algorithmExpression = InlineExpressionParser.handlePlaceHolder(expression.trim());
++            proto = new InlineExpressionParser(algorithmExpression).evaluateClosure();
++            prototypeClosure = proto;
++        }
++        Closure<?> result = proto.rehydrate(new Expando(), null, null);
+         result.setResolveStrategy(Closure.DELEGATE_ONLY);
+         return result;
+     }

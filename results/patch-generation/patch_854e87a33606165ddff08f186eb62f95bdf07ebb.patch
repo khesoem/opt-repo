@@ -1,0 +1,33 @@
+--- /workspace/project_original/independent-projects/arc/runtime/src/main/java/io/quarkus/arc/impl/RequestContext.java	2026-01-10 08:02:33.000000000 +0000
++++ independent-projects/arc/runtime/src/main/java/io/quarkus/arc/impl/RequestContext.java	2026-02-09 07:23:11.454584720 +0000
+@@ -7,11 +7,10 @@
+ import io.quarkus.arc.impl.EventImpl.Notifier;
+ import java.lang.annotation.Annotation;
+ import java.util.Arrays;
++import java.util.HashMap;
+ import java.util.HashSet;
+ import java.util.Map;
+ import java.util.Objects;
+-import java.util.concurrent.ConcurrentHashMap;
+-import java.util.concurrent.ConcurrentMap;
+ import java.util.function.Function;
+ import java.util.stream.Collectors;
+ import javax.enterprise.context.BeforeDestroyed;
+@@ -136,7 +135,7 @@
+                     initialState != null ? Integer.toHexString(initialState.hashCode()) : "new", stack);
+         }
+         if (initialState == null) {
+-            currentContext.set(new RequestContextState(new ConcurrentHashMap<>()));
++            currentContext.set(new RequestContextState(new HashMap<>()));
+             // Fire an event with qualifier @Initialized(RequestScoped.class) if there are any observers for it
+             fireIfNotEmpty(initializedNotifier);
+         } else {
+@@ -264,7 +263,7 @@
+ 
+         private volatile boolean isValid;
+ 
+-        RequestContextState(ConcurrentMap<Contextual<?>, ContextInstanceHandle<?>> value) {
++        RequestContextState(Map<Contextual<?>, ContextInstanceHandle<?>> value) {
+             this.map = Objects.requireNonNull(value);
+             this.isValid = true;
+         }

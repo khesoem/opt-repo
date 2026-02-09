@@ -1,0 +1,17 @@
+--- /workspace/project_original/model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/organization/OrganizationAdapter.java	2026-01-10 00:02:17.000000000 +0000
++++ model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/organization/OrganizationAdapter.java	2026-02-08 23:24:19.943747094 +0000
+@@ -156,12 +156,12 @@
+ 
+     @Override
+     public boolean isManaged(UserModel user) {
+-        return delegate.isManagedMember(this, user);
++        return organizationCache.isManagedMember(this, user);
+     }
+ 
+     @Override
+     public boolean isMember(UserModel user) {
+-        return delegate.isMember(this, user);
++        return organizationCache.isMember(this, user);
+     }
+ 
+     @Override
