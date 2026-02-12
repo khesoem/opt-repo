@@ -1,9 +1,9 @@
-You are at '/workspace/project/', which is the root of the '{repo-name}' project. The project uses uses the Maven wrapper ./mvnw. The unit tests for the '{buggy-module}' module of the project can be executed as follows:
+The root of the '{repo-name}' project is at '/workspace/project'. The project uses uses the Maven wrapper ./mvnw. The unit tests for the '{buggy-module}' module(s) of the project can be executed as follows:
   ./mvnw -pl {buggy-module} -am test -DfailIfNoTests=false -DskipITs
 
 Note that running the test with the command above should usually take less than 300 seconds, including compiling, building, and executing the tests.
 
-In this project, there is a performance issue in terms of execution time. The issue appears in the '{buggy-module}' module of the project and can be described as follows:
+In this project, there is a performance issue in terms of execution time. The issue appears in the '{buggy-module}' module(s) of the project and can be described as follows:
 ###ISSUE DESCRIPTION BEGINS###
 ISSUE TITLE: {issue-title}
 ISSUE DESCRIPTION:
@@ -13,13 +13,15 @@ ISSUE DESCRIPTION:
 This issue can be fixed by changing the following file(s) of the project:
 {buggy-files}
 
-Your task is to generate a patch that fixes the issue described above by changing the mentioned files.
+Your task is to generate a patch that fixes the issue described above by changing the mentioned files. The result should be saved in a '/workspace/project/fix.patch' file that can be easily applied on the original version later.
 
 Follow this loop:
+0) Go into the project folder: cd '/workspace/project'.
 1) Plan: make a plan of the steps you will take.
 2) Fault localization: identify which parts of the code should be changed.
 3) Patch generation: patch the project to fix the issue by modifying the detected faulty lines.
 4) Patch validation: run the tests with the './mvnw -pl {buggy-module} -am test -DfailIfNoTests=false -DskipITs' command and ensure the project successfully builds and all tests pass. If this validation step fails, revert to the original version and start again from the fault localization step.
-5) Summarize: save your the patch in a file at '/workspace/project/patch.diff'.
+5) Summarize: save your the patch in a file at '/workspace/project/fix.patch'. Note that the project at '/workspace/project' is a git repo. There is also a snapshot of the original version at `/workspace/project_original'. Also, git is installed on the machine and you can use it if needed.
 
 Note that you should not look for the code in a different directory. You are starting at '/workspace/project/', which is exactly the root of the project and there is no need to look for files in the parent directory.
+You are running in headless mode. Do not ask the user any questions.

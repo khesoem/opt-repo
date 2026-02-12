@@ -1,12 +1,12 @@
 docker run \
 	--pull=always \
-	-e SANDBOX_BASE_CONAINER_IMAGE={image} \
-	-e SANDBOX_VOLUMES={repo_path}:/workspace/project:rw \
+	-e SANDBOX_BASE_CONTAINER_IMAGE={image} \
+	-e SANDBOX_VOLUMES={workspace_path}:/workspace:rw \
 	-e LOG_ALL_EVENTS=true \
 	-e GITHUB_TOKEN={gh-token} \
 	-v /run/docker.sock:/var/run/docker.sock \
 	-v {openhands_files_path}:/openhands-files \
 	--add-host host.docker.internal:host-gateway \
 	--name openhands-cli-$(date +%Y%m%d%H%M%S) \
-	docker.openhands.dev/openhands/openhands:1.0.0 \
+	docker.openhands.dev/openhands/openhands:1.2.1 \
 	python -m openhands.core.main -f /openhands-files/task-patch-generation.txt --config-file /openhands-files/config.toml

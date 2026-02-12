@@ -1,0 +1,44 @@
+diff --git a/workspace/project_original/presto-spi/src/main/java/io/prestosql/spi/type/TypeSignature.java b/workspace/project/presto-spi/src/main/java/io/prestosql/spi/type/TypeSignature.java
+index 34a00c1..345d9ff 100644
+--- a/workspace/project_original/presto-spi/src/main/java/io/prestosql/spi/type/TypeSignature.java
++++ b/workspace/project/presto-spi/src/main/java/io/prestosql/spi/type/TypeSignature.java
+@@ -36,8 +36,11 @@ public final class TypeSignature
+     private static final String TIMESTAMP_WITHOUT_TIME_ZONE = "timestamp without time zone";
+ 
+     private final String base;
++    private final String baseLower;
+     private final List<TypeSignatureParameter> parameters;
+     private final boolean calculated;
++    // Cached hash code for performance
++    private final int hashCode;
+ 
+     public TypeSignature(String base, TypeSignatureParameter... parameters)
+     {
+@@ -54,6 +57,9 @@ public final class TypeSignature
+         this.parameters = List.copyOf(parameters);
+ 
+         this.calculated = parameters.stream().anyMatch(TypeSignatureParameter::isCalculated);
++        this.baseLower = base.toLowerCase(Locale.ENGLISH);
++        // Precompute hash code for faster hash-based collections
++        this.hashCode = Objects.hash(this.baseLower, this.parameters);
+     }
+ 
+     public String getBase()
+@@ -156,14 +162,15 @@ public final class TypeSignature
+ 
+         TypeSignature other = (TypeSignature) o;
+ 
+-        return Objects.equals(this.base.toLowerCase(Locale.ENGLISH), other.base.toLowerCase(Locale.ENGLISH)) &&
++        // Use precomputed lowercased base for comparison
++        return Objects.equals(this.baseLower, other.baseLower) &&
+                 Objects.equals(this.parameters, other.parameters);
+     }
+ 
+     @Override
+     public int hashCode()
+     {
+-        return Objects.hash(base.toLowerCase(Locale.ENGLISH), parameters);
++        return hashCode;
+     }
+ 
+     // Type signature constructors for common types

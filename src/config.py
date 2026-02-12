@@ -58,4 +58,6 @@ openhands = {
     'working-dir': os.environ['workingdir'],
     'openhands-files-dir': 'auxiliary/openhands-files',
     'llm-api-key': os.environ['OPENAI_API_KEY'],
+    'llm-timeout': 3000,
+    'max-iterations': 40,
 }

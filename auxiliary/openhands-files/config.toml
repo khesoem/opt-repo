@@ -50,10 +50,10 @@ workspace_base = "/workspace/project"
 #enable_browser = true
 
 # Maximum budget per task, 0.0 means no limit
-#max_budget_per_task = 0.5
+max_budget_per_task = 0.5
 
 # Maximum number of iterations
-#max_iterations = 500
+max_iterations = {max-iterations}
 
 # Path to mount the workspace in the sandbox
 #workspace_mount_path_in_sandbox = "/workspace"
