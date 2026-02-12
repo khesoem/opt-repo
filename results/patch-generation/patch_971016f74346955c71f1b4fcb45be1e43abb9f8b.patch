@@ -1,0 +1,43 @@
+--- /workspace/project_original/common/src/main/java/org/keycloak/common/util/SecretGenerator.java	2026-01-08 23:32:30.000000000 +0000
++++ common/src/main/java/org/keycloak/common/util/SecretGenerator.java	2026-02-11 00:30:15.889840459 +0000
+@@ -16,6 +16,9 @@
+ 
+     public static final char[] ALPHANUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+ 
++    public static final char[] HEX_DIGITS = "0123456789abcdef".toCharArray();
++
++
+     private static final SecretGenerator instance = new SecretGenerator();
+ 
+     private ThreadLocal<Random> random = new ThreadLocal<Random>() {
+@@ -33,12 +36,24 @@
+     }
+     
+     public String generateSecureID() {
+-        StringBuilder builder = new StringBuilder(instance.randomBytesHex(16));
+-        builder.insert(8, '-');
+-        builder.insert(13, '-');
+-        builder.insert(18, '-');
+-        builder.insert(23, '-');
+-        return builder.toString();
++        byte[] bytes = instance.randomBytes(16);
++        // UUID-like format: 8-4-4-4-12 -> total 36 chars including 4 hyphens
++        char[] chars = new char[36];
++        int[] hyphenPos = {8, 13, 18, 23};
++        for (int p : hyphenPos) {
++            chars[p] = '-';
++        }
++        int ci = 0;
++        for (int i = 0; i < bytes.length; ++i) {
++            // skip hyphen positions
++            while (chars[ci] == '-') ci++;
++            int b = bytes[i] & 0xFF;
++            chars[ci++] = HEX_DIGITS[(b >>> 4) & 0xF];
++            // skip hyphen positions
++            while (ci < chars.length && chars[ci] == '-') ci++;
++            chars[ci++] = HEX_DIGITS[b & 0xF];
++        }
++        return new String(chars);
+     }
+ 
+     public String randomString() {

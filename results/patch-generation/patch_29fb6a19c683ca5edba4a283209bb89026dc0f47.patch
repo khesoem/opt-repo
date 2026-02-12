@@ -1,0 +1,73 @@
+--- /workspace/project_original/manager/api/es/src/main/java/io/apiman/manager/api/es/EsStorage.java	2026-01-09 12:54:35.000000000 +0000
++++ manager/api/es/src/main/java/io/apiman/manager/api/es/EsStorage.java	2026-02-11 15:33:59.149592109 +0000
+@@ -1985,8 +1985,8 @@
+             String fullIndexName = getFullIndexName(type);
+ 
+             IndexRequest indexRequest = new IndexRequest(fullIndexName).id(id).source(json, XContentType.JSON);
+-            // WAIT_UNTIL same as "wait_for" => Leave this request open until a refresh has made the contents of this request visible to search
+-            indexRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL);
++            // Use IMMEDIATE refresh for UI/time-critical scenarios
++            indexRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+ 
+             IndexResponse indexResponse = getClient().index(indexRequest, RequestOptions.DEFAULT);
+ 
+@@ -2052,8 +2052,8 @@
+     private void deleteEntity(String type, String id) throws StorageException {
+         try {
+             final DeleteRequest deleteRequest = new DeleteRequest(getFullIndexName(type), id);
+-            // WAIT_UNTIL same as "wait_for" => Leave this request open until a refresh has made the contents of this request visible to search
+-            deleteRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL);
++            // Use IMMEDIATE refresh for UI/time-critical scenarios
++            deleteRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+ 
+             DeleteResponse response = getClient().delete(deleteRequest, RequestOptions.DEFAULT);
+             if (!response.status().equals(RestStatus.OK)) {
+@@ -2078,8 +2078,8 @@
+             String doc = Strings.toString(source);
+             String fullIndexName = getFullIndexName(type);
+             IndexRequest indexRequest = new IndexRequest(fullIndexName).id(id).source(doc, XContentType.JSON);
+-            // WAIT_UNTIL same as "wait_for" => Leave this request open until a refresh has made the contents of this request visible to search
+-            indexRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL);
++            // Use IMMEDIATE refresh for UI/time-critical scenarios
++            indexRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+             getClient().index(indexRequest, RequestOptions.DEFAULT);
+         } catch (Exception e) {
+             throw new StorageException(e);
+--- /workspace/project_original/gateway/engine/es/src/main/java/io/apiman/gateway/engine/es/EsRegistry.java	2026-01-09 12:54:35.000000000 +0000
++++ gateway/engine/es/src/main/java/io/apiman/gateway/engine/es/EsRegistry.java	2026-02-11 15:34:16.794616954 +0000
+@@ -95,7 +95,7 @@
+             IndexRequest indexRequest = new IndexRequest(getIndexPrefix() + EsConstants.INDEX_APIS)
+                     .id(id)
+                     .source(JSON_MAPPER.writeValueAsBytes(api), XContentType.JSON)
+-                    .setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL);
++                    .setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+ 
+             IndexResponse response = getClient().index(indexRequest, RequestOptions.DEFAULT);
+ 
+@@ -121,7 +121,7 @@
+         try {
+             DeleteRequest deleteRequest = new DeleteRequest(getIndexPrefix() + EsConstants.INDEX_APIS)
+                     .id(id)
+-                    .setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL);
++                    .setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+ 
+             DeleteResponse response = getClient().delete(deleteRequest, RequestOptions.DEFAULT);
+ 
+@@ -148,7 +148,7 @@
+             IndexRequest indexRequest = new IndexRequest(getIndexPrefix() + EsConstants.INDEX_CLIENTS)
+                     .source(JSON_MAPPER.writeValueAsBytes(client), XContentType.JSON)
+                     .id(id)
+-                    .setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL);
++                    .setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+ 
+             IndexResponse response = getClient().index(indexRequest, RequestOptions.DEFAULT);
+ 
+@@ -214,7 +214,7 @@
+ 
+             DeleteRequest deleteRequest = new DeleteRequest(getIndexPrefix() + EsConstants.INDEX_CLIENTS)
+                     .id(id)
+-                    .setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL);
++                    .setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+ 
+             DeleteResponse response = getClient().delete(deleteRequest, RequestOptions.DEFAULT);
+             if (response.status().equals(RestStatus.OK)) {

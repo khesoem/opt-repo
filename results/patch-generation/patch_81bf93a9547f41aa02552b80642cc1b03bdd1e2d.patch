@@ -1,0 +1,57 @@
+diff --git a/workspace/project_original/core/src/main/java/org/neo4j/ogm/session/delegates/SaveEventDelegate.java b/core/src/main/java/org/neo4j/ogm/session/delegates/SaveEventDelegate.java
+index 846d8a7..7ce4c53 100644
+--- a/workspace/project_original/core/src/main/java/org/neo4j/ogm/session/delegates/SaveEventDelegate.java
++++ b/core/src/main/java/org/neo4j/ogm/session/delegates/SaveEventDelegate.java
+@@ -90,18 +90,42 @@ final class SaveEventDelegate extends SessionDelegate {
+             .forEach(session::notifyListeners);
+     }
+ 
+-    private void preSaveCheck(Object object) {
++    private void preSaveCheck(Object root) {
+ 
+-        if (visit(object)) {
+-            logger.debug("visiting: {}", object);
+-            for (Object child : children(object)) {
+-                preSaveCheck(child);
+-            }
+-            if (!preSaveFired(object) && dirty(object)) {
+-                firePreSave(object);
++        // iterative depth-first post-order traversal to avoid recursion
++        java.util.Deque<Object> stack = new java.util.ArrayDeque<>();
++        java.util.Deque<Boolean> processed = new java.util.ArrayDeque<>();
++
++        stack.push(root);
++        processed.push(false);
++
++        while (!stack.isEmpty()) {
++            Object object = stack.pop();
++            boolean isProcessed = processed.pop();
++
++            if (isProcessed) {
++                // post-order processing: after children
++                if (!preSaveFired(object) && dirty(object)) {
++                    firePreSave(object);
++                }
++            } else {
++                if (visit(object)) {
++                    logger.debug("visiting: {}", object);
++
++                    // push marker for post-processing
++                    stack.push(object);
++                    processed.push(true);
++
++                    // push children in reverse order so they are processed in original order
++                    java.util.List<Object> children = children(object);
++                    for (int i = children.size() - 1; i >= 0; i--) {
++                        stack.push(children.get(i));
++                        processed.push(false);
++                    }
++                } else if (logger.isDebugEnabled()) {
++                    logger.debug("already visited: {}", object);
++                }
+             }
+-        } else if (logger.isDebugEnabled()) {
+-            logger.debug("already visited: {}", object);
+         }
+     }
+ 

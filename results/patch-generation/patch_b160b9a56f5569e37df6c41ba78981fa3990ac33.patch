@@ -1,0 +1,52 @@
+--- /workspace/project_original/core/src/main/java/org/neo4j/ogm/metadata/FieldInfo.java	2026-01-09 21:58:38.000000000 +0000
++++ /workspace/project/core/src/main/java/org/neo4j/ogm/metadata/FieldInfo.java	2026-02-12 03:02:42.372271719 +0000
+@@ -89,6 +89,12 @@
+     private volatile Optional<Class<?>> convertedType;
+ 
+     /**
++     * Cached relationship name for this field. Nullable - Optional.empty() means explicitly computed to null.
++     * Lazily computed and stored to avoid repeated reflection and annotation lookups.
++     */
++    private volatile Optional<String> cachedRelationship;
++
++    /**
+      * Constructs a new {@link FieldInfo} based on the given arguments.
+      *
+      * @param typeParameterDescriptor The descriptor that expresses the generic type parameter, which may be <code>null</code>
+@@ -161,17 +167,32 @@
+     }
+ 
+     public String relationship() {
++
++        Optional<String> loaded = this.cachedRelationship;
++        if (loaded == null) {
++            synchronized (this) {
++                loaded = this.cachedRelationship;
++                if (loaded == null) {
++                    this.cachedRelationship = computeRelationship();
++                    loaded = this.cachedRelationship;
++                }
++            }
++        }
++        return loaded.orElse(null);
++    }
++
++    private Optional<String> computeRelationship() {
+         if (this.containingClassInfo.relationshipFields().contains(this)) {
+             if (annotations != null) {
+                 AnnotationInfo relationshipAnnotation = annotations.get(Relationship.class);
+                 if (relationshipAnnotation != null) {
+-                    return relationshipAnnotation
+-                        .get(Relationship.TYPE, RelationshipUtils.inferRelationshipType(getName()));
++                    return Optional.ofNullable(relationshipAnnotation
++                                .get(Relationship.TYPE, RelationshipUtils.inferRelationshipType(getName())));
+                 }
+             }
+-            return RelationshipUtils.inferRelationshipType(getName());
++            return Optional.ofNullable(RelationshipUtils.inferRelationshipType(getName()));
+         }
+-        return null;
++        return Optional.empty();
+     }
+ 
+     public String relationshipTypeAnnotation() {

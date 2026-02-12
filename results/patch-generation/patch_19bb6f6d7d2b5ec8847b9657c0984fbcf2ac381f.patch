@@ -1,0 +1,20 @@
+--- /workspace/project_original/shardingsphere-elasticjob-cloud-ui/shardingsphere-elasticjob-cloud-ui-backend/src/main/java/org/apache/shardingsphere/elasticjob/cloud/ui/security/AuthenticationFilter.java	2026-01-10 02:30:34.000000000 +0000
++++ /workspace/project/shardingsphere-elasticjob-cloud-ui/shardingsphere-elasticjob-cloud-ui-backend/src/main/java/org/apache/shardingsphere/elasticjob/cloud/ui/security/AuthenticationFilter.java	2026-02-09 21:56:52.734120658 +0000
+@@ -94,6 +94,6 @@
+     private void respondWithUnauthorized(final HttpServletResponse httpResponse) throws IOException {
+         httpResponse.setContentType("application/json");
+         httpResponse.setCharacterEncoding("UTF-8");
+-        httpResponse.getWriter().write(new Gson().toJson(ResponseResultUtil.handleUnauthorizedException("Unauthorized.")));
++        httpResponse.getWriter().write(gson.toJson(ResponseResultUtil.handleUnauthorizedException("Unauthorized.")));
+     }
+ }
+--- /workspace/project_original/shardingsphere-elasticjob-lite-ui/shardingsphere-elasticjob-lite-ui-backend/src/main/java/org/apache/shardingsphere/elasticjob/lite/ui/security/AuthenticationFilter.java	2026-01-10 02:30:34.000000000 +0000
++++ /workspace/project/shardingsphere-elasticjob-lite-ui/shardingsphere-elasticjob-lite-ui-backend/src/main/java/org/apache/shardingsphere/elasticjob/lite/ui/security/AuthenticationFilter.java	2026-02-09 21:56:56.718123722 +0000
+@@ -94,6 +94,6 @@
+     private void respondWithUnauthorized(final HttpServletResponse httpResponse) throws IOException {
+         httpResponse.setContentType("application/json");
+         httpResponse.setCharacterEncoding("UTF-8");
+-        httpResponse.getWriter().write(new Gson().toJson(ResponseResultUtil.handleUnauthorizedException("Unauthorized.")));
++        httpResponse.getWriter().write(gson.toJson(ResponseResultUtil.handleUnauthorizedException("Unauthorized.")));
+     }
+ }

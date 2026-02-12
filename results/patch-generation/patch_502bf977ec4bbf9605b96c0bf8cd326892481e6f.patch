@@ -1,0 +1,31 @@
+--- /workspace/project_original/core/src/main/java/org/neo4j/ogm/metadata/ClassInfo.java	2026-01-09 21:59:48.000000000 +0000
++++ core/src/main/java/org/neo4j/ogm/metadata/ClassInfo.java	2026-02-12 04:12:54.373258003 +0000
+@@ -533,7 +533,19 @@
+      *
+      * @return A Collection of FieldInfo objects describing the classInfo's relationship fields
+      */
++    private volatile Collection<FieldInfo> relationshipFieldInfos;
++
+     public Collection<FieldInfo> relationshipFields() {
++        if (relationshipFieldInfos == null) {
++            initRelationshipFields();
++        }
++        return relationshipFieldInfos;
++    }
++
++    private synchronized void initRelationshipFields() {
++        if (relationshipFieldInfos != null) {
++            return;
++        }
+ 
+         FieldInfo optionalIdentityField = identityFieldOrNull();
+         Set<FieldInfo> relationshipFields = new HashSet<>();
+@@ -548,7 +560,7 @@
+                 }
+             }
+         }
+-        return relationshipFields;
++        this.relationshipFieldInfos = Collections.unmodifiableSet(relationshipFields);
+     }
+ 
+     /**

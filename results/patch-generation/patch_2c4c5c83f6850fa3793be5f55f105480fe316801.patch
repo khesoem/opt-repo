@@ -1,0 +1,47 @@
+--- /workspace/project_original/core/src/main/java/org/neo4j/ogm/metadata/ClassInfo.java	2026-01-09 21:35:54.000000000 +0000
++++ core/src/main/java/org/neo4j/ogm/metadata/ClassInfo.java	2026-02-12 01:48:19.654236803 +0000
+@@ -378,23 +378,31 @@
+             .orElseThrow(() -> new MetadataException("No internal identity field found for class: " + this.className));
+     }
+ 
+-    private synchronized void initIdentityField() {
++    private void initIdentityField() {
+ 
+-        if (identityField != null) {
++        Optional<FieldInfo> known = this.identityField;
++        if (known != null) {
+             return;
+         }
+ 
+-        Collection<FieldInfo> identityFields = getFieldInfos(FieldInfo::isInternalIdentity);
+-        if (identityFields.size() == 1) {
+-            this.identityField = Optional.of(identityFields.iterator().next());
+-        } else if (identityFields.size() > 1) {
+-            throw new MetadataException("Expected exactly one internal identity field (@Id with " +
+-                "InternalIdStrategy), found " + identityFields.size() + " " + identityFields);
+-        } else {
+-            this.identityField = fieldsInfo.fields().stream()
+-                .filter(f -> "id".equals(f.getName()))
+-                .filter(f -> "java.lang.Long".equals(f.getTypeDescriptor()))
+-                .findFirst();
++        synchronized (this) {
++            known = this.identityField;
++            if (known != null) {
++                return;
++            }
++
++            Collection<FieldInfo> identityFields = getFieldInfos(FieldInfo::isInternalIdentity);
++            if (identityFields.size() == 1) {
++                this.identityField = Optional.of(identityFields.iterator().next());
++            } else if (identityFields.size() > 1) {
++                throw new MetadataException("Expected exactly one internal identity field (@Id with " +
++                    "InternalIdStrategy), found " + identityFields.size() + " " + identityFields);
++            } else {
++                this.identityField = fieldsInfo.fields().stream()
++                    .filter(f -> "id".equals(f.getName()))
++                    .filter(f -> "java.lang.Long".equals(f.getTypeDescriptor()))
++                    .findFirst();
++            }
+         }
+     }
+ 

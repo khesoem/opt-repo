@@ -1,0 +1,66 @@
+--- /workspace/project_original/rest/kadai-rest-spring/src/main/java/io/kadai/classification/rest/ClassificationDefinitionController.java	2026-01-09 07:32:19.000000000 +0000
++++ /workspace/project/rest/kadai-rest-spring/src/main/java/io/kadai/classification/rest/ClassificationDefinitionController.java	2026-02-11 07:03:43.808432143 +0000
+@@ -151,35 +151,39 @@
+   private Map<Classification, String> mapChildrenToParentKeys(
+       Collection<ClassificationDefinitionRepresentationModel> definitionList,
+       Map<String, String> systemIds) {
+-    Map<Classification, String> childrenInFile = new HashMap<>();
+-    Set<String> newKeysWithDomain = new HashSet<>();
+-    definitionList.stream()
++    // collect keys present in the uploaded file for quick lookup
++    Set<String> newKeysWithDomain = definitionList.stream()
+         .map(ClassificationDefinitionRepresentationModel::getClassification)
+-        .forEach(cl -> newKeysWithDomain.add(cl.getKey() + "|" + cl.getDomain()));
++        .map(cl -> cl.getKey() + "|" + cl.getDomain())
++        .collect(Collectors.toSet());
+ 
+-    for (ClassificationDefinitionRepresentationModel def : definitionList) {
+-      ClassificationRepresentationModel cl = def.getClassification();
+-      cl.setParentId(cl.getParentId() == null ? "" : cl.getParentId());
+-      cl.setParentKey(cl.getParentKey() == null ? "" : cl.getParentKey());
++    // map children to their parent keys only when the parent exists either in the file
++    // or already in the system
++    return definitionList.stream()
++        .map(def -> {
++          ClassificationRepresentationModel cl = def.getClassification();
++          cl.setParentId(cl.getParentId() == null ? "" : cl.getParentId());
++          cl.setParentKey(cl.getParentKey() == null ? "" : cl.getParentKey());
+ 
+-      if (!cl.getParentId().equals("") && cl.getParentKey().equals("")) {
+-        for (ClassificationDefinitionRepresentationModel parentDef : definitionList) {
+-          ClassificationRepresentationModel parent = parentDef.getClassification();
+-          if (cl.getParentId().equals(parent.getClassificationId())) {
+-            cl.setParentKey(parent.getKey());
++          if (!cl.getParentId().isEmpty() && cl.getParentKey().isEmpty()) {
++            // try to resolve parentKey from other entries in the file
++            definitionList.stream()
++                .map(ClassificationDefinitionRepresentationModel::getClassification)
++                .filter(parent -> cl.getParentId().equals(parent.getClassificationId()))
++                .findFirst()
++                .ifPresent(parent -> cl.setParentKey(parent.getKey()));
+           }
+-        }
+-      }
+ 
+-      String parentKeyAndDomain = cl.getParentKey() + "|" + cl.getDomain();
+-      if ((!cl.getParentKey().isEmpty()
+-          && !cl.getParentKey().equals("")
+-          && (newKeysWithDomain.contains(parentKeyAndDomain)
+-              || systemIds.containsKey(parentKeyAndDomain)))) {
+-        childrenInFile.put(assembler.toEntityModel(def), cl.getParentKey());
+-      }
+-    }
+-    return childrenInFile;
++          String parentKeyAndDomain = cl.getParentKey() + "|" + cl.getDomain();
++          if (!cl.getParentKey().isEmpty()
++              && (newKeysWithDomain.contains(parentKeyAndDomain)
++                  || systemIds.containsKey(parentKeyAndDomain))) {
++            return new java.util.AbstractMap.SimpleEntry<>(assembler.toEntityModel(def), cl.getParentKey());
++          }
++          return null;
++        })
++        .filter(java.util.Objects::nonNull)
++        .collect(Collectors.toMap(java.util.Map.Entry::getKey, java.util.Map.Entry::getValue, (a, b) -> b));
+   }
+ 
+   private void insertOrUpdateClassificationsWithoutParent(

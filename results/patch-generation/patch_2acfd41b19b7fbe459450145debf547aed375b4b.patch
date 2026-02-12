@@ -1,0 +1,15 @@
+--- project_original/services/src/main/java/org/keycloak/authentication/authenticators/client/ClientAssertionState.java	2026-01-09 13:35:51.000000000 +0000
++++ project/services/src/main/java/org/keycloak/authentication/authenticators/client/ClientAssertionState.java	2026-02-11 20:35:11.560768244 +0000
+@@ -80,7 +80,11 @@
+                 event.detail(Details.CLIENT_ASSERTION_ISSUER, token.getIssuer());
+                 event.detail(Details.CLIENT_ASSERTION_SUB, token.getSubject());
+ 
+-                if (token.getSubject() != null) {
++                String clientIdParam = params.getFirst(org.keycloak.OAuth2Constants.CLIENT_ID);
++
++                if (clientIdParam != null) {
++                    client = context.getRealm().getClientByClientId(clientIdParam);
++                } else if (token.getSubject() != null) {
+                     client = context.getRealm().getClientByClientId(token.getSubject());
+                 }
+             }

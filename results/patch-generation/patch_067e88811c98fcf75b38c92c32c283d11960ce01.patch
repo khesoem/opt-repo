@@ -1,0 +1,10 @@
+--- /workspace/project_original/independent-projects/bootstrap/maven-resolver/src/main/java/io/quarkus/bootstrap/resolver/maven/ApplicationDependencyTreeResolver.java	2026-01-10 08:04:08.000000000 +0000
++++ /workspace/project/independent-projects/bootstrap/maven-resolver/src/main/java/io/quarkus/bootstrap/resolver/maven/ApplicationDependencyTreeResolver.java	2026-02-09 22:35:57.746077230 +0000
+@@ -537,6 +537,7 @@
+         while (i < deploymentDeps.size()) {
+             final Artifact a = deploymentDeps.get(i).getArtifact();
+             if (a == null) {
++                ++i;
+                 continue;
+             }
+             if (isSameKey(extDep.info.runtimeArtifact, a)) {

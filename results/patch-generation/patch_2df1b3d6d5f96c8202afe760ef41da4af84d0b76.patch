@@ -1,0 +1,51 @@
+--- project_original/core/src/main/java/org/neo4j/ogm/metadata/DomainInfo.java	2026-01-09 22:20:56.000000000 +0000
++++ project/core/src/main/java/org/neo4j/ogm/metadata/DomainInfo.java	2026-02-12 05:23:06.434064790 +0000
+@@ -25,6 +25,7 @@
+ import io.github.classgraph.ScanResult;
+ 
+ import java.util.*;
++import java.util.concurrent.ConcurrentHashMap;
+ import java.util.function.Function;
+ import java.util.function.Predicate;
+ import java.util.regex.Pattern;
+@@ -334,6 +335,8 @@
+         return getClassInfo(fullOrPartialClassName, classNameToClassInfo);
+     }
+ 
++    private final Map<String, Optional<ClassInfo>> simpleNameCache = new ConcurrentHashMap<>();
++
+     private ClassInfo getClassInfo(String fullOrPartialClassName, Map<String, ClassInfo> infos) {
+ 
+         // It is a fully, qualified name or at least matches to one.
+@@ -341,15 +344,30 @@
+             return infos.get(fullOrPartialClassName);
+         }
+ 
++        // Only cache lookups against the primary classNameToClassInfo map. Other maps are small and/or transient.
++        if (infos == this.classNameToClassInfo) {
++            Optional<ClassInfo> cached = simpleNameCache.get(fullOrPartialClassName);
++            if (cached != null) {
++                return cached.orElse(null);
++            }
++        }
++
+         Pattern partialClassNamePattern = Pattern.compile(".+[\\\\.\\$]" + Pattern.quote(fullOrPartialClassName) + "$");
+         List<String> foundKeys = infos.keySet().stream().filter(partialClassNamePattern.asPredicate())
+             .collect(Collectors.toList());
+         if (foundKeys.isEmpty()) {
++            if (infos == this.classNameToClassInfo) {
++                simpleNameCache.put(fullOrPartialClassName, Optional.empty());
++            }
+             return null;
+         } else if (foundKeys.size() > 1) {
+             throw new MappingException("More than one class has simple name: " + fullOrPartialClassName);
+         } else {
+-            return infos.get(foundKeys.get(0));
++            ClassInfo result = infos.get(foundKeys.get(0));
++            if (infos == this.classNameToClassInfo) {
++                simpleNameCache.put(fullOrPartialClassName, Optional.ofNullable(result));
++            }
++            return result;
+         }
+     }
+ 

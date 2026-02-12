@@ -1,0 +1,29 @@
+--- /workspace/project_original/services/src/main/java/org/keycloak/broker/saml/mappers/AbstractAttributeToRoleMapper.java	2026-01-08 21:32:31.000000000 +0000
++++ /workspace/project/services/src/main/java/org/keycloak/broker/saml/mappers/AbstractAttributeToRoleMapper.java	2026-02-10 21:14:58.359648810 +0000
+@@ -46,7 +46,9 @@
+         }
+ 
+         if (this.applies(mapperModel, context)) {
+-            user.grantRole(role);
++            if (!user.hasRole(role)) {
++                user.grantRole(role);
++            }
+         }
+     }
+ 
+@@ -62,9 +64,13 @@
+         if (!context.hasMapperGrantedRole(roleName)) {
+             if (this.applies(mapperModel, context)) {
+                 context.addMapperGrantedRole(roleName);
+-                user.grantRole(role);
++                if (!user.hasRole(role)) {
++                    user.grantRole(role);
++                }
+             } else {
+-                user.deleteRoleMapping(role);
++                if (user.hasRole(role)) {
++                    user.deleteRoleMapping(role);
++                }
+             }
+         }
+     }

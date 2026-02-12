@@ -1,0 +1,44 @@
+--- a/config/.../FileConfiguration.java
++++ b/config/.../FileConfiguration.java
+@@ -335,9 +335,6 @@
+ 
+         private final String dataId;
+         private final ConfigurationChangeListener listener;
+-        private final ExecutorService executor = new ThreadPoolExecutor(CORE_LISTENER_THREAD, MAX_LISTENER_THREAD, 0L,
+-                TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(),
+-                new NamedThreadFactory("fileListener", MAX_LISTENER_THREAD));
+ 
+         /**
+          * Instantiates a new FileListener.
+@@ -377,7 +374,8 @@
+ 
+         @Override
+         public ExecutorService getExecutorService() {
+-            return executor;
++            // Use shared executor to avoid creating a thread pool per listener which may cause thread explosion
++            return ConfigurationChangeListener.EXECUTOR_SERVICE;
+         }
+     }
+ 
+--- a/rm-datasource/.../ConnectionProxy.java
++++ b/rm-datasource/.../ConnectionProxy.java
+@@ -284,11 +284,16 @@
+     }
+ 
+     public static class LockRetryPolicy {
+-        protected static final boolean LOCK_RETRY_POLICY_BRANCH_ROLLBACK_ON_CONFLICT = ConfigurationFactory
+-            .getInstance().getBoolean(ConfigurationKeys.CLIENT_LOCK_RETRY_POLICY_BRANCH_ROLLBACK_ON_CONFLICT, DEFAULT_CLIENT_LOCK_RETRY_POLICY_BRANCH_ROLLBACK_ON_CONFLICT);
++        // Read the configuration lazily in an instance field to avoid static initialization side-effects
++        private final boolean branchRollbackOnConflict;
++
++        public LockRetryPolicy() {
++            this.branchRollbackOnConflict = ConfigurationFactory
++                .getInstance().getBoolean(ConfigurationKeys.CLIENT_LOCK_RETRY_POLICY_BRANCH_ROLLBACK_ON_CONFLICT, DEFAULT_CLIENT_LOCK_RETRY_POLICY_BRANCH_ROLLBACK_ON_CONFLICT);
++        }
+ 
+         public <T> T execute(Callable<T> callable) throws Exception {
+-            if (LOCK_RETRY_POLICY_BRANCH_ROLLBACK_ON_CONFLICT) {
++            if (branchRollbackOnConflict) {
+                 return callable.call();
+             } else {
+                 return doRetryOnLockConflict(callable);

@@ -1,0 +1,38 @@
+--- /workspace/project_original/server-spi-private/src/main/java/org/keycloak/models/utils/RepresentationToModel.java	2026-01-09 00:02:07.000000000 +0000
++++ server-spi-private/src/main/java/org/keycloak/models/utils/RepresentationToModel.java	2026-02-11 01:12:47.254442548 +0000
+@@ -377,11 +377,31 @@
+         }
+ 
+         if (resourceRep.getProtocolMappers() != null) {
+-            // first, remove all default/built in mappers
+-            client.getProtocolMappersStream().collect(Collectors.toList()).forEach(client::removeProtocolMapper);
++            // Efficiently sync protocol mappers: avoid removing and re-adding identical mappers
++            Map<String, ProtocolMapperModel> existingProtocolMappers =
++                    client.getProtocolMappersStream().collect(Collectors.toMap(mapper ->
++                            generateProtocolNameKey(mapper.getProtocol(), mapper.getName()), Function.identity()));
+ 
+-            for (ProtocolMapperRepresentation mapper : resourceRep.getProtocolMappers()) {
+-                client.addProtocolMapper(toModel(mapper));
++            Map<String, ProtocolMapperRepresentation> newProtocolMappers = resourceRep.getProtocolMappers().stream()
++                    .collect(Collectors.toMap(m -> generateProtocolNameKey(m.getProtocol(), m.getName()), Function.identity(), (a, b) -> a));
++
++            // Add or update new mappers
++            for (Map.Entry<String, ProtocolMapperRepresentation> entry : newProtocolMappers.entrySet()) {
++                String protocolNameKey = entry.getKey();
++                ProtocolMapperModel existingMapper = existingProtocolMappers.get(protocolNameKey);
++                if (existingMapper != null) {
++                    ProtocolMapperModel updatedProtocolMapperModel = toModel(entry.getValue());
++                    updatedProtocolMapperModel.setId(existingMapper.getId());
++                    client.updateProtocolMapper(updatedProtocolMapperModel);
++                    existingProtocolMappers.remove(protocolNameKey);
++                } else {
++                    client.addProtocolMapper(toModel(entry.getValue()));
++                }
++            }
++
++            // Remove any remaining existing mappers that are not present in new config
++            for (ProtocolMapperModel toRemove : existingProtocolMappers.values()) {
++                client.removeProtocolMapper(toRemove);
+             }
+ 
+             MigrationUtils.updateProtocolMappers(client);

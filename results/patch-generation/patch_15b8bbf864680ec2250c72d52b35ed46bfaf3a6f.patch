@@ -1,0 +1,15 @@
+--- /workspace/project_original/common/src/main/java/io/netty/util/internal/PlatformDependent.java	2026-01-08 22:34:08.000000000 +0000
++++ /workspace/project/common/src/main/java/io/netty/util/internal/PlatformDependent.java	2026-02-10 23:39:58.995424089 +0000
+@@ -264,8 +264,10 @@
+     }
+ 
+     private static boolean initializeVarHandle() {
+-        if (UNSAFE_UNAVAILABILITY_CAUSE == null || javaVersion() < 9 ||
+-                PlatformDependent0.isNativeImage()) {
++        // VarHandle can be used when running on Java 9+ and when not running in native image.
++        // Do not gate VarHandle availability on the presence / absence of Unsafe; allow it when supported
++        // so we can use VarHandle backed access paths when they are beneficial.
++        if (javaVersion() < 9 || PlatformDependent0.isNativeImage()) {
+             return false;
+         }
+         boolean varHandleAvailable = false;

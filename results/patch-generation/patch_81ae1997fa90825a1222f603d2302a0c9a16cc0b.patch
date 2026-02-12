@@ -1,0 +1,42 @@
+--- a/presto-spi/src/main/java/io/prestosql/spi/type/TypeSignature.java      2026-01-10 10:36:05.000000000 +0000
++++ b/presto-spi/src/main/java/io/prestosql/spi/type/TypeSignature.java       2026-02-10 00:22:44.555763291 +0000
+@@ -38,6 +38,8 @@
+     private final String base;
+     private final List<TypeSignatureParameter> parameters;
+     private final boolean calculated;
++    // cached hash code for fast hash-based collections
++    private final int hash;
+
+     public TypeSignature(String base, TypeSignatureParameter... parameters)
+     {
+@@ -54,6 +56,9 @@
+         this.parameters = List.copyOf(parameters);
+
+         this.calculated = parameters.stream().anyMatch(TypeSignatureParameter::isCalculated);
++
++        // Cache hash code for performance in hash-based collections
++        this.hash = Objects.hash(base.toLowerCase(Locale.ENGLISH), this.parameters);
+     }
+
+     public String getBase()
+@@ -156,6 +161,11 @@
+ 
+         TypeSignature other = (TypeSignature) o;
+ 
++        // Quick path: if cached hashes differ, objects are not equal
++        if (this.hash != other.hash) {
++            return false;
++        }
++
+         return Objects.equals(this.base.toLowerCase(Locale.ENGLISH), other.base.toLowerCase(Locale.ENGLISH)) &&
+                 Objects.equals(this.parameters, other.parameters);
+     }
+@@ -163,7 +173,7 @@
+     @Override
+     public int hashCode()
+     {
+-        return Objects.hash(base.toLowerCase(Locale.ENGLISH), parameters);
++        return hash;
+     }
+
+     // Type signature constructors for common types

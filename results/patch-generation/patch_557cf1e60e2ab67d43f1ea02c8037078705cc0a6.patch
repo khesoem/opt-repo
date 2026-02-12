@@ -1,0 +1,49 @@
+--- /workspace/project_original/model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/remote/RemoteInfinispanKeycloakTransaction.java	2026-01-09 01:59:23.000000000 +0000
++++ model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/remote/RemoteInfinispanKeycloakTransaction.java	2026-02-11 03:54:09.538813934 +0000
+@@ -43,6 +43,20 @@
+     private final RemoteCache<K, V> cache;
+     private Predicate<V> removePredicate;
+ 
++    @SuppressWarnings("rawtypes")
++    private static final Operation TOMBSTONE = new Operation() {
++        @Override
++        public CompletionStage<?> execute(RemoteCache cache) {
++            // No-op tombstone: represents an entry that was put and then removed in this transaction.
++            return CompletableFuture.completedFuture(null);
++        }
++
++        @Override
++        public boolean hasValue() {
++            return false;
++        }
++    };
++
+     public RemoteInfinispanKeycloakTransaction(RemoteCache<K, V> cache) {
+         this.cache = Objects.requireNonNull(cache);
+     }
+@@ -100,9 +114,22 @@
+         logger.tracef("Adding %s.remove(%S)", cache.getName(), key);
+ 
+         Operation<K, V> existing = tasks.get(key);
+-        if (existing != null && existing.canRemove()) {
+-            tasks.remove(key);
+-            return;
++        if (existing != null) {
++            // If there was a put in this transaction, replace it with a tombstone to indicate
++            // the entry was created and then removed without touching the remote cache.
++            if (existing.hasValue() && existing instanceof PutOperation) {
++                tasks.put(key, (Operation<K, V>) TOMBSTONE);
++                return;
++            }
++            // If tombstone already present, do nothing.
++            if (existing == TOMBSTONE) {
++                return;
++            }
++            // If operation allows removal (e.g., a fresh put that can be removed), remove it.
++            if (existing.canRemove()) {
++                tasks.remove(key);
++                return;
++            }
+         }
+ 
+         tasks.put(key, new RemoveOperation<>(key));

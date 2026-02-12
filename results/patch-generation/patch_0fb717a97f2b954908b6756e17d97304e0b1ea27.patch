@@ -1,0 +1,27 @@
+From f91e2b6b2729f25d0bc7cc142613656dfa5bcf55 Mon Sep 17 00:00:00 2001
+From: openhands <openhands@all-hands.dev>
+Date: Thu, 12 Feb 2026 06:45:06 +0000
+Subject: [PATCH] perf: enable rawEntry parsing to avoid ByteString->Entry
+ reparse for MQ producers
+
+---
+ .../java/com/alibaba/otter/canal/deployer/CanalStarter.java    | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/deployer/src/main/java/com/alibaba/otter/canal/deployer/CanalStarter.java b/deployer/src/main/java/com/alibaba/otter/canal/deployer/CanalStarter.java
+index 38e8622..6acafb5 100644
+--- a/deployer/src/main/java/com/alibaba/otter/canal/deployer/CanalStarter.java
++++ b/deployer/src/main/java/com/alibaba/otter/canal/deployer/CanalStarter.java
+@@ -73,7 +73,8 @@ public class CanalStarter {
+             // disable netty
+             System.setProperty(CanalConstants.CANAL_WITHOUT_NETTY, "true");
+             // 设置为raw避免ByteString->Entry的二次解析
+-            System.setProperty("canal.instance.memory.rawEntry", "false");
++            // set to true to avoid ByteString->Entry second parse and improve performance
++            System.setProperty("canal.instance.memory.rawEntry", "true");
+         }
+ 
+         logger.info("## start the canal server.");
+-- 
+2.43.0
+

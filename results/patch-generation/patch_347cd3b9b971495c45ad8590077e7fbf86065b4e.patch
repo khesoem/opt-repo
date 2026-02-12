@@ -1,0 +1,37 @@
+--- /workspace/project_original/server-spi-private/src/main/java/org/keycloak/userprofile/ValidationException.java
++++ /workspace/project/server-spi-private/src/main/java/org/keycloak/userprofile/ValidationException.java
+@@ -39,10 +39,34 @@
+ 
+ 	private final Map<String, List<Error>> errors = new HashMap<>();
+ 
++		// By default, avoid populating the stack trace at construction time to reduce allocation cost.
++		private transient boolean populateStackTraceOnDemand = false;
++
++		/**
++		 * Prepare this exception to have a stack trace. This method should be called right before throwing the exception
++		 * when a full stack trace is desired. By default stack traces are not captured at construction time to avoid
++		 * the performance overhead when exceptions are only used as error collectors.
++		 */
++		public void prepareForThrow() {
++			this.populateStackTraceOnDemand = true;
++			super.fillInStackTrace();
++		}
++
++		@Override
++		public synchronized Throwable fillInStackTrace() {
++			if (populateStackTraceOnDemand) {
++				return super.fillInStackTrace();
++			}
++			// Skip filling in the stack trace to avoid the expensive operation when the exception is used as a collector
++			return this;
++		}
++
+ 	public ValidationException() {}
+ 
+ 	public ValidationException(ValidationError error) {
+ 		addError(error);
++			prepareForThrow();
++
+ 	}
+ 
+ 	public List<Error> getErrors() {

@@ -1,0 +1,11 @@
+--- project_original/spring-modulith-events/spring-modulith-events-core/src/main/java/org/springframework/modulith/events/core/DefaultEventPublicationRegistry.java	2026-01-09 11:02:51.000000000 +0000
++++ project/spring-modulith-events/spring-modulith-events-core/src/main/java/org/springframework/modulith/events/core/DefaultEventPublicationRegistry.java	2026-02-11 10:39:49.673030947 +0000
+@@ -386,7 +386,7 @@
+ 				}
+ 
+ 				return this.event == that.event
+-						&& this.identifier.equals(identifier);
++						&& this.identifier.equals(that.identifier);
+ 			}
+ 
+ 			/*

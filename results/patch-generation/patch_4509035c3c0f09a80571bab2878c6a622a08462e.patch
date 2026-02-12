@@ -1,0 +1,20 @@
+diff --git a/mockserver-core/src/main/java/org/mockserver/mock/HttpState.java b/mockserver-core/src/main/java/org/mockserver/mock/HttpState.java
+index de91525..bb38019 100644
+--- a/mockserver-core/src/main/java/org/mockserver/mock/HttpState.java
++++ b/mockserver-core/src/main/java/org/mockserver/mock/HttpState.java
+@@ -162,7 +162,6 @@ public class HttpState {
+             );
+             throw new IllegalArgumentException("\"" + request.getFirstQueryStringParameter("type") + "\" is not a valid value for \"type\" parameter, only the following values are supported " + Arrays.stream(ClearType.values()).map(input -> input.name().toLowerCase()).collect(Collectors.toList()));
+         }
+-        System.gc();
+     }
+ 
+     private RequestDefinition resolveExpectationId(ExpectationId expectationId) {
+@@ -193,7 +192,6 @@ public class HttpState {
+                     .setMessageFormat("resetting all expectations and request logs")
+             );
+         }
+-        System.gc();
+         new Scheduler.SchedulerThreadFactory("MockServer Memory Metrics").newThread(() -> {
+             try {
+                 SECONDS.sleep(10);

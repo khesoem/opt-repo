@@ -1,0 +1,20 @@
+--- /workspace/project_original/pulsar-client-messagecrypto-bc/src/main/java/org/apache/pulsar/client/impl/crypto/MessageCryptoBc.java	2026-01-10 08:44:03.000000000 +0000
++++ /workspace/project/pulsar-client-messagecrypto-bc/src/main/java/org/apache/pulsar/client/impl/crypto/MessageCryptoBc.java	2026-02-09 23:48:20.324049740 +0000
+@@ -145,7 +145,16 @@
+ 
+         try {
+ 
+-            cipher = Cipher.getInstance(AESGCM, BouncyCastleProvider.PROVIDER_NAME);
++            // Prefer default provider (e.g., SunJCE) for AES/GCM to take advantage of
++            // platform-specific optimizations (AES-NI) when available. Fall back to
++            // BouncyCastle provider if the default provider doesn't support AES/GCM.
++            try {
++                cipher = Cipher.getInstance(AESGCM);
++            } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
++                // Fallback to BouncyCastle if default provider isn't available
++                cipher = Cipher.getInstance(AESGCM, BouncyCastleProvider.PROVIDER_NAME);
++            }
++
+             // If keygen is not needed(e.g: consumer), data key will be decrypted from the message
+             if (!keyGenNeeded) {
+                 // codeql[java/weak-cryptographic-algorithm] - md5 is sufficient for this use case

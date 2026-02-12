@@ -1,0 +1,19 @@
+--- /workspace/project_original/authz/policy/common/src/main/java/org/keycloak/authorization/policy/provider/user/UserPolicyProviderFactory.java	2026-01-09 00:49:17.000000000 +0000
++++ authz/policy/common/src/main/java/org/keycloak/authorization/policy/provider/user/UserPolicyProviderFactory.java	2026-02-11 02:00:55.865342187 +0000
+@@ -166,13 +166,10 @@
+         KeycloakSession session = authorization.getKeycloakSession();
+         RealmModel realm = authorization.getRealm();
+         UserProvider userProvider = session.users();
+-        UserModel user = userProvider.getUserByUsername(realm, userId);
+ 
+-        if (user == null) {
+-            user = userProvider.getUserById(realm, userId);
+-        }
+-
+-        return user;
++        // userId is expected to be a user id (UUID). Use getUserById to ensure proper caching
++        // and avoid unnecessary lookups (e.g., LDAP queries when searching by username).
++        return userProvider.getUserById(realm, userId);
+     }
+ 
+     @Override

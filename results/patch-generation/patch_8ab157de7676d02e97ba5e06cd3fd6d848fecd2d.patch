@@ -1,0 +1,113 @@
+Only in project: fix.patch
+diff -ru project_original/spring-cloud-function-adapters/spring-cloud-function-serverless-web/src/main/java/org/springframework/cloud/function/serverless/web/FunctionClassUtils.java project/spring-cloud-function-adapters/spring-cloud-function-serverless-web/src/main/java/org/springframework/cloud/function/serverless/web/FunctionClassUtils.java
+--- project_original/spring-cloud-function-adapters/spring-cloud-function-serverless-web/src/main/java/org/springframework/cloud/function/serverless/web/FunctionClassUtils.java	2026-01-09 21:11:35.000000000 +0000
++++ project/spring-cloud-function-adapters/spring-cloud-function-serverless-web/src/main/java/org/springframework/cloud/function/serverless/web/FunctionClassUtils.java	2026-02-12 01:09:14.842950458 +0000
+@@ -46,6 +46,10 @@
+ 
+ 	private static Log logger = LogFactory.getLog(FunctionClassUtils.class);
+ 
++		/* Cached start class to avoid repeated classpath scanning */
++		private static volatile Class<?> startClass;
++
++
+ 	private FunctionClassUtils() {
+ 
+ 	}
+@@ -59,11 +63,17 @@
+ 	 * @return instance of Class which represent the start class of the application.
+ 	 */
+ 	public static Class<?> getStartClass() {
++		if (startClass != null) {
++			return startClass;
++		}
+ 		ClassLoader classLoader = FunctionClassUtils.class.getClassLoader();
+ 		return getStartClass(classLoader);
+ 	}
+ 
+ 	static Class<?> getStartClass(ClassLoader classLoader) {
++		if (startClass != null) {
++			return startClass;
++		}
+ 		Class<?> mainClass = null;
+ 		if (System.getenv("MAIN_CLASS") != null) {
+ 			mainClass = ClassUtils.resolveClassName(System.getenv("MAIN_CLASS"), classLoader);
+@@ -88,6 +98,14 @@
+ 						+ "entry in META-INF/MANIFEST.MF (in that order).", ex);
+ 			}
+ 		}
++		if (mainClass != null) {
++			// cache discovered main class so subsequent calls are fast
++			synchronized (FunctionClassUtils.class) {
++				if (startClass == null) {
++					startClass = mainClass;
++				}
++			}
++		}
+ 		logger.info("Main class: " + mainClass);
+ 		return mainClass;
+ 	}
+@@ -97,38 +115,40 @@
+ 			logger.trace("Searching manifests: " + list);
+ 		}
+ 		for (URL url : list) {
+-			try {
+-				InputStream inputStream = null;
+-				Manifest manifest = new Manifest(url.openStream());
++			try (InputStream inputStream = url.openStream()) {
++				Manifest manifest = new Manifest(inputStream);
+ 				logger.info("Searching for start class in manifest: " + url);
+ 				if (logger.isDebugEnabled()) {
+ 					manifest.write(System.out);
+ 				}
+-				try {
+-					String startClassName = manifest.getMainAttributes().getValue("Start-Class");
+-					if (!StringUtils.hasText(startClassName)) {
+-						startClassName = manifest.getMainAttributes().getValue("Main-Class");
+-					}
+ 
+-					if (StringUtils.hasText(startClassName)) {
+-						Class<?> startClass = ClassUtils.forName(startClassName, classLoader);
++				String startClassName = manifest.getMainAttributes().getValue("Start-Class");
++				if (!StringUtils.hasText(startClassName)) {
++					startClassName = manifest.getMainAttributes().getValue("Main-Class");
++				}
++
++				if (StringUtils.hasText(startClassName)) {
++					Class<?> found = ClassUtils.forName(startClassName, classLoader);
+ 
+-						if (KotlinDetector.isKotlinType(startClass)) {
+-							PathMatchingResourcePatternResolver r = new PathMatchingResourcePatternResolver(classLoader);
+-							String packageName = startClass.getPackage().getName();
+-							Resource[] resources = r.getResources("classpath:" + packageName.replace(".", "/") + "/*.class");
+-							for (int i = 0; i < resources.length; i++) {
+-								Resource resource = resources[i];
+-								String className = packageName + "." + (resource.getFilename().replace("/", ".")).replace(".class", "");
+-								startClass = ClassUtils.forName(className, classLoader);
+-							}
++					if (KotlinDetector.isKotlinType(found)) {
++						PathMatchingResourcePatternResolver r = new PathMatchingResourcePatternResolver(classLoader);
++						String packageName = found.getPackage().getName();
++						Resource[] resources = r.getResources("classpath:" + packageName.replace(".", "/") + "/*.class");
++						for (int i = 0; i < resources.length; i++) {
++							Resource resource = resources[i];
++							String className = packageName + "." + (resource.getFilename().replace("/", ".")).replace(".class", "");
++							found = ClassUtils.forName(className, classLoader);
+ 						}
+ 					}
+-				}
+-				finally {
+-					if (inputStream != null) {
+-						inputStream.close();
++
++					// cache and return immediately once discovered
++					logger.info("Loaded Start Class: " + found);
++					synchronized (FunctionClassUtils.class) {
++						if (startClass == null) {
++							startClass = found;
++						}
+ 					}
++					return found;
+ 				}
+ 			}
+ 			catch (Exception ex) {
+Only in project/spring-cloud-function-adapters/spring-cloud-function-serverless-web/src/main/java/org/springframework/cloud/function/serverless/web: FunctionClassUtils.java.bak

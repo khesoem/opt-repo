@@ -1,0 +1,11 @@
+--- /workspace/project_original/core/src/main/java/com/alibaba/fastjson2/JSONReaderUTF8.java	2026-01-10 10:50:18.000000000 +0000
++++ core/src/main/java/com/alibaba/fastjson2/JSONReaderUTF8.java	2026-02-10 00:58:52.782097905 +0000
+@@ -4712,7 +4712,7 @@
+                 int upperBound = offset + ((end - offset) & ~7);
+                 while (offset < upperBound) {
+                     long v = getLongLE(bytes, offset);
+-                    if ((v & 0xFF00FF00FF00FF00L) != 0 || JSONReaderUTF8.containsSlashOrQuote(v, byteVectorQuote)) {
++                    if ((v & 0x8080808080808080L) != 0 || JSONReaderUTF8.containsSlashOrQuote(v, byteVectorQuote)) {
+                         break;
+                     }
+ 

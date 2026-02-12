@@ -1,0 +1,38 @@
+diff --git a/src/main/java/org/apache/ibatis/transaction/jdbc/JdbcTransaction.java b/src/main/java/org/apache/ibatis/transaction/jdbc/JdbcTransaction.java
+index 2bfec33..3ee3433 100644
+--- a/src/main/java/org/apache/ibatis/transaction/jdbc/JdbcTransaction.java
++++ b/src/main/java/org/apache/ibatis/transaction/jdbc/JdbcTransaction.java
+@@ -44,11 +44,18 @@ public class JdbcTransaction implements Transaction {
+   protected DataSource dataSource;
+   protected TransactionIsolationLevel level;
+   protected boolean autoCommit;
++  // Whether to reset autocommit on close. Default true to preserve existing behavior.
++  protected boolean resetAutoCommit = true;
+ 
+   public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
++    this(ds, desiredLevel, desiredAutoCommit, true);
++  }
++
++  public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit, boolean resetAutoCommit) {
+     dataSource = ds;
+     level = desiredLevel;
+     autoCommit = desiredAutoCommit;
++    this.resetAutoCommit = resetAutoCommit;
+   }
+ 
+   public JdbcTransaction(Connection connection) {
+diff --git a/src/main/java/org/apache/ibatis/transaction/jdbc/JdbcTransactionFactory.java b/src/main/java/org/apache/ibatis/transaction/jdbc/JdbcTransactionFactory.java
+index 1a56e6f..d24b580 100644
+--- a/src/main/java/org/apache/ibatis/transaction/jdbc/JdbcTransactionFactory.java
++++ b/src/main/java/org/apache/ibatis/transaction/jdbc/JdbcTransactionFactory.java
+@@ -39,6 +39,9 @@ public class JdbcTransactionFactory implements TransactionFactory {
+ 
+   @Override
+   public Transaction newTransaction(DataSource ds, TransactionIsolationLevel level, boolean autoCommit) {
+-    return new JdbcTransaction(ds, level, autoCommit);
++    // Create JdbcTransaction with resetAutoCommit=false to avoid unnecessary
++    // SET AUTOCOMMIT calls when the connection is managed externally (e.g. pools).
++    // Preserve backward compatibility by still honoring autoCommit parameter.
++    return new JdbcTransaction(ds, level, autoCommit, false);
+   }
+ }

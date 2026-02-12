@@ -1,0 +1,30 @@
+--- /workspace/project_original/independent-projects/arc/runtime/src/main/java/io/quarkus/arc/ArcContainerImpl.java	2026-01-09 17:25:44.000000000 +0000
++++ independent-projects/arc/runtime/src/main/java/io/quarkus/arc/ArcContainerImpl.java	2026-02-11 23:44:30.229342725 +0000
+@@ -47,7 +47,7 @@
+ 
+     private static final Logger LOGGER = Logger.getLogger(ArcContainerImpl.class.getPackage().getName());
+ 
+-    private final String id;
++    private transient volatile String id;
+ 
+     private final AtomicBoolean running;
+ 
+@@ -252,7 +252,17 @@
+ 
+     @Override
+     public String toString() {
+-        return "ArcContainerImpl [id=" + id + ", running=" + running + ", beans=" + beans.size() + ", observers="
++        // Lazily initialize id to avoid expensive SecureRandom call during startup
++        String idCopy = id;
++        if (idCopy == null) {
++            synchronized (this) {
++                if (id == null) {
++                    id = UUID.randomUUID().toString();
++                }
++                idCopy = id;
++            }
++        }
++        return "ArcContainerImpl [id=" + idCopy + ", running=" + running + ", beans=" + beans.size() + ", observers="
+                 + observers.size() + ", scopes="
+                 + getScopes() + "]";
+     }

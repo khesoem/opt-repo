@@ -1,0 +1,20 @@
+--- /workspace/project_original/core/src/main/java/org/neo4j/ogm/session/delegates/ExecuteQueriesDelegate.java	2026-01-09 22:14:38.000000000 +0000
++++ /workspace/project/core/src/main/java/org/neo4j/ogm/session/delegates/ExecuteQueriesDelegate.java	2026-02-12 04:48:38.577711694 +0000
+@@ -69,7 +69,7 @@
+  */
+ public class ExecuteQueriesDelegate extends SessionDelegate {
+ 
+-    private static final Pattern WRITE_CYPHER_KEYWORDS = Pattern.compile("\\b(CREATE|MERGE|SET|DELETE|REMOVE|DROP|CALL)\\b");
++    private static final Pattern WRITE_CYPHER_KEYWORDS = Pattern.compile("\\b(CREATE|MERGE|SET|DELETE|REMOVE|DROP|CALL)\\b", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+     private static final Set<Class<?>> VOID_TYPES = new HashSet<>(Arrays.asList(Void.class, void.class));
+ 
+     public ExecuteQueriesDelegate(Neo4jSession session) {
+@@ -287,7 +287,7 @@
+     }
+ 
+     private static boolean mayBeReadWrite(String cypher) {
+-        Matcher matcher = WRITE_CYPHER_KEYWORDS.matcher(cypher.toUpperCase());
++        Matcher matcher = WRITE_CYPHER_KEYWORDS.matcher(cypher);
+         return matcher.find();
+     }
+ 

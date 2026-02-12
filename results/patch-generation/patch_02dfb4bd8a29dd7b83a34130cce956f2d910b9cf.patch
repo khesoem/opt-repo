@@ -1,0 +1,56 @@
+--- /workspace/project_original/model/jpa/src/main/java/org/keycloak/models/jpa/JpaRealmProvider.java	2026-01-08 21:32:32.000000000 +0000
++++ model/jpa/src/main/java/org/keycloak/models/jpa/JpaRealmProvider.java	2026-02-10 22:02:05.313868847 +0000
+@@ -121,18 +121,24 @@
+         realm.setName(name);
+         realm.setId(id);
+         em.persist(realm);
+-        em.flush();
+-        final RealmModel adapter = new RealmAdapter(session, em, realm);
+-        session.getKeycloakSessionFactory().publish(new RealmModel.RealmCreationEvent() {
+-            @Override
+-            public RealmModel getCreatedRealm() {
+-                return adapter;
+-            }
+-            @Override
+-            public KeycloakSession getKeycloakSession() {
+-            	return session;
+-            }
+-        });
++        final RealmAdapter adapter = new RealmAdapter(session, em, realm);
++        // Suspend flushes during event publishing to avoid unnecessary DB flushes triggered by event listeners.
++        adapter.suspendFlush();
++        try {
++            session.getKeycloakSessionFactory().publish(new RealmModel.RealmCreationEvent() {
++                @Override
++                public RealmModel getCreatedRealm() {
++                    return adapter;
++                }
++                @Override
++                public KeycloakSession getKeycloakSession() {
++                    return session;
++                }
++            });
++        } finally {
++            // Resume and perform a single flush afterwards to persist changes.
++            adapter.resumeFlush();
++        }
+         return adapter;
+     }
+ 
+--- /workspace/project_original/model/jpa/src/main/java/org/keycloak/models/jpa/RealmAdapter.java	2026-01-08 21:32:32.000000000 +0000
++++ model/jpa/src/main/java/org/keycloak/models/jpa/RealmAdapter.java	2026-02-10 22:01:28.910861896 +0000
+@@ -64,6 +64,14 @@
+     protected RealmEntity realm;
+     protected EntityManager em;
+     protected KeycloakSession session;
++    private boolean suspendFlush = false;
++
++    public void suspendFlush() { this.suspendFlush = true; }
++    public void resumeFlush() { this.suspendFlush = false; em.flush(); }
++
++    private void maybeFlush() {
++        if (!suspendFlush) em.flush();
++    }
+ 
+     @Override
+     public Long getClientsCount() {
