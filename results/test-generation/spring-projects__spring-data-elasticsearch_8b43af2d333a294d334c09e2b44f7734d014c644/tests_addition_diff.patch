@@ -1,0 +1,82 @@
+diff -uNr original_repo/src/test/java/org/springframework/data/elasticsearch/geo/GeneratedTests.java original_with_tests/src/test/java/org/springframework/data/elasticsearch/geo/GeneratedTests.java
+--- original_repo/src/test/java/org/springframework/data/elasticsearch/geo/GeneratedTests.java	1970-01-01 00:00:00.000000000 +0000
++++ original_with_tests/src/test/java/org/springframework/data/elasticsearch/geo/GeneratedTests.java	2026-02-19 19:04:03.209936622 +0000
+@@ -0,0 +1,78 @@
++package org.springframework.data.elasticsearch.geo;
++
++import org.junit.jupiter.api.Test;
++import org.springframework.data.elasticsearch.core.geo.GeoJsonLineString;
++import org.springframework.data.elasticsearch.core.geo.GeoJsonMultiPoint;
++import org.springframework.data.elasticsearch.core.geo.GeoJsonPolygon;
++import org.springframework.data.geo.Point;
++
++import static org.junit.jupiter.api.Assertions.assertTrue;
++
++public class GeneratedTests {
++
++    @Test
++    public void lineStringCreationBenchmark() {
++        final int ITERATIONS = 4000;
++        final int OTHERS = 50; // ensure more than default ArrayList capacity to trigger growth in original code
++
++        int totalPoints = 0;
++        Point[] others = new Point[OTHERS];
++        for (int i = 0; i < OTHERS; i++) {
++            others[i] = new Point(i, i + 0.5);
++        }
++
++        long start = System.nanoTime();
++        for (int i = 0; i < ITERATIONS; i++) {
++            GeoJsonLineString ls = GeoJsonLineString.of(new Point(0, 0), new Point(1, 1), others);
++            totalPoints += ls.getCoordinates().size();
++        }
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++        System.out.println("lineStringCreationBenchmark time ms: " + elapsedMs);
++
++        assertTrue(totalPoints > 0);
++    }
++
++    @Test
++    public void multiPointCreationBenchmark() {
++        final int ITERATIONS = 4000;
++        final int OTHERS = 50;
++
++        int totalPoints = 0;
++        Point[] others = new Point[OTHERS];
++        for (int i = 0; i < OTHERS; i++) {
++            others[i] = new Point(i, i + 0.1);
++        }
++
++        long start = System.nanoTime();
++        for (int i = 0; i < ITERATIONS; i++) {
++            GeoJsonMultiPoint mp = GeoJsonMultiPoint.of(new Point(0, 0), new Point(1, 1), others);
++            totalPoints += mp.getCoordinates().size();
++        }
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++        System.out.println("multiPointCreationBenchmark time ms: " + elapsedMs);
++
++        assertTrue(totalPoints > 0);
++    }
++
++    @Test
++    public void polygonAsListCreationBenchmark() {
++        final int ITERATIONS = 2000;
++        final int OTHERS = 50;
++
++        int totalRings = 0;
++        Point[] others = new Point[OTHERS];
++        for (int i = 0; i < OTHERS; i++) {
++            others[i] = new Point(i, -i);
++        }
++
++        long start = System.nanoTime();
++        for (int i = 0; i < ITERATIONS; i++) {
++            GeoJsonPolygon p = GeoJsonPolygon.of(new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(0, 1), others);
++            totalRings += p.getCoordinates().size();
++        }
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++        System.out.println("polygonAsListCreationBenchmark time ms: " + elapsedMs);
++
++        assertTrue(totalRings > 0);
++    }
++}

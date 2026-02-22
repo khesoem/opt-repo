@@ -1,0 +1,68 @@
+diff --git a/core/src/test/java/org/neo4j/ogm/session/delegates/GeneratedTests.java b/core/src/test/java/org/neo4j/ogm/session/delegates/GeneratedTests.java
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/core/src/test/java/org/neo4j/ogm/session/delegates/GeneratedTests.java
+@@ -0,0 +1,62 @@
++package org.neo4j.ogm.session.delegates;
++
++import org.junit.Test;
++import org.neo4j.ogm.metadata.MetaData;
++import org.neo4j.ogm.session.Neo4jSession;
++
++import java.util.ArrayList;
++import java.util.List;
++
++import static org.junit.Assert.*;
++
++public class GeneratedTests {
++
++    // This test constructs a deep cyclic object graph to stress SaveEventDelegate.preSave traversal.
++    @Test
++    public void testPreSaveTraversalPerformance() {
++        MetaData metaData = new MetaData("org.neo4j.ogm.domain.gh609");
++        Neo4jSession session = new Neo4jSession(metaData, true, new org.neo4j.ogm.driver.Driver() {
++            @Override
++            public void configure(org.neo4j.ogm.config.Configuration config) { }
++
++            @Override
++            public java.util.function.Function<org.neo4j.ogm.transaction.TransactionManager, java.util.function.BiFunction<org.neo4j.ogm.transaction.Transaction.Type, Iterable<String>, org.neo4j.ogm.transaction.Transaction>> getTransactionFactorySupplier() {
++                return tm -> (type, bookmarks) -> null;
++            }
++
++            @Override
++            public void close() { }
++
++            @Override
++            public org.neo4j.ogm.request.Request request(org.neo4j.ogm.transaction.Transaction transaction) {
++                return null;
++            }
++
++            @Override
++            public org.neo4j.ogm.config.Configuration getConfiguration() {
++                return null;
++            }
++        });
++
++        // Build a graph of 2000 nodes in a linked cycle to force deep traversal in recursive algorithm
++        final int N = 2000;
++        java.util.List<org.neo4j.ogm.domain.gh609.CyclicNodeType> nodes = new ArrayList<>(N);
++        for (int i = 0; i < N; i++) {
++            nodes.add(new org.neo4j.ogm.domain.gh609.CyclicNodeType());
++        }
++        for (int i = 0; i < N; i++) {
++            // set subordinateNodeTypes to point to next node
++            java.util.List<org.neo4j.ogm.domain.gh609.CyclicNodeType> list = new java.util.ArrayList<>();
++            list.add(nodes.get((i+1)%N));
++            nodes.get(i).setSubordinateNodeTypes(list);
++        }
++
++        long start = System.nanoTime();
++        session.register(new org.neo4j.ogm.session.event.EventListenerAdapter());
++        session.save(nodes.get(0), 0);
++        long took = System.nanoTime() - start;
++        // We don't assert performance numerically here; test will be used to compare timings between versions
++        assertTrue(took > 0);
++    }
++
++}

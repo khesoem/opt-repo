@@ -1,0 +1,1 @@
+This test generates many classes in multiple packages and measures the time to lookup their module via ApplicationModules.getModuleByType(Class). The patched version optimizes contains(Class) and getModuleByType(Class) to use faster checks; thus the repeated lookups should be faster on the patched version.

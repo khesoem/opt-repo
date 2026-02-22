@@ -1,0 +1,51 @@
+*** Begin Patch
+*** Add File: buffer/src/test/java/io/netty/buffer/generated/GeneratedPerformanceTests.java
++package io.netty.buffer.generated;
++
++import io.netty.buffer.ByteBuf;
++import io.netty.buffer.Unpooled;
++import org.junit.jupiter.api.Test;
++
++import static org.junit.jupiter.api.Assertions.assertTrue;
++
++public class GeneratedPerformanceTests {
++
++    @Test
++    public void testDirectIntAccessPerformance() {
++        final int N = 3_000_000;
++        ByteBuf buf = Unpooled.directBuffer(4096);
++        try {
++            long acc = 0;
++            int mask = 4096 - 1;
++            for (int i = 0; i < N; i++) {
++                int idx = (i & mask) & ~3; // align to 4
++                buf.setInt(idx, i);
++                acc += buf.getInt(idx);
++            }
++            // prevent dead code elimination
++            assertTrue(acc >= 0);
++        } finally {
++            buf.release();
++        }
++    }
++
++    @Test
++    public void testDirectLongAccessPerformance() {
++        final int N = 1_500_000;
++        ByteBuf buf = Unpooled.directBuffer(4096);
++        try {
++            long acc = 0;
++            int mask = 4096 - 1;
++            for (int i = 0; i < N; i++) {
++                int idx = (i & mask) & ~7; // align to 8
++                buf.setLong(idx, i);
++                acc += buf.getLong(idx);
++            }
++            assertTrue(acc >= 0);
++        } finally {
++            buf.release();
++        }
++    }
++}
++
+*** End Patch

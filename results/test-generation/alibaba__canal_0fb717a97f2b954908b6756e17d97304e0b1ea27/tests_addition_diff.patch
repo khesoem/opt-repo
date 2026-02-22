@@ -1,0 +1,112 @@
+*** Begin Patch
+*** Add File: server/src/test/java/com/alibaba/otter/canal/common/GeneratedTests.java
++package com.alibaba.otter.canal.common;
++
++import java.lang.reflect.Array;
++import java.lang.reflect.Method;
++import java.util.ArrayList;
++import java.util.List;
++import java.util.concurrent.ArrayBlockingQueue;
++import java.util.concurrent.ThreadPoolExecutor;
++import java.util.concurrent.TimeUnit;
++
++import org.junit.Test;
++
++import com.alibaba.otter.canal.protocol.CanalEntry;
++import com.alibaba.otter.canal.protocol.CanalEntry.Entry;
++import com.alibaba.otter.canal.protocol.CanalEntry.RowChange;
++import com.alibaba.otter.canal.protocol.CanalEntry.RowData;
++import com.alibaba.otter.canal.protocol.CanalEntry.Column;
++import com.alibaba.otter.canal.protocol.Message;
++
++import static org.junit.Assert.assertNotNull;
++
++public class GeneratedTests {
++
++    @Test
++    public void testMessageConversionPerformance() throws Exception {
++        final int COUNT = 400; // number of entries to build
++
++        List<Entry> entries = new ArrayList<Entry>();
++        for (int i = 0; i < COUNT; i++) {
++            RowChange.Builder rc = RowChange.newBuilder();
++            rc.setIsDdl(false);
++            rc.setEventType(CanalEntry.EventType.INSERT);
++
++            RowData.Builder rd = RowData.newBuilder();
++            Column.Builder col = Column.newBuilder();
++            col.setName("col");
++            col.setIsNull(false);
++            col.setUpdated(true);
++            col.setIsKey(i % 10 == 0);
++            col.setMysqlType("varchar");
++            col.setSqlType(12);
++            col.setValue("value-" + i);
++            rd.addAfterColumns(col.build());
++            rc.addRowDatas(rd.build());
++
++            Entry.Builder eb = Entry.newBuilder();
++            eb.setEntryType(CanalEntry.EntryType.ROWDATA);
++            CanalEntry.Header.Builder hb = CanalEntry.Header.newBuilder();
++            hb.setSchemaName("testdb");
++            hb.setTableName("testtable");
++            eb.setHeader(hb.build());
++            eb.setStoreValue(rc.build().toByteString());
++
++            entries.add(eb.build());
++        }
++
++        Message message = new Message(1000, entries);
++
++        Class<?> utils = Class.forName("com.alibaba.otter.canal.common.MQMessageUtils");
++
++        long start, end;
++
++        // detect patched methods via reflection
++        Method buildMethod = null;
++        Method convertMethod = null;
++        Class<?> entryRowDataClass = null;
++        try {
++            entryRowDataClass = Class.forName("com.alibaba.otter.canal.common.MQMessageUtils$EntryRowData");
++            buildMethod = utils.getMethod("buildMessageData", Message.class, ThreadPoolExecutor.class);
++            convertMethod = utils.getMethod("messageConverter", Array.newInstance(entryRowDataClass,0).getClass(), long.class);
++        } catch (NoSuchMethodException nsme) {
++            // fallback to original
++            convertMethod = utils.getMethod("messageConverter", Message.class);
++        }
++
++        // warm up
++        if (buildMethod != null) {
++            ThreadPoolExecutor executor = new ThreadPoolExecutor(8, 8, 0L, TimeUnit.SECONDS,
++                new ArrayBlockingQueue<Runnable>(32), new ThreadPoolExecutor.CallerRunsPolicy());
++            Object datas = buildMethod.invoke(null, message, executor);
++            Object flat1 = convertMethod.invoke(null, datas, message.getId());
++            assertNotNull(flat1);
++            executor.shutdownNow();
++        } else {
++            Object flat1 = convertMethod.invoke(null, message);
++            assertNotNull(flat1);
++        }
++
++        // measure
++        start = System.nanoTime();
++        if (buildMethod != null) {
++            ThreadPoolExecutor executor = new ThreadPoolExecutor(8, 8, 0L, TimeUnit.SECONDS,
++                new ArrayBlockingQueue<Runnable>(32), new ThreadPoolExecutor.CallerRunsPolicy());
++            Object datas = buildMethod.invoke(null, message, executor);
++            Object flat = convertMethod.invoke(null, datas, message.getId());
++            assertNotNull(flat);
++            executor.shutdownNow();
++        } else {
++            Object flat = convertMethod.invoke(null, message);
++            assertNotNull(flat);
++        }
++        end = System.nanoTime();
++
++        double elapsedSeconds = (end - start) / 1_000_000_000.0;
++        System.out.println("PERF Test message conversion elapsed: " + elapsedSeconds + " s");
++
++    }
++}
++
+*** End Patch

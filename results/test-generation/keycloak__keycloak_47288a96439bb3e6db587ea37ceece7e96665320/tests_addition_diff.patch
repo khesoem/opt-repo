@@ -1,0 +1,91 @@
+diff --git a/services/src/test/java/org/keycloak/broker/saml/mappers/GeneratedTests.java b/services/src/test/java/org/keycloak/broker/saml/mappers/GeneratedTests.java
+new file mode 100644
+index 0000000..200f89e
+--- /dev/null
++++ b/services/src/test/java/org/keycloak/broker/saml/mappers/GeneratedTests.java
+@@ -0,0 +1,200 @@
++package org.keycloak.broker.saml.mappers;
++
++import org.junit.Test;
++import org.keycloak.broker.provider.ConfigConstants;
++import org.keycloak.broker.provider.IdentityProviderMapperModel;
++import org.keycloak.broker.provider.BrokeredIdentityContext;
++import org.keycloak.models.KeycloakSession;
++import org.keycloak.models.RealmModel;
++import org.keycloak.models.RoleModel;
++import org.keycloak.models.UserModel;
++import org.mockito.Mockito;
++
++import java.util.HashMap;
++import java.util.Map;
++import java.util.stream.Stream;
++
++/**
++ * Generated performance test that demonstrates the effect of avoiding unnecessary role grants/deletes in the
++ * AbstractAttributeToRoleMapper. The test simulates expensive grantRole/deleteRoleMapping operations by
++ * introducing a short sleep in the mocked methods. The patched implementation avoids calling these methods when
++ * the user already has (or doesn't have) the role which makes the test run significantly faster on the patched
++ * codebase compared to the original.
++ */
++public class GeneratedTests {
++
++    @Test
++    public void performanceTestAvoidUnnecessaryGrant() {
++        // Create a mapper that always applies
++        AbstractAttributeToRoleMapper mapper = new AbstractAttributeToRoleMapper() {
++            @Override
++            protected boolean applies(IdentityProviderMapperModel mapperModel, BrokeredIdentityContext context) {
++                return true; // mapping always applies
++            }
++        };
++
++        KeycloakSession session = Mockito.mock(KeycloakSession.class);
++        RealmModel realm = Mockito.mock(RealmModel.class);
++        RoleModel role = Mockito.mock(RoleModel.class);
++        UserModel user = Mockito.mock(UserModel.class);
++
++        // Configure role as realm role (not a client role)
++        Mockito.when(role.isClientRole()).thenReturn(false);
++
++        // Realm should return the role by name when getRole is invoked via KeycloakModelUtils.getRoleFromString
++        Mockito.when(realm.getRole(Mockito.anyString())).thenReturn(role);
++
++        // Prepare mapper model with role name
++        IdentityProviderMapperModel mapperModel = Mockito.mock(IdentityProviderMapperModel.class);
++        Map<String, String> cfg = new HashMap<>();
++        cfg.put(ConfigConstants.ROLE, "somerole");
++        Mockito.when(mapperModel.getConfig()).thenReturn(cfg);
++
++        // Context: indicate that no previous mapper granted the role
++        BrokeredIdentityContext context = Mockito.mock(BrokeredIdentityContext.class);
++        Mockito.when(context.hasMapperGrantedRole(Mockito.anyString())).thenReturn(false);
++
++        // Simulate that the user already has the realm role so patched code will avoid calling grantRole.
++        // Return a fresh stream each time to avoid stream reuse issues.
++        Mockito.when(user.getRealmRoleMappingsStream()).thenAnswer(invocation -> Stream.of(role));
++
++        // Simulate expensive grantRole/deleteRoleMapping implementations by sleeping
++        try {
++            Mockito.doAnswer(invocation -> {
++                Thread.sleep(10); // simulate DB operation
++                return null;
++            }).when(user).grantRole(Mockito.any(RoleModel.class));
++
++            Mockito.doAnswer(invocation -> {
++                Thread.sleep(10); // simulate DB operation
++                return null;
++            }).when(user).deleteRoleMapping(Mockito.any(RoleModel.class));
++        } catch (Exception ignored) {
++        }
++
++        // Run the updateBrokeredUser multiple times to amplify the difference between patched and original
++        final int ITER = 80;
++        long start = System.nanoTime();
++        for (int i = 0; i < ITER; i++) {
++            mapper.updateBrokeredUser(session, realm, user, mapperModel, context);
++        }
++        long elapsed = System.nanoTime() - start;
++        System.out.println("GeneratedTests.performanceTestAvoidUnnecessaryGrant: Time elapsed (ms) = " + (elapsed / 1_000_000));
++    }
++}
++

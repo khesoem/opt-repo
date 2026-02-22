@@ -1,0 +1,51 @@
+diff --git a/common/src/test/java/org/keycloak/common/util/PerformanceSecretGeneratorTest.java b/common/src/test/java/org/keycloak/common/util/PerformanceSecretGeneratorTest.java
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/common/src/test/java/org/keycloak/common/util/PerformanceSecretGeneratorTest.java
+@@ -0,0 +1,200 @@
++package org.keycloak.common.util;
++
++import org.junit.Test;
++
++import static org.junit.Assert.assertNotNull;
++
++public class PerformanceSecretGeneratorTest {
++
++    /**
++     * This test performs many calls to SecretGenerator APIs that were optimized by the patch.
++     * It is intended to amplify the performance difference between the original and patched
++     * implementations so the Maven test timing (Time elapsed) shows a measurable improvement.
++     */
++    @Test
++    public void testSecureIdAndHexGenerationPerformance() {
++        final SecretGenerator gen = SecretGenerator.getInstance();
++
++        // Warm up to reduce JIT noise
++        for (int i = 0; i < 5_000; i++) {
++            String id = gen.generateSecureID();
++            String hex = gen.randomBytesHex(16);
++            assertNotNull(id);
++            assertNotNull(hex);
++        }
++
++        final int ITER = 50_000;
++
++        // Heavy loop: generate many secure IDs
++        for (int i = 0; i < ITER; i++) {
++            String id = gen.generateSecureID();
++            // keep a small assertion to ensure work is not optimized away
++            if (id == null || id.length() == 0) {
++                throw new AssertionError("generateSecureID returned empty");
++            }
++        }
++
++        // Heavy loop: generate many hex-encoded random byte arrays
++        for (int i = 0; i < ITER; i++) {
++            String hex = gen.randomBytesHex(16);
++            if (hex == null || hex.length() == 0) {
++                throw new AssertionError("randomBytesHex returned empty");
++            }
++        }
++    }
++}

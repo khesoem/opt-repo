@@ -1,0 +1,46 @@
+package com.gluonhq.richtext.perf;
+
+import com.gluonhq.richtext.model.TextDecoration;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Method;
+
+public class TextDecorationCreationTest {
+
+    @Test
+    public void measureDecorationBuilderCreation() throws Exception {
+        final int N = 200_000; // keep high enough to show difference but small enough to run quickly
+        Method builderMethod = TextDecoration.class.getMethod("builder");
+
+        long start = System.nanoTime();
+        for (int i = 0; i < N; i++) {
+            Object builder = builderMethod.invoke(null);
+            // try original API
+            try {
+                Method fontMethod = builder.getClass().getMethod("font", Font.class);
+                Font f = Font.font("Arial", 12 + (i % 3));
+                fontMethod.invoke(builder, f);
+                Method build = builder.getClass().getMethod("build");
+                build.invoke(builder);
+            } catch (NoSuchMethodException ex) {
+                // patched API
+                Method ffm = builder.getClass().getMethod("fontFamily", String.class);
+                Method fsm = builder.getClass().getMethod("fontSize", double.class);
+                Method fwm = builder.getClass().getMethod("fontWeight", FontWeight.class);
+                Method fpm = builder.getClass().getMethod("fontPosture", FontPosture.class);
+                ffm.invoke(builder, "Arial");
+                fsm.invoke(builder, 12.0 + (i % 3));
+                fwm.invoke(builder, FontWeight.NORMAL);
+                fpm.invoke(builder, FontPosture.REGULAR);
+                Method build = builder.getClass().getMethod("build");
+                build.invoke(builder);
+            }
+        }
+        long end = System.nanoTime();
+        double elapsedMs = (end - start) / 1_000_000.0;
+        System.out.println("Decorations creation time for " + N + " items: " + elapsedMs + " ms");
+    }
+}

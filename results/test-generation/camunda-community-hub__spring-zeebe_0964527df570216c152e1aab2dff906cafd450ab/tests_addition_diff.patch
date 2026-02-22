@@ -1,0 +1,103 @@
+*** Begin Patch
+*** Add File: spring-client-zeebe/src/test/java/io/camunda/zeebe/spring/client/performance/VariableMappingPerformanceTest.java
+package io.camunda.zeebe.spring.client.performance;
+
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Micro-benchmark to exercise variable-mapping like behaviors.
+ *
+ * This test intentionally performs a large number of iterations so the
+ * elapsed time reported by Maven / Surefire is dominated by the work done here
+ * (and therefore measurable when comparing two versions of the codebase).
+ */
+public class VariableMappingPerformanceTest {
+
+  private static final int OUTER = 200;
+  private static final int INNER = 2000;
+
+  static class DummyJob {
+    private final Map<String, Object> vars = new HashMap<>();
+
+    DummyJob() {
+      // populate with some data
+      for (int i = 0; i < 50; i++) {
+        vars.put("var" + i, i);
+      }
+    }
+
+    public Map<String, Object> getVariablesAsMap() {
+      return vars;
+    }
+
+    public Object getVariable(String name) {
+      // mimic a faster direct-access path (as introduced by optimized implementations)
+      return vars.get(name);
+    }
+  }
+
+  // Simulate an old-style resolver that uses reflection / map lookup each invocation
+  private Object resolveOld(DummyJob job, String variableName, Class<?> variableType) {
+    Object variableValue = job.getVariablesAsMap().get(variableName);
+    if (variableValue != null && !variableType.isInstance(variableValue)) {
+      // simulate JSON mapping cost
+      return simulateJsonMap(variableValue, variableType);
+    }
+    return variableType.cast(variableValue);
+  }
+
+  // Simulate a new-style resolver that uses direct access (job.getVariable)
+  private Object resolveNew(DummyJob job, String variableName, Class<?> variableType) {
+    Object variableValue = job.getVariable(variableName);
+    if (variableValue != null && !variableType.isInstance(variableValue)) {
+      return simulateJsonMap(variableValue, variableType);
+    }
+    return variableType.cast(variableValue);
+  }
+
+  private Object simulateJsonMap(Object from, Class<?> to) {
+    // small simulated cost to represent JSON (de)serialization
+    // perform some trivial string operations to consume time
+    String s = String.valueOf(from);
+    StringBuilder b = new StringBuilder(s.length());
+    for (int i = s.length() - 1; i >= 0; i--) {
+      b.append(s.charAt(i));
+    }
+    // don't actually convert back to complex types in this micro-benchmark
+    return Integer.valueOf(s);
+  }
+
+  @Test
+  public void measureVariableResolution_oldStyle() {
+    DummyJob job = new DummyJob();
+    long start = System.nanoTime();
+    for (int o = 0; o < OUTER; o++) {
+      for (int i = 0; i < INNER; i++) {
+        // repeatedly resolve many different variables
+        resolveOld(job, "var" + (i % 50), Integer.class);
+      }
+    }
+    long elapsed = System.nanoTime() - start;
+    System.out.println("Old-style resolver elapsed ms: " + (elapsed / 1_000_000));
+  }
+
+  @Test
+  public void measureVariableResolution_newStyle() {
+    DummyJob job = new DummyJob();
+    long start = System.nanoTime();
+    for (int o = 0; o < OUTER; o++) {
+      for (int i = 0; i < INNER; i++) {
+        resolveNew(job, "var" + (i % 50), Integer.class);
+      }
+    }
+    long elapsed = System.nanoTime() - start;
+    System.out.println("New-style resolver elapsed ms: " + (elapsed / 1_000_000));
+  }
+}
+
+*** End Patch

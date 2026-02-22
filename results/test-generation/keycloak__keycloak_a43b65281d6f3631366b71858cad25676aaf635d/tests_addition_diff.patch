@@ -1,0 +1,137 @@
+--- /dev/null	2026-02-19 01:14:08.049376714 +0000
++++ /workspace/original_repo/authz/policy/common/src/test/java/org/keycloak/authorization/policy/provider/user/GeneratedTests.java	2026-02-19 01:22:45.127268645 +0000
+@@ -0,0 +1,134 @@
++package org.keycloak.authorization.policy.provider.user;
++
++import org.junit.Test;
++import org.keycloak.authorization.AuthorizationProvider;
++import org.keycloak.authorization.policy.provider.user.UserPolicyProviderFactory;
++import org.keycloak.authorization.model.Policy;
++import org.keycloak.representations.idm.authorization.UserPolicyRepresentation;
++import org.keycloak.models.KeycloakSession;
++import org.keycloak.models.RealmModel;
++import org.keycloak.models.UserModel;
++import org.keycloak.models.UserProvider;
++
++import java.lang.reflect.InvocationHandler;
++import java.lang.reflect.Method;
++import java.lang.reflect.Proxy;
++import java.util.*;
++
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertNotNull;
++
++public class GeneratedTests {
++
++    @Test
++    public void performanceTest() throws Exception {
++        // number of user ids to test - chosen to amplify the overhead of an unnecessary username lookup
++        final int USERS = 200;
++        List<String> ids = new ArrayList<>();
++        for (int i = 0; i < USERS; i++) {
++            ids.add(UUID.randomUUID().toString());
++        }
++
++        // Prepare JSON array string like ["id1","id2",...]
++        StringBuilder sb = new StringBuilder();
++        sb.append('[');
++        for (int i = 0; i < ids.size(); i++) {
++            if (i > 0) sb.append(',');
++            sb.append('"').append(ids.get(i)).append('"');
++        }
++        sb.append(']');
++        final String usersJson = sb.toString();
++
++        // Create a single UserModel instance that returns id when getId() called
++        UserModel sampleUser = (UserModel) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{UserModel.class}, new InvocationHandler() {
++            @Override
++            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                if ("getId".equals(method.getName())) return "SAMPLE_ID";
++                if ("getUsername".equals(method.getName())) return "SAMPLE_USERNAME";
++                Class<?> rt = method.getReturnType();
++                if (rt.isPrimitive()) {
++                    if (rt == boolean.class) return false;
++                    if (rt == int.class) return 0;
++                    if (rt == long.class) return 0L;
++                    if (rt == double.class) return 0.0;
++                }
++                return null;
++            }
++        });
++
++        // Create a UserProvider proxy. getUserByUsername will sleep (simulating expensive LDAP lookup)
++        // getUserById will return a non-null user quickly.
++        final long SLEEP_MS = 10L; // per-call sleep to simulate slow username lookup
++
++        UserProvider userProvider = (UserProvider) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{UserProvider.class}, new InvocationHandler() {
++            @Override
++            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                String name = method.getName();
++                if ("getUserByUsername".equals(name)) {
++                    // simulate slow path - username lookup on a UUID
++                    Thread.sleep(SLEEP_MS);
++                    return null;
++                }
++                if ("getUserById".equals(name)) {
++                    // fast path - return a user model
++                    return sampleUser;
++                }
++                // other methods - return reasonable defaults
++                Class<?> rt = method.getReturnType();
++                if (rt == boolean.class) return false;
++                if (rt == int.class) return 0;
++                return null;
++            }
++        });
++
++        // KeycloakSession proxy that returns our UserProvider
++        KeycloakSession session = (KeycloakSession) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{KeycloakSession.class}, new InvocationHandler() {
++            @Override
++            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                if ("users".equals(method.getName())) return userProvider;
++                // other methods not used in this test
++                return null;
++            }
++        });
++
++        // RealmModel proxy - not used directly by our provider stub, but required by AuthorizationProvider
++        RealmModel realm = (RealmModel) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{RealmModel.class}, (proxy, method, args1) -> null);
++
++        AuthorizationProvider authorization = new AuthorizationProvider(session, realm, null);
++
++        // Policy proxy that supplies the users JSON through getConfig().get("users")
++        Map<String, String> config = new HashMap<>();
++        config.put("users", usersJson);
++
++        Policy policy = (Policy) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{Policy.class}, new InvocationHandler() {
++            @Override
++            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                String name = method.getName();
++                if ("getConfig".equals(name)) return config;
++                if ("getName".equals(name)) return "testPolicy";
++                Class<?> rt = method.getReturnType();
++                if (rt == boolean.class) return false;
++                if (rt == int.class) return 0;
++                return null;
++            }
++        });
++
++        UserPolicyProviderFactory factory = new UserPolicyProviderFactory();
++
++        // Run the conversion several times to amplify timing difference between calling username lookup first vs id lookup first
++        final int ITERATIONS = 3;
++        for (int i = 0; i < ITERATIONS; i++) {
++            long t0 = System.currentTimeMillis();
++            UserPolicyRepresentation rep = factory.toRepresentation(policy, authorization);
++            long t1 = System.currentTimeMillis();
++            long elapsed = t1 - t0;
++
++            assertNotNull(rep);
++            // the representation should keep all users that could be resolved by id
++            assertEquals(USERS, rep.getUsers().size());
++
++            // Log times to stdout to make it visible in Maven surefire output
++            System.out.println("Iteration " + i + " elapsed ms: " + elapsed);
++        }
++    }
++}

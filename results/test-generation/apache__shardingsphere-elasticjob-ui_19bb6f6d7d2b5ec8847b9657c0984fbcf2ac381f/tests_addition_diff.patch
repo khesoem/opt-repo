@@ -1,0 +1,64 @@
+*** Begin Patch
+*** Add File: shardingsphere-elasticjob-cloud-ui/shardingsphere-elasticjob-cloud-ui-backend/src/test/java/org/apache/shardingsphere/elasticjob/cloud/ui/security/GeneratedTests.java
++package org.apache.shardingsphere.elasticjob.cloud.ui.security;
++
++import org.junit.Test;
++import javax.servlet.FilterChain;
++import javax.servlet.ServletException;
++import javax.servlet.ServletRequest;
++import javax.servlet.ServletResponse;
++import javax.servlet.http.HttpServletRequest;
++import javax.servlet.http.HttpServletResponse;
++import java.io.IOException;
++import java.io.PrintWriter;
++import java.io.StringWriter;
++
++import static org.mockito.Mockito.*;
++
++/**
++ * Generated performance test to amplify the cost of creating new Gson instances in respondWithUnauthorized().
++ */
++public class GeneratedTests {
++
++    @Test
++    public void measureRespondWithUnauthorizedManyTimes() throws IOException, ServletException {
++        AuthenticationFilter filter = new AuthenticationFilter();
++        // UserAuthenticationService won't be used when access token is missing, but provide a simple mock to satisfy setter
++        filter.setUserAuthenticationService(mock(UserAuthenticationService.class));
++
++        HttpServletRequest request = mock(HttpServletRequest.class);
++        when(request.getRequestURI()).thenReturn("/api/other");
++        when(request.getHeader("Access-Token")).thenReturn(null);
++
++        HttpServletResponse response = mock(HttpServletResponse.class);
++        StringWriter sw = new StringWriter();
++        PrintWriter pw = new PrintWriter(sw);
++        when(response.getWriter()).thenReturn(pw);
++
++        FilterChain chain = mock(FilterChain.class);
++
++        // Warm up
++        for (int i = 0; i < 500; i++) {
++            filter.doFilter(request, response, chain);
++        }
++
++        int iterations = 20000;
++        long start = System.nanoTime();
++        for (int i = 0; i < iterations; i++) {
++            filter.doFilter(request, response, chain);
++        }
++        long end = System.nanoTime();
++        double seconds = (end - start) / 1_000_000_000.0;
++        System.out.println("GeneratedTests.measureRespondWithUnauthorizedManyTimes: iterations=" + iterations + ", time(s)=" + seconds);
++
++        // Ensure writer flushed
++        pw.flush();
++        // basic smoke check to ensure output contains Unauthorized
++        String out = sw.toString();
++        if (!out.contains("Unauthorized")) {
++            throw new AssertionError("expected unauthorized text");
++        }
++    }
++}
++
+*** End Patch

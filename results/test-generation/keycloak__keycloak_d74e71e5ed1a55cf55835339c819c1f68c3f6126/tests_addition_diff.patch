@@ -1,0 +1,145 @@
+diff --git a/server-spi-private/src/test/java/org/keycloak/models/utils/GeneratedTests.java b/server-spi-private/src/test/java/org/keycloak/models/utils/GeneratedTests.java
+new file mode 100644
+index 0000000..468fff2
+--- /dev/null
++++ b/server-spi-private/src/test/java/org/keycloak/models/utils/GeneratedTests.java
+@@ -0,0 +1,139 @@
++package org.keycloak.models.utils;
++
++import org.junit.Assert;
++import org.junit.Test;
++import org.keycloak.models.ClientModel;
++import org.keycloak.models.ClientScopeModel;
++import org.keycloak.models.RealmModel;
++import org.keycloak.representations.idm.ClientRepresentation;
++
++import java.lang.reflect.InvocationHandler;
++import java.lang.reflect.Method;
++import java.lang.reflect.Proxy;
++import java.util.*;
++import java.util.stream.Collectors;
++import java.util.stream.Stream;
++
++public class GeneratedTests {
++
++    @SuppressWarnings("unchecked")
++    private <T> T proxy(Class<T> intf, InvocationHandler h) {
++        return (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{intf}, h);
++    }
++
++    @SuppressWarnings("unchecked")
++    private <T> T proxy(Class<?>[] ifs, InvocationHandler h) {
++        return (T) Proxy.newProxyInstance(getClass().getClassLoader(), ifs, h);
++    }
++
++    @Test
++    public void testUpdateClientScopesPerformance() {
++        // use dynamic proxies so we don't need to implement the whole Keycloak interfaces
++        Map<String, Map<String, Object>> scopes = new LinkedHashMap<>();
++
++        Class<?> clientScopeIfc = ClientScopeModel.class;
++
++        // create many scopes
++        final int scopeCount = 600;
++        for (int i = 0; i < scopeCount; i++) {
++            final String name = "scope-" + i;
++            final String id = UUID.randomUUID().toString();
++            Map<String, Object> meta = new HashMap<>();
++            meta.put("name", name);
++            meta.put("id", id);
++
++            Object scopeProxy = proxy(new Class[]{clientScopeIfc}, (proxy, method, args) -> {
++                String m = method.getName();
++                if (m.equals("getName")) return name;
++                if (m.equals("getId")) return id;
++                if (m.equals("toString")) return "Scope(" + name + ")";
++                // default return values
++                if (method.getReturnType() == boolean.class) return false;
++                return null;
++            });
++            meta.put("proxy", scopeProxy);
++            scopes.put(name, meta);
++        }
++
++        // realm proxy provides stream of scopes
++        RealmModel realm = proxy(RealmModel.class, (proxy, method, args) -> {
++            if ("getClientScopesStream".equals(method.getName())) {
++                return scopes.values().stream().map(m -> m.get("proxy")).map(o -> (ClientScopeModel) o);
++            }
++            if ("getClientScopeById".equals(method.getName()) && args != null && args.length == 1) {
++                String id = (String) args[0];
++                for (Map<String, Object> m : scopes.values()) if (Objects.equals(m.get("id"), id)) return m.get("proxy");
++                return null;
++            }
++            if ("getClientScopeByName".equals(method.getName()) && args != null && args.length == 1) {
++                return scopes.get(args[0]) == null ? null : scopes.get(args[0]).get("proxy");
++            }
++            // fallback
++            return null;
++        });
++
++        // create desired lists
++        List<String> defaultScopes = new ArrayList<>();
++        List<String> optionalScopes = new ArrayList<>();
++        for (int i = 0; i < scopeCount; i++) {
++            if (i % 3 == 0) defaultScopes.add("scope-" + i);
++            if (i % 5 == 0) optionalScopes.add("scope-" + i);
++        }
++
++        ClientRepresentation rep = new ClientRepresentation();
++        rep.setDefaultClientScopes(defaultScopes);
++        rep.setOptionalClientScopes(optionalScopes);
++
++        // client proxy keeps maps of default and optional scopes and references realm
++        Map<String, ClientScopeModel> clientDefault = new LinkedHashMap<>();
++        Map<String, ClientScopeModel> clientOptional = new LinkedHashMap<>();
++
++        ClientModel client = proxy(new Class[]{ClientModel.class}, (proxy, method, args) -> {
++            String m = method.getName();
++            if ("getClientScopes".equals(m) && args != null && args.length == 1) {
++                boolean def = (Boolean) args[0];
++                return def ? new HashMap<>(clientDefault) : new HashMap<>(clientOptional);
++            }
++            if ("addClientScope".equals(m) && args != null && args.length == 2) {
++                ClientScopeModel cs = (ClientScopeModel) args[0];
++                boolean def = (Boolean) args[1];
++                if (def) clientDefault.put(cs.getName(), cs); else clientOptional.put(cs.getName(), cs);
++                return null;
++            }
++            if ("removeClientScope".equals(m) && args != null && args.length == 1) {
++                ClientScopeModel cs = (ClientScopeModel) args[0];
++                clientDefault.remove(cs.getName());
++                clientOptional.remove(cs.getName());
++                return null;
++            }
++            if ("getRealm".equals(m)) return realm;
++            if ("updateClient".equals(m)) return null;
++            return null;
++        });
++
++        // pre-populate client with many scopes (some default, some optional, some both)
++        int idx = 0;
++        for (Map.Entry<String, Map<String, Object>> e : scopes.entrySet()) {
++            ClientScopeModel proxyScope = (ClientScopeModel) e.getValue().get("proxy");
++            if (idx % 2 == 0) clientDefault.put(proxyScope.getName(), proxyScope);
++            if (idx % 7 == 0) clientOptional.put(proxyScope.getName(), proxyScope);
++            idx++;
++        }
++
++        // warmup
++        for (int i = 0; i < 5; i++) {
++            RepresentationToModel.updateClientScopes(rep, client);
++        }
++
++        long start = System.nanoTime();
++        int iterations = 30;
++        for (int i = 0; i < iterations; i++) {
++            RepresentationToModel.updateClientScopes(rep, client);
++        }
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++
++        System.out.println("Elapsed ms for updateClientScopes: " + elapsedMs);
++        Assert.assertTrue("elapsed should be positive", elapsedMs > 0);
++    }
++}
++

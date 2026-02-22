@@ -1,0 +1,96 @@
+--- a/spring-modulith-core/src/test/java/org/springframework/modulith/core/GeneratedTests.java
++++ b/spring-modulith-core/src/test/java/org/springframework/modulith/core/GeneratedTests.java
+@@ -0,0 +1,93 @@
++package org.springframework.modulith.core;
++
++import static org.junit.jupiter.api.Assertions.*;
++
++import java.io.IOException;
++import java.net.URL;
++import java.net.URLClassLoader;
++import java.nio.charset.StandardCharsets;
++import java.nio.file.Files;
++import java.nio.file.Path;
++import java.util.stream.IntStream;
++
++import javax.tools.JavaCompiler;
++import javax.tools.StandardJavaFileManager;
++import javax.tools.ToolProvider;
++
++import org.junit.jupiter.api.Test;
++
++import com.tngtech.archunit.core.importer.ClassFileImporter;
++
++public class GeneratedTests {
++
++    @Test
++    void moduleLookupPerformance() throws Exception {
++        int modules = 21;
++        int classesPerModule = 200; // ~4200 classes
++        int iterations = 2000; // repeated lookups
++
++        Path temp = Files.createTempDirectory("generated-src");
++        try {
++            // generate sources
++            for (int m = 0; m < modules; m++) {
++                String pkg = "com.generated.module" + m;
++                Path pkgdir = temp.resolve(pkg.replace('.', '/'));
++                Files.createDirectories(pkgdir);
++                for (int c = 0; c < classesPerModule; c++) {
++                    String cls = "EventClass" + c; // same simple names across modules to stress lookup
++                    String src = "package " + pkg + "; public class " + cls + " {}\n";
++                    Files.write(pkgdir.resolve(cls + ".java"), src.getBytes(StandardCharsets.UTF_8));
++                }
++            }
++
++            // compile
++            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
++            try (StandardJavaFileManager fm = compiler.getStandardFileManager(null, null, null)) {
++                var files = Files.walk(temp).filter(p -> p.toString().endsWith(".java")).map(Path::toFile).toList();
++                var task = compiler.getTask(null, fm, null, java.util.List.of("-g"), null, fm.getJavaFileObjectsFromFiles(files));
++                Boolean ok = task.call();
++                assertTrue(Boolean.TRUE.equals(ok), "Compilation failed");
++            }
++
++            // load classes
++            URL[] urls = new URL[] { temp.toUri().toURL() };
++            try (URLClassLoader cl = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader())) {
++                Thread.currentThread().setContextClassLoader(cl);
++
++                // import classes via ArchUnit
++                // Importing the root package forces discovery of all generated classes
++                new com.tngtech.archunit.core.importer.ClassFileImporter().importPackages("com.generated");
++
++                // Build ApplicationModules for the generated package
++                var modulesObj = ApplicationModules.of("com.generated");
++
++                // pick a class that exists in multiple modules by simple name
++                Class<?> target = cl.loadClass("com.generated.module10.EventClass0");
++
++                // Warm up
++                for (int i = 0; i < 50; i++) {
++                    modulesObj.getModuleByType(target);
++                }
++
++                long start = System.nanoTime();
++                for (int i = 0; i < iterations; i++) {
++                    var maybe = modulesObj.getModuleByType(target);
++                    if (i == 0) {
++                        assertTrue(maybe.isPresent(), "module should be present for the generated class");
++                    }
++                }
++                long end = System.nanoTime();
++
++                long ms = (end - start) / 1_000_000;
++                System.out.println("Lookup time for " + iterations + " iterations: " + ms + " ms");
++            }
++        } finally {
++            // best-effort cleanup
++            try {
++                Files.walk(temp).sorted(java.util.Comparator.reverseOrder()).forEach(p -> p.toFile().delete());
++            } catch (IOException e) {
++                // ignore
++            }
++        }
++    }
++}

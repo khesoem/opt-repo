@@ -1,0 +1,95 @@
+diff --git a/shardingsphere-infra/shardingsphere-infra-executor/src/test/java/org/apache/shardingsphere/infra/executor/sql/prepare/driver/GeneratedTests.java b/shardingsphere-infra/shardingsphere-infra-executor/src/test/java/org/apache/shardingsphere/infra/executor/sql/prepare/driver/GeneratedTests.java
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/shardingsphere-infra/shardingsphere-infra-executor/src/test/java/org/apache/shardingsphere/infra/executor/sql/prepare/driver/GeneratedTests.java
+@@ -0,0 +1,160 @@
++package org.apache.shardingsphere.infra.executor.sql.prepare.driver;
++
++import org.apache.shardingsphere.infra.rule.ShardingSphereRule;
++import org.junit.Test;
++
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.Collections;
++import java.util.List;
++import java.util.concurrent.CountDownLatch;
++
++/**
++ * Generated performance test to demonstrate contention on DriverExecutionPrepareEngine constructor.
++ */
++public final class GeneratedTests {
++
++    @Test
++    public void testDriverExecutionPrepareEngineContention() throws InterruptedException {
++        final int threads = 40;
++        final int iterationsPerThread = 300; // total constructors = 12000
++        final CountDownLatch startLatch = new CountDownLatch(1);
++        final CountDownLatch doneLatch = new CountDownLatch(threads);
++        List<Thread> threadList = new ArrayList<>();
++        for (int t = 0; t < threads; t++) {
++            Thread thread = new Thread(() -> {
++                try {
++                    startLatch.await();
++                    for (int i = 0; i < iterationsPerThread; i++) {
++                        // create new instance which will trigger computeIfAbsent in constructor
++                        new DriverExecutionPrepareEngine<>("PERF", 1, new DummyExecutorDriverManager(), null, Collections.emptyList());
++                    }
++                } catch (final Exception ex) {
++                    // propagate as runtime
++                    throw new RuntimeException(ex);
++                } finally {
++                    doneLatch.countDown();
++                }
++            });
++            threadList.add(thread);
++            thread.start();
++        }
++        long start = System.nanoTime();
++        startLatch.countDown();
++        doneLatch.await();
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++        System.out.println("DriverExecutionPrepareEngine contention test elapsed: " + elapsedMs + " ms");
++    }
++
++    private static final class DummyExecutorDriverManager implements ExecutorDriverManager<Object, Object, StorageResourceOption> {
++        @Override
++        public List<Object> getConnections(final String dataSourceName, final int connectionSize, final org.apache.shardingsphere.infra.executor.sql.execute.engine.ConnectionMode connectionMode) {
++            return Collections.emptyList();
++        }
++
++        @Override
++        public Object createStorageResource(final Object connection, final org.apache.shardingsphere.infra.executor.sql.execute.engine.ConnectionMode connectionMode, final StorageResourceOption option) {
++            return null;
++        }
++
++        @Override
++        public Object createStorageResource(final String sql, final List<Object> parameters, final Object connection, final org.apache.shardingsphere.infra.executor.sql.execute.engine.ConnectionMode connectionMode, final StorageResourceOption option) {
++            return null;
++        }
++    }
++}
++
++diff --git a/EXPLANATION.md b/EXPLANATION.md
++new file mode 100644
++index 0000000..5f15663
++--- /dev/null
+++++ b/EXPLANATION.md
++@@ -0,0 +1,17 @@
++ I added a JUnit test that stresses the contention in DriverExecutionPrepareEngine's constructor
++ by concurrently creating many instances from multiple threads. The original version called
++ ConcurrentHashMap.computeIfAbsent(...) directly in the constructor which can be slower under
++ concurrent calls due to a known JDK issue; the patched version uses a pre-get then computeIfAbsent
++ pattern to reduce contention.
++
++ Test details:
++ - Class: org.apache.shardingsphere.infra.executor.sql.prepare.driver.GeneratedTests
++ - Method: testDriverExecutionPrepareEngineContention
++ - It spins up 40 threads and each thread constructs 300 DriverExecutionPrepareEngine instances
++   (12,000 total). The test prints elapsed milliseconds. Running the test on both versions
++   should show that the patched version completes faster.
++
++ Note: the environment used for automatic verification may not have a working Java/Maven setup.
++ If you run locally, execute:
++
++   ./mvnw -pl shardingsphere-infra/shardingsphere-infra-executor -am test -Dtest=org.apache.shardingsphere.infra.executor.sql.prepare.driver.GeneratedTests -Dsurefire.runOrder=alphabetical -DfailIfNoTests=false -DskipITs

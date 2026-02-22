@@ -1,0 +1,75 @@
+diff --git a/shardingsphere-infra/shardingsphere-infra-common/src/test/java/org/apache/shardingsphere/infra/metadata/schema/model/GeneratedTests.java b/shardingsphere-infra/shardingsphere-infra-common/src/test/java/org/apache/shardingsphere/infra/metadata/schema/model/GeneratedTests.java
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/shardingsphere-infra/shardingsphere-infra-common/src/test/java/org/apache/shardingsphere/infra/metadata/schema/model/GeneratedTests.java
+@@ -0,0 +1,70 @@
++package org.apache.shardingsphere.infra.metadata.schema.model;
++
++import org.junit.Test;
++
++import java.sql.Types;
++import java.util.ArrayList;
++import java.util.Collections;
++import java.util.List;
++import java.util.concurrent.CountDownLatch;
++import java.util.concurrent.ThreadLocalRandom;
++
++/**
++ * Generated performance test to show improvement after removing synchronizedMap wrapping in TableMetaData.
++ */
++public final class GeneratedTests {
++
++    @Test
++    public void testConcurrentReadPerformance() throws InterruptedException {
++        final int columns = 1000;
++        final List<ColumnMetaData> columnMetaDataList = new ArrayList<>(columns);
++        for (int i = 0; i < columns; i++) {
++            // primary key for some columns
++            columnMetaDataList.add(new ColumnMetaData("col" + i, Types.INTEGER, i % 10 == 0, false, false));
++        }
++        final TableMetaData tableMetaData = new TableMetaData("t", columnMetaDataList, Collections.emptyList());
++
++        // warm up
++        for (int i = 0; i < 10000; i++) {
++            int idx = i % columns;
++            tableMetaData.getColumnMetaData(idx);
++            tableMetaData.isPrimaryKey(idx);
++        }
++
++        final int threads = Math.max(2, Runtime.getRuntime().availableProcessors());
++        final int iterationsPerThread = 200_000;
++        final CountDownLatch startLatch = new CountDownLatch(1);
++        final CountDownLatch doneLatch = new CountDownLatch(threads);
++
++        Runnable task = () -> {
++            try {
++                startLatch.await();
++                for (int i = 0; i < iterationsPerThread; i++) {
++                    int idx = ThreadLocalRandom.current().nextInt(columns);
++                    tableMetaData.getColumnMetaData(idx);
++                    tableMetaData.isPrimaryKey(idx);
++                }
++            } catch (final InterruptedException ex) {
++                Thread.currentThread().interrupt();
++            } finally {
++                doneLatch.countDown();
++            }
++        };
++
++        for (int i = 0; i < threads; i++) {
++            new Thread(task, "perf-thread-" + i).start();
++        }
++
++        long start = System.nanoTime();
++        startLatch.countDown();
++        doneLatch.await();
++        long durationMs = (System.nanoTime() - start) / 1_000_000;
++        System.out.println("Concurrent read duration ms: " + durationMs + " (threads=" + threads + ", iterationsPerThread=" + iterationsPerThread + ")");
++
++        // trivial assertion to avoid test being ignored
++        if (durationMs < 0) {
++            throw new AssertionError("invalid duration");
++        }
++    }
++}

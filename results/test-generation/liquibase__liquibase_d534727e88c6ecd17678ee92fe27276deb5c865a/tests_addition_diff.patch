@@ -1,0 +1,157 @@
+*** Begin Patch
+*** Add File: liquibase-standard/src/test/java/liquibase/snapshot/GeneratedTests.java
++package liquibase.snapshot;
++
++import liquibase.database.Database;
++import liquibase.database.core.MockDatabase;
++import liquibase.exception.DatabaseException;
++import liquibase.structure.DatabaseObject;
++import liquibase.structure.core.Schema;
++import liquibase.structure.core.Table;
++import org.junit.jupiter.api.Test;
++
++import java.util.HashSet;
++import java.util.Set;
++
++public class GeneratedTests {
++
++    // Create a number of dummy DatabaseObject subclasses to inflate the snapshotControl types
++    public static class Dummy1 extends DatabaseObject {}
++    public static class Dummy2 extends DatabaseObject {}
++    public static class Dummy3 extends DatabaseObject {}
++    public static class Dummy4 extends DatabaseObject {}
++    public static class Dummy5 extends DatabaseObject {}
++    public static class Dummy6 extends DatabaseObject {}
++    public static class Dummy7 extends DatabaseObject {}
++    public static class Dummy8 extends DatabaseObject {}
++    public static class Dummy9 extends DatabaseObject {}
++    public static class Dummy10 extends DatabaseObject {}
++    public static class Dummy11 extends DatabaseObject {}
++    public static class Dummy12 extends DatabaseObject {}
++    public static class Dummy13 extends DatabaseObject {}
++    public static class Dummy14 extends DatabaseObject {}
++    public static class Dummy15 extends DatabaseObject {}
++    public static class Dummy16 extends DatabaseObject {}
++    public static class Dummy17 extends DatabaseObject {}
++    public static class Dummy18 extends DatabaseObject {}
++    public static class Dummy19 extends DatabaseObject {}
++    public static class Dummy20 extends DatabaseObject {}
++    public static class Dummy21 extends DatabaseObject {}
++    public static class Dummy22 extends DatabaseObject {}
++    public static class Dummy23 extends DatabaseObject {}
++    public static class Dummy24 extends DatabaseObject {}
++    public static class Dummy25 extends DatabaseObject {}
++    public static class Dummy26 extends DatabaseObject {}
++    public static class Dummy27 extends DatabaseObject {}
++    public static class Dummy28 extends DatabaseObject {}
++    public static class Dummy29 extends DatabaseObject {}
++    public static class Dummy30 extends DatabaseObject {}
++    public static class Dummy31 extends DatabaseObject {}
++    public static class Dummy32 extends DatabaseObject {}
++    public static class Dummy33 extends DatabaseObject {}
++    public static class Dummy34 extends DatabaseObject {}
++    public static class Dummy35 extends DatabaseObject {}
++    public static class Dummy36 extends DatabaseObject {}
++    public static class Dummy37 extends DatabaseObject {}
++    public static class Dummy38 extends DatabaseObject {}
++    public static class Dummy39 extends DatabaseObject {}
++    public static class Dummy40 extends DatabaseObject {}
++    public static class Dummy41 extends DatabaseObject {}
++    public static class Dummy42 extends DatabaseObject {}
++    public static class Dummy43 extends DatabaseObject {}
++    public static class Dummy44 extends DatabaseObject {}
++    public static class Dummy45 extends DatabaseObject {}
++    public static class Dummy46 extends DatabaseObject {}
++    public static class Dummy47 extends DatabaseObject {}
++    public static class Dummy48 extends DatabaseObject {}
++    public static class Dummy49 extends DatabaseObject {}
++    public static class Dummy50 extends DatabaseObject {}
++
++    public static class CustomMockSnapshotGeneratorFactory extends MockSnapshotGeneratorFactory {
++        @Override
++        public Set<Class<? extends DatabaseObject>> getContainerTypes(Class<? extends DatabaseObject> type, Database database) {
++            Set<Class<? extends DatabaseObject>> s = new HashSet<>();
++            s.add(Dummy1.class);
++            s.add(Dummy2.class);
++            s.add(Dummy3.class);
++            s.add(Dummy4.class);
++            s.add(Dummy5.class);
++            s.add(Dummy6.class);
++            s.add(Dummy7.class);
++            s.add(Dummy8.class);
++            s.add(Dummy9.class);
++            s.add(Dummy10.class);
++            s.add(Dummy11.class);
++            s.add(Dummy12.class);
++            s.add(Dummy13.class);
++            s.add(Dummy14.class);
++            s.add(Dummy15.class);
++            s.add(Dummy16.class);
++            s.add(Dummy17.class);
++            s.add(Dummy18.class);
++            s.add(Dummy19.class);
++            s.add(Dummy20.class);
++            s.add(Dummy21.class);
++            s.add(Dummy22.class);
++            s.add(Dummy23.class);
++            s.add(Dummy24.class);
++            s.add(Dummy25.class);
++            s.add(Dummy26.class);
++            s.add(Dummy27.class);
++            s.add(Dummy28.class);
++            s.add(Dummy29.class);
++            s.add(Dummy30.class);
++            s.add(Dummy31.class);
++            s.add(Dummy32.class);
++            s.add(Dummy33.class);
++            s.add(Dummy34.class);
++            s.add(Dummy35.class);
++            s.add(Dummy36.class);
++            s.add(Dummy37.class);
++            s.add(Dummy38.class);
++            s.add(Dummy39.class);
++            s.add(Dummy40.class);
++            s.add(Dummy41.class);
++            s.add(Dummy42.class);
++            s.add(Dummy43.class);
++            s.add(Dummy44.class);
++            s.add(Dummy45.class);
++            s.add(Dummy46.class);
++            s.add(Dummy47.class);
++            s.add(Dummy48.class);
++            s.add(Dummy49.class);
++            s.add(Dummy50.class);
++            return s;
++        }
++
++        @Override
++        public DatabaseSnapshot createSnapshot(DatabaseObject[] examples, Database database, SnapshotControl snapshotControl) throws DatabaseException, InvalidExampleException {
++            int types = snapshotControl == null ? 0 : snapshotControl.getTypesToInclude().size();
++            try {
++                // Sleep proportional to number of types to simulate expensive snapshotting
++                Thread.sleep(Math.min(1000, types * 10));
++            } catch (InterruptedException e) {
++                Thread.currentThread().interrupt();
++            }
++            return super.createSnapshot(examples, database, snapshotControl);
++        }
++    }
++
++    @Test
++    public void generatedTest01_measureSnapshotControlImpact() throws Exception {
++        // Replace the singleton factory with our custom factory
++        SnapshotGeneratorFactory.resetAll();
++        SnapshotGeneratorFactory.instance = new CustomMockSnapshotGeneratorFactory();
++
++        Database db = new MockDatabase();
++        Table example = new Table().setName("SOME_TABLE").setSchema(new Schema("CAT", "SC"));
++
++        long start = System.nanoTime();
++        boolean exists = SnapshotGeneratorFactory.getInstance().has(example, db);
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++
++        System.out.println("GeneratedTests.generatedTest01 elapsed ms: " + elapsedMs + " exists=" + exists);
++    }
++}
++
+*** End Patch

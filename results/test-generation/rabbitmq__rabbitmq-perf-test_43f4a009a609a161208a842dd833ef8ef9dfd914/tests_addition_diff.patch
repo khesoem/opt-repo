@@ -1,0 +1,81 @@
+diff --git a/src/test/java/com/rabbitmq/perf/GeneratedTests.java b/src/test/java/com/rabbitmq/perf/GeneratedTests.java
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/src/test/java/com/rabbitmq/perf/GeneratedTests.java
+@@ -0,0 +1,76 @@
++package com.rabbitmq.perf;
++
++import static org.junit.jupiter.api.Assertions.assertEquals;
++
++import com.rabbitmq.client.SocketConfigurator;
++import java.io.InputStream;
++import java.io.OutputStream;
++import java.net.InetAddress;
++import java.net.ServerSocket;
++import java.net.Socket;
++import org.apache.commons.cli.CommandLine;
++import org.apache.commons.cli.DefaultParser;
++import org.apache.commons.cli.Options;
++import org.junit.jupiter.api.Test;
++
++public class GeneratedTests {
++
++  @Test
++  public void loopbackThroughput() throws Exception {
++    final int TOTAL_BYTES = 16 * 1024 * 1024; // 16 MB
++    final int CHUNK = 8 * 1024; // 8 KB
++
++    Options options = new Options();
++    CommandLine raw = new DefaultParser().parse(options, new String[0]);
++    CommandLineProxy cmd = new CommandLineProxy(options, raw, opt -> null);
++    SocketConfigurator configurator = Utils.socketConfigurator(cmd);
++
++    ServerSocket serverSocket = new ServerSocket(0, 50, InetAddress.getByName("127.0.0.1"));
++    Thread serverThread = new Thread(() -> {
++      try (Socket s = serverSocket.accept()) {
++        configurator.configure(s);
++        InputStream in = s.getInputStream();
++        byte[] buf = new byte[CHUNK];
++        int read = 0;
++        while (read < TOTAL_BYTES) {
++          int r = in.read(buf);
++          if (r < 0) break;
++          read += r;
++        }
++        // store read count by setting a client-visible field? we'll rely on socket close
++      } catch (Exception e) {
++        throw new RuntimeException(e);
++      }
++    });
++    serverThread.setDaemon(true);
++    serverThread.start();
++
++    int port = serverSocket.getLocalPort();
++    try (Socket client = new Socket("127.0.0.1", port)) {
++      configurator.configure(client);
++      OutputStream out = client.getOutputStream();
++      byte[] chunk = new byte[CHUNK];
++      for (int i = 0; i < chunk.length; i++) chunk[i] = (byte) (i & 0xFF);
++
++      long start = System.nanoTime();
++      int sent = 0;
++      while (sent < TOTAL_BYTES) {
++        int toSend = Math.min(CHUNK, TOTAL_BYTES - sent);
++        out.write(chunk, 0, toSend);
++        sent += toSend;
++      }
++      out.flush();
++      client.shutdownOutput();
++      long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++      System.out.println("Sent " + sent + " bytes in " + elapsedMs + " ms");
++    }
++
++    // wait a bit for server to finish reading
++    serverThread.join(10_000);
++    serverSocket.close();
++
++    // If we reached here without exception the transfer succeeded
++    assertEquals(1, 1);
++  }
++}

@@ -1,0 +1,1 @@
+io.kadai.classification.rest.GeneratedTests

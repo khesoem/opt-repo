@@ -1,0 +1,81 @@
+*** Begin Patch
+*** Add File: model/infinispan/src/test/java/org/keycloak/models/sessions/infinispan/remote/GeneratedTests.java
+package org.keycloak.models.sessions.infinispan.remote;
+
+import org.junit.Test;
+import org.infinispan.client.hotrod.RemoteCache;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.TimeUnit;
+
+public class GeneratedTests {
+
+    private static java.util.concurrent.atomic.AtomicInteger removeCount = new java.util.concurrent.atomic.AtomicInteger();
+    private static java.util.concurrent.atomic.AtomicInteger putCount = new java.util.concurrent.atomic.AtomicInteger();
+
+    private static RemoteCache<Object,Object> createDelayedRemoteCache(long delayMillis) {
+        InvocationHandler h = new InvocationHandler() {
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                String name = method.getName();
+                if ("removeAsync".equals(name) || "putAsync".equals(name) || "replaceAsync".equals(name)) {
+                    if ("removeAsync".equals(name)) removeCount.incrementAndGet();
+                    if ("putAsync".equals(name)) putCount.incrementAndGet();
+                    // simulate a slow remote call by blocking the caller thread before returning
+                    try {
+                        Thread.sleep(delayMillis);
+                    } catch (InterruptedException ignored) {
+                    }
+                    return CompletableFuture.completedFuture(null);
+                }
+                if ("get".equals(name)) {
+                    return null;
+                }
+                if ("getName".equals(name)) {
+                    return "testCache";
+                }
+                // default for other methods
+                return null;
+            }
+        };
+        return (RemoteCache<Object,Object>) Proxy.newProxyInstance(RemoteCache.class.getClassLoader(), new Class[]{RemoteCache.class}, h);
+    }
+
+    @Test
+    public void performance_multipleRemoves_afterPut() {
+        final int N = 200; // number of keys to amplify the difference
+        final long delayPerRemoteCallMs = 25; // simulated remote latency
+
+        RemoteCache<Object,Object> cache = createDelayedRemoteCache(delayPerRemoteCallMs);
+        RemoteInfinispanKeycloakTransaction<Object,Object> tx = new RemoteInfinispanKeycloakTransaction<>(cache);
+        tx.begin();
+
+        for (int i = 0; i < N; i++) {
+            Object key = "k" + i;
+            tx.put(key, "v" + i, 0, TimeUnit.SECONDS);
+            // first remove should cancel the put in both versions, second remove triggers remote removal in ORIGINAL
+            tx.remove(key);
+            tx.remove(key);
+        }
+
+        long t0 = System.nanoTime();
+        tx.commit();
+        long elapsedMs = (System.nanoTime() - t0) / 1_000_000;
+        System.out.println("Elapsed ms for commit: " + elapsedMs);
+        // no assertions about timing — this test is used to measure relative performance between versions
+    }
+}
+
+*** End Patch
+*** Begin Patch
+*** Add File: model/infinispan/src/test/java/org/infinispan/query/dsl/Query.java
+package org.infinispan.query.dsl;
+
+public interface Query {
+}
+
+*** End Patch

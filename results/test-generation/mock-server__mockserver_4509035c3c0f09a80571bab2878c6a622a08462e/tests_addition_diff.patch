@@ -1,0 +1,72 @@
+--- /dev/null	2026-02-19 13:49:45.617404699 +0000
++++ /workspace/original_repo/mockserver-core/src/test/java/org/mockserver/benchmark/HttpStateGcPerformanceTest.java	2026-02-19 13:53:58.995619542 +0000
+@@ -0,0 +1,69 @@
++package org.mockserver.benchmark;
++
++import org.junit.Test;
++import org.mockserver.log.MockServerEventLog;
++import org.mockserver.logging.MockServerLogger;
++import org.mockserver.mock.HttpState;
++import org.mockserver.model.HttpRequest;
++import org.mockserver.responsewriter.ResponseWriter;
++import org.mockserver.scheduler.Scheduler;
++
++import static org.mockserver.model.HttpRequest.request;
++import static org.mockserver.model.HttpResponse.response;
++
++/**
++ * Simple micro-benchmark that stresses the explicit GC calls removed in the patch.
++ *
++ * This test runs a repeated sequence of HTTP clear/reset operations that triggered
++ * System.gc() in the original code. The patched code removed those calls which
++ * should result in noticeably lower execution time for this test.
++ */
++public class HttpStateGcPerformanceTest {
++
++    private static class SilentResponseWriter extends ResponseWriter {
++        @Override
++        public void sendResponse(HttpRequest request, org.mockserver.model.HttpResponse response) {
++            // no-op
++        }
++    }
++
++    @Test
++    public void repeatedClearAndResetShouldBeFasterWhenGcRemoved() {
++        MockServerLogger mockServerLogger = new MockServerLogger();
++        // use synchronous scheduler to avoid background scheduling affecting measurements
++        Scheduler scheduler = new Scheduler(mockServerLogger, true);
++        HttpState httpState = new HttpState(mockServerLogger, scheduler);
++
++        SilentResponseWriter responseWriter = new SilentResponseWriter();
++
++        HttpRequest clearRequest = request("/mockserver/clear").withMethod("PUT");
++
++        // warm up
++        for (int i = 0; i < 5; i++) {
++            httpState.handle(clearRequest, responseWriter, false);
++            httpState.reset();
++        }
++
++        final int iterations = 40;
++
++        long start = System.nanoTime();
++        for (int i = 0; i < iterations; i++) {
++            httpState.handle(clearRequest, responseWriter, false);
++        }
++        long afterClears = System.nanoTime();
++
++        for (int i = 0; i < iterations / 2; i++) {
++            httpState.reset();
++        }
++        long end = System.nanoTime();
++
++        long clearsMs = (afterClears - start) / 1_000_000;
++        long resetsMs = (end - afterClears) / 1_000_000;
++
++        System.out.println("HttpStateGcPerformanceTest: total clear calls: " + iterations + " took " + clearsMs + " ms");
++        System.out.println("HttpStateGcPerformanceTest: total reset calls: " + (iterations / 2) + " took " + resetsMs + " ms");
++
++        // simple sanity check - test should always pass
++        org.junit.Assert.assertTrue(true);
++    }
++}

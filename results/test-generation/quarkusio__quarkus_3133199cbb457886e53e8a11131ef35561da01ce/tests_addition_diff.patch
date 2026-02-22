@@ -1,0 +1,675 @@
+diff --git a/independent-projects/arc/processor/src/test/java/io/quarkus/arc/processor/perf/RemovedBeansPerformanceTest.java b/independent-projects/arc/processor/src/test/java/io/quarkus/arc/processor/perf/RemovedBeansPerformanceTest.java
+index 646090f3..475defd7 100644
+--- a/independent-projects/arc/processor/src/test/java/io/quarkus/arc/processor/perf/RemovedBeansPerformanceTest.java
++++ b/independent-projects/arc/processor/src/test/java/io/quarkus/arc/processor/perf/RemovedBeansPerformanceTest.java
+@@ -4,12 +4,13 @@ import static io.quarkus.arc.processor.Basics.index;
+ 
+ import io.quarkus.arc.processor.BeanProcessor;
+ import java.io.IOException;
++import javax.inject.Singleton;
+ import org.jboss.jandex.Index;
+ import org.junit.jupiter.api.Test;
+-import javax.inject.Singleton;
+ 
+ /**
+- * Performance test that triggers processing of many removed beans to measure ComponentsProviderGenerator removed beans handling.
++ * Performance test that triggers processing of many removed beans to measure ComponentsProviderGenerator removed beans
++ * handling.
+  * The test prints elapsed time which is reported by Maven Surefire as the test duration.
+  */
+ public class RemovedBeansPerformanceTest {
+@@ -19,21 +20,34 @@ public class RemovedBeansPerformanceTest {
+         // Build Jandex index with a large number of simple bean classes that are not used anywhere -> they will be considered removable
+         Index index = index(
+                 Dummy0.class, Dummy1.class, Dummy2.class, Dummy3.class, Dummy4.class, Dummy5.class, Dummy6.class, Dummy7.class,
+-                Dummy8.class, Dummy9.class, Dummy10.class, Dummy11.class, Dummy12.class, Dummy13.class, Dummy14.class, Dummy15.class,
+-                Dummy16.class, Dummy17.class, Dummy18.class, Dummy19.class, Dummy20.class, Dummy21.class, Dummy22.class, Dummy23.class,
+-                Dummy24.class, Dummy25.class, Dummy26.class, Dummy27.class, Dummy28.class, Dummy29.class, Dummy30.class, Dummy31.class,
+-                Dummy32.class, Dummy33.class, Dummy34.class, Dummy35.class, Dummy36.class, Dummy37.class, Dummy38.class, Dummy39.class,
+-                Dummy40.class, Dummy41.class, Dummy42.class, Dummy43.class, Dummy44.class, Dummy45.class, Dummy46.class, Dummy47.class,
+-                Dummy48.class, Dummy49.class, Dummy50.class, Dummy51.class, Dummy52.class, Dummy53.class, Dummy54.class, Dummy55.class,
+-                Dummy56.class, Dummy57.class, Dummy58.class, Dummy59.class, Dummy60.class, Dummy61.class, Dummy62.class, Dummy63.class,
+-                Dummy64.class, Dummy65.class, Dummy66.class, Dummy67.class, Dummy68.class, Dummy69.class, Dummy70.class, Dummy71.class,
+-                Dummy72.class, Dummy73.class, Dummy74.class, Dummy75.class, Dummy76.class, Dummy77.class, Dummy78.class, Dummy79.class,
+-                Dummy80.class, Dummy81.class, Dummy82.class, Dummy83.class, Dummy84.class, Dummy85.class, Dummy86.class, Dummy87.class,
+-                Dummy88.class, Dummy89.class, Dummy90.class, Dummy91.class, Dummy92.class, Dummy93.class, Dummy94.class, Dummy95.class,
+-                Dummy96.class, Dummy97.class, Dummy98.class, Dummy99.class, Dummy100.class, Dummy101.class, Dummy102.class, Dummy103.class,
+-                Dummy104.class, Dummy105.class, Dummy106.class, Dummy107.class, Dummy108.class, Dummy109.class, Dummy110.class, Dummy111.class,
+-                Dummy112.class, Dummy113.class, Dummy114.class, Dummy115.class, Dummy116.class, Dummy117.class, Dummy118.class, Dummy119.class
+-        );
++                Dummy8.class, Dummy9.class, Dummy10.class, Dummy11.class, Dummy12.class, Dummy13.class, Dummy14.class,
++                Dummy15.class,
++                Dummy16.class, Dummy17.class, Dummy18.class, Dummy19.class, Dummy20.class, Dummy21.class, Dummy22.class,
++                Dummy23.class,
++                Dummy24.class, Dummy25.class, Dummy26.class, Dummy27.class, Dummy28.class, Dummy29.class, Dummy30.class,
++                Dummy31.class,
++                Dummy32.class, Dummy33.class, Dummy34.class, Dummy35.class, Dummy36.class, Dummy37.class, Dummy38.class,
++                Dummy39.class,
++                Dummy40.class, Dummy41.class, Dummy42.class, Dummy43.class, Dummy44.class, Dummy45.class, Dummy46.class,
++                Dummy47.class,
++                Dummy48.class, Dummy49.class, Dummy50.class, Dummy51.class, Dummy52.class, Dummy53.class, Dummy54.class,
++                Dummy55.class,
++                Dummy56.class, Dummy57.class, Dummy58.class, Dummy59.class, Dummy60.class, Dummy61.class, Dummy62.class,
++                Dummy63.class,
++                Dummy64.class, Dummy65.class, Dummy66.class, Dummy67.class, Dummy68.class, Dummy69.class, Dummy70.class,
++                Dummy71.class,
++                Dummy72.class, Dummy73.class, Dummy74.class, Dummy75.class, Dummy76.class, Dummy77.class, Dummy78.class,
++                Dummy79.class,
++                Dummy80.class, Dummy81.class, Dummy82.class, Dummy83.class, Dummy84.class, Dummy85.class, Dummy86.class,
++                Dummy87.class,
++                Dummy88.class, Dummy89.class, Dummy90.class, Dummy91.class, Dummy92.class, Dummy93.class, Dummy94.class,
++                Dummy95.class,
++                Dummy96.class, Dummy97.class, Dummy98.class, Dummy99.class, Dummy100.class, Dummy101.class, Dummy102.class,
++                Dummy103.class,
++                Dummy104.class, Dummy105.class, Dummy106.class, Dummy107.class, Dummy108.class, Dummy109.class, Dummy110.class,
++                Dummy111.class,
++                Dummy112.class, Dummy113.class, Dummy114.class, Dummy115.class, Dummy116.class, Dummy117.class, Dummy118.class,
++                Dummy119.class);
+ 
+         long start = System.nanoTime();
+         // Build and process - this will exercise ComponentsProviderGenerator and removed beans processing
+@@ -43,125 +57,484 @@ public class RemovedBeansPerformanceTest {
+     }
+ 
+     // 120 simple bean classes
+-    @Singleton static class Dummy0 {}
+-    @Singleton static class Dummy1 {}
+-    @Singleton static class Dummy2 {}
+-    @Singleton static class Dummy3 {}
+-    @Singleton static class Dummy4 {}
+-    @Singleton static class Dummy5 {}
+-    @Singleton static class Dummy6 {}
+-    @Singleton static class Dummy7 {}
+-    @Singleton static class Dummy8 {}
+-    @Singleton static class Dummy9 {}
+-    @Singleton static class Dummy10 {}
+-    @Singleton static class Dummy11 {}
+-    @Singleton static class Dummy12 {}
+-    @Singleton static class Dummy13 {}
+-    @Singleton static class Dummy14 {}
+-    @Singleton static class Dummy15 {}
+-    @Singleton static class Dummy16 {}
+-    @Singleton static class Dummy17 {}
+-    @Singleton static class Dummy18 {}
+-    @Singleton static class Dummy19 {}
+-    @Singleton static class Dummy20 {}
+-    @Singleton static class Dummy21 {}
+-    @Singleton static class Dummy22 {}
+-    @Singleton static class Dummy23 {}
+-    @Singleton static class Dummy24 {}
+-    @Singleton static class Dummy25 {}
+-    @Singleton static class Dummy26 {}
+-    @Singleton static class Dummy27 {}
+-    @Singleton static class Dummy28 {}
+-    @Singleton static class Dummy29 {}
+-    @Singleton static class Dummy30 {}
+-    @Singleton static class Dummy31 {}
+-    @Singleton static class Dummy32 {}
+-    @Singleton static class Dummy33 {}
+-    @Singleton static class Dummy34 {}
+-    @Singleton static class Dummy35 {}
+-    @Singleton static class Dummy36 {}
+-    @Singleton static class Dummy37 {}
+-    @Singleton static class Dummy38 {}
+-    @Singleton static class Dummy39 {}
+-    @Singleton static class Dummy40 {}
+-    @Singleton static class Dummy41 {}
+-    @Singleton static class Dummy42 {}
+-    @Singleton static class Dummy43 {}
+-    @Singleton static class Dummy44 {}
+-    @Singleton static class Dummy45 {}
+-    @Singleton static class Dummy46 {}
+-    @Singleton static class Dummy47 {}
+-    @Singleton static class Dummy48 {}
+-    @Singleton static class Dummy49 {}
+-    @Singleton static class Dummy50 {}
+-    @Singleton static class Dummy51 {}
+-    @Singleton static class Dummy52 {}
+-    @Singleton static class Dummy53 {}
+-    @Singleton static class Dummy54 {}
+-    @Singleton static class Dummy55 {}
+-    @Singleton static class Dummy56 {}
+-    @Singleton static class Dummy57 {}
+-    @Singleton static class Dummy58 {}
+-    @Singleton static class Dummy59 {}
+-    @Singleton static class Dummy60 {}
+-    @Singleton static class Dummy61 {}
+-    @Singleton static class Dummy62 {}
+-    @Singleton static class Dummy63 {}
+-    @Singleton static class Dummy64 {}
+-    @Singleton static class Dummy65 {}
+-    @Singleton static class Dummy66 {}
+-    @Singleton static class Dummy67 {}
+-    @Singleton static class Dummy68 {}
+-    @Singleton static class Dummy69 {}
+-    @Singleton static class Dummy70 {}
+-    @Singleton static class Dummy71 {}
+-    @Singleton static class Dummy72 {}
+-    @Singleton static class Dummy73 {}
+-    @Singleton static class Dummy74 {}
+-    @Singleton static class Dummy75 {}
+-    @Singleton static class Dummy76 {}
+-    @Singleton static class Dummy77 {}
+-    @Singleton static class Dummy78 {}
+-    @Singleton static class Dummy79 {}
+-    @Singleton static class Dummy80 {}
+-    @Singleton static class Dummy81 {}
+-    @Singleton static class Dummy82 {}
+-    @Singleton static class Dummy83 {}
+-    @Singleton static class Dummy84 {}
+-    @Singleton static class Dummy85 {}
+-    @Singleton static class Dummy86 {}
+-    @Singleton static class Dummy87 {}
+-    @Singleton static class Dummy88 {}
+-    @Singleton static class Dummy89 {}
+-    @Singleton static class Dummy90 {}
+-    @Singleton static class Dummy91 {}
+-    @Singleton static class Dummy92 {}
+-    @Singleton static class Dummy93 {}
+-    @Singleton static class Dummy94 {}
+-    @Singleton static class Dummy95 {}
+-    @Singleton static class Dummy96 {}
+-    @Singleton static class Dummy97 {}
+-    @Singleton static class Dummy98 {}
+-    @Singleton static class Dummy99 {}
+-    @Singleton static class Dummy100 {}
+-    @Singleton static class Dummy101 {}
+-    @Singleton static class Dummy102 {}
+-    @Singleton static class Dummy103 {}
+-    @Singleton static class Dummy104 {}
+-    @Singleton static class Dummy105 {}
+-    @Singleton static class Dummy106 {}
+-    @Singleton static class Dummy107 {}
+-    @Singleton static class Dummy108 {}
+-    @Singleton static class Dummy109 {}
+-    @Singleton static class Dummy110 {}
+-    @Singleton static class Dummy111 {}
+-    @Singleton static class Dummy112 {}
+-    @Singleton static class Dummy113 {}
+-    @Singleton static class Dummy114 {}
+-    @Singleton static class Dummy115 {}
+-    @Singleton static class Dummy116 {}
+-    @Singleton static class Dummy117 {}
+-    @Singleton static class Dummy118 {}
+-    @Singleton static class Dummy119 {}
++    @Singleton
++    static class Dummy0 {
++    }
++
++    @Singleton
++    static class Dummy1 {
++    }
++
++    @Singleton
++    static class Dummy2 {
++    }
++
++    @Singleton
++    static class Dummy3 {
++    }
++
++    @Singleton
++    static class Dummy4 {
++    }
++
++    @Singleton
++    static class Dummy5 {
++    }
++
++    @Singleton
++    static class Dummy6 {
++    }
++
++    @Singleton
++    static class Dummy7 {
++    }
++
++    @Singleton
++    static class Dummy8 {
++    }
++
++    @Singleton
++    static class Dummy9 {
++    }
++
++    @Singleton
++    static class Dummy10 {
++    }
++
++    @Singleton
++    static class Dummy11 {
++    }
++
++    @Singleton
++    static class Dummy12 {
++    }
++
++    @Singleton
++    static class Dummy13 {
++    }
++
++    @Singleton
++    static class Dummy14 {
++    }
++
++    @Singleton
++    static class Dummy15 {
++    }
++
++    @Singleton
++    static class Dummy16 {
++    }
++
++    @Singleton
++    static class Dummy17 {
++    }
++
++    @Singleton
++    static class Dummy18 {
++    }
++
++    @Singleton
++    static class Dummy19 {
++    }
++
++    @Singleton
++    static class Dummy20 {
++    }
++
++    @Singleton
++    static class Dummy21 {
++    }
++
++    @Singleton
++    static class Dummy22 {
++    }
++
++    @Singleton
++    static class Dummy23 {
++    }
++
++    @Singleton
++    static class Dummy24 {
++    }
++
++    @Singleton
++    static class Dummy25 {
++    }
++
++    @Singleton
++    static class Dummy26 {
++    }
++
++    @Singleton
++    static class Dummy27 {
++    }
++
++    @Singleton
++    static class Dummy28 {
++    }
++
++    @Singleton
++    static class Dummy29 {
++    }
++
++    @Singleton
++    static class Dummy30 {
++    }
++
++    @Singleton
++    static class Dummy31 {
++    }
++
++    @Singleton
++    static class Dummy32 {
++    }
++
++    @Singleton
++    static class Dummy33 {
++    }
++
++    @Singleton
++    static class Dummy34 {
++    }
++
++    @Singleton
++    static class Dummy35 {
++    }
++
++    @Singleton
++    static class Dummy36 {
++    }
++
++    @Singleton
++    static class Dummy37 {
++    }
++
++    @Singleton
++    static class Dummy38 {
++    }
++
++    @Singleton
++    static class Dummy39 {
++    }
++
++    @Singleton
++    static class Dummy40 {
++    }
++
++    @Singleton
++    static class Dummy41 {
++    }
++
++    @Singleton
++    static class Dummy42 {
++    }
++
++    @Singleton
++    static class Dummy43 {
++    }
++
++    @Singleton
++    static class Dummy44 {
++    }
++
++    @Singleton
++    static class Dummy45 {
++    }
++
++    @Singleton
++    static class Dummy46 {
++    }
++
++    @Singleton
++    static class Dummy47 {
++    }
++
++    @Singleton
++    static class Dummy48 {
++    }
++
++    @Singleton
++    static class Dummy49 {
++    }
++
++    @Singleton
++    static class Dummy50 {
++    }
++
++    @Singleton
++    static class Dummy51 {
++    }
++
++    @Singleton
++    static class Dummy52 {
++    }
++
++    @Singleton
++    static class Dummy53 {
++    }
++
++    @Singleton
++    static class Dummy54 {
++    }
++
++    @Singleton
++    static class Dummy55 {
++    }
++
++    @Singleton
++    static class Dummy56 {
++    }
++
++    @Singleton
++    static class Dummy57 {
++    }
++
++    @Singleton
++    static class Dummy58 {
++    }
++
++    @Singleton
++    static class Dummy59 {
++    }
++
++    @Singleton
++    static class Dummy60 {
++    }
++
++    @Singleton
++    static class Dummy61 {
++    }
++
++    @Singleton
++    static class Dummy62 {
++    }
++
++    @Singleton
++    static class Dummy63 {
++    }
++
++    @Singleton
++    static class Dummy64 {
++    }
++
++    @Singleton
++    static class Dummy65 {
++    }
++
++    @Singleton
++    static class Dummy66 {
++    }
++
++    @Singleton
++    static class Dummy67 {
++    }
++
++    @Singleton
++    static class Dummy68 {
++    }
++
++    @Singleton
++    static class Dummy69 {
++    }
++
++    @Singleton
++    static class Dummy70 {
++    }
++
++    @Singleton
++    static class Dummy71 {
++    }
++
++    @Singleton
++    static class Dummy72 {
++    }
++
++    @Singleton
++    static class Dummy73 {
++    }
++
++    @Singleton
++    static class Dummy74 {
++    }
++
++    @Singleton
++    static class Dummy75 {
++    }
++
++    @Singleton
++    static class Dummy76 {
++    }
++
++    @Singleton
++    static class Dummy77 {
++    }
++
++    @Singleton
++    static class Dummy78 {
++    }
++
++    @Singleton
++    static class Dummy79 {
++    }
++
++    @Singleton
++    static class Dummy80 {
++    }
++
++    @Singleton
++    static class Dummy81 {
++    }
++
++    @Singleton
++    static class Dummy82 {
++    }
++
++    @Singleton
++    static class Dummy83 {
++    }
++
++    @Singleton
++    static class Dummy84 {
++    }
++
++    @Singleton
++    static class Dummy85 {
++    }
++
++    @Singleton
++    static class Dummy86 {
++    }
++
++    @Singleton
++    static class Dummy87 {
++    }
++
++    @Singleton
++    static class Dummy88 {
++    }
++
++    @Singleton
++    static class Dummy89 {
++    }
++
++    @Singleton
++    static class Dummy90 {
++    }
++
++    @Singleton
++    static class Dummy91 {
++    }
++
++    @Singleton
++    static class Dummy92 {
++    }
++
++    @Singleton
++    static class Dummy93 {
++    }
++
++    @Singleton
++    static class Dummy94 {
++    }
++
++    @Singleton
++    static class Dummy95 {
++    }
++
++    @Singleton
++    static class Dummy96 {
++    }
++
++    @Singleton
++    static class Dummy97 {
++    }
++
++    @Singleton
++    static class Dummy98 {
++    }
++
++    @Singleton
++    static class Dummy99 {
++    }
++
++    @Singleton
++    static class Dummy100 {
++    }
++
++    @Singleton
++    static class Dummy101 {
++    }
++
++    @Singleton
++    static class Dummy102 {
++    }
++
++    @Singleton
++    static class Dummy103 {
++    }
++
++    @Singleton
++    static class Dummy104 {
++    }
++
++    @Singleton
++    static class Dummy105 {
++    }
++
++    @Singleton
++    static class Dummy106 {
++    }
++
++    @Singleton
++    static class Dummy107 {
++    }
++
++    @Singleton
++    static class Dummy108 {
++    }
++
++    @Singleton
++    static class Dummy109 {
++    }
++
++    @Singleton
++    static class Dummy110 {
++    }
++
++    @Singleton
++    static class Dummy111 {
++    }
++
++    @Singleton
++    static class Dummy112 {
++    }
++
++    @Singleton
++    static class Dummy113 {
++    }
++
++    @Singleton
++    static class Dummy114 {
++    }
++
++    @Singleton
++    static class Dummy115 {
++    }
++
++    @Singleton
++    static class Dummy116 {
++    }
++
++    @Singleton
++    static class Dummy117 {
++    }
++
++    @Singleton
++    static class Dummy118 {
++    }
++
++    @Singleton
++    static class Dummy119 {
++    }
+ 
+ }

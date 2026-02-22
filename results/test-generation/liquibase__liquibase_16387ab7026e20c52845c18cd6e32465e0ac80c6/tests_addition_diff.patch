@@ -1,0 +1,62 @@
+--- a/liquibase-standard/src/test/java/liquibase/statement/GeneratedPerformanceTests.java
++++ b/liquibase-standard/src/test/java/liquibase/statement/GeneratedPerformanceTests.java
+@@ -3,7 +3,6 @@
+ import liquibase.change.ColumnConfig;
+ import liquibase.changelog.ChangeSet;
+ import liquibase.database.core.PostgresDatabase;
+-import liquibase.exception.DatabaseException;
+ import liquibase.snapshot.SnapshotGenerator;
+ import liquibase.snapshot.SnapshotGeneratorChain;
+ import liquibase.snapshot.SnapshotGeneratorFactory;
+@@ -16,11 +15,8 @@
+ import org.junit.runner.RunWith;
+ import org.mockito.junit.MockitoJUnitRunner;
+ import org.mockito.Mock;
+-import org.mockito.Spy;
+-import org.mockito.InjectMocks;
+ 
+ import java.io.ByteArrayInputStream;
+-import java.io.IOException;
+ import java.io.InputStream;
+ import java.sql.PreparedStatement;
+ import java.util.ArrayList;
+@@ -39,7 +35,6 @@
+ 
+     @Before
+     public void setUp() {
+-        // ensure SnapshotGeneratorFactory singleton is reset so our test is deterministic
+         try {
+             SnapshotGeneratorFactory.resetAll();
+         } catch (Exception ignored) {
+@@ -48,11 +43,9 @@
+ 
+     @Test
+     public void stressApplyColumnParameter_withPostgres_manyColumns() throws Exception {
+-        // create an executable prepared statement targeting Postgres
+         PostgresDatabase postgres = new PostgresDatabase();
+         ExecutablePreparedStatementBaseMock exec = new ExecutablePreparedStatementBaseMock(postgres, "cat", "sch", "tbl", new ArrayList<>(), changeSetMock, null);
+ 
+-        // register a SnapshotGenerator that returns a Column with type bytea so branch is taken
+         SnapshotGeneratorFactory factory = SnapshotGeneratorFactory.getInstance();
+         factory.register(new SnapshotGenerator() {
+             @Override
+@@ -79,7 +72,6 @@
+             }
+         });
+ 
+-        // prepare a small binary stream for blobs
+         InputStream in = new ByteArrayInputStream(new byte[10]);
+ 
+         int iterations = 200;
+@@ -88,11 +80,9 @@
+             when(col.getValueBlobFile()).thenReturn("valueBlobFile");
+             when(col.getName()).thenReturn("col" + i);
+ 
+-            // spy the exec to provide the binary stream without accessing resources
+             ExecutablePreparedStatementBase spyExec = spy(exec);
+             doReturn(new ExecutablePreparedStatementBase.LOBContent<InputStream>(in, 10)).when(spyExec).toBinaryStream(any());
+ 
+-            // call applyColumnParameter which will exercise the Postgres/bytea branch
+             spyExec.applyColumnParameter(preparedStatementMock, 1, col);
+         }
+     }

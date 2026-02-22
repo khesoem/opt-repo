@@ -1,0 +1,38 @@
+diff --git a/dubbo-common/src/test/java/org/apache/dubbo/common/utils/PojoUtilsPerformanceTest.java b/dubbo-common/src/test/java/org/apache/dubbo/common/utils/PojoUtilsPerformanceTest.java
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/dubbo-common/src/test/java/org/apache/dubbo/common/utils/PojoUtilsPerformanceTest.java
+@@ -0,0 +1,99 @@
++/*
++ * Performance regression test for PojoUtils.className lookup.
++ */
++package org.apache.dubbo.common.utils;
++
++import org.junit.jupiter.api.Test;
++
++import java.util.HashMap;
++import java.util.Map;
++
++public class PojoUtilsPerformanceTest {
++
++    @Test
++    public void testClassNotFoundCachingPerformance() {
++        final int iterations = 20000;
++        long start = System.nanoTime();
++        for (int i = 0; i < iterations; i++) {
++            Map<String, Object> map = new HashMap<String, Object>();
++            map.put("class", "non.existent.ClassName");
++            // Use Object.class so PojoUtils will try to resolve the provided class name when
++            // processing the map entry named "class".
++            Object r = PojoUtils.realize(map, Object.class);
++            // avoid JIT optimizations removing the call
++            if (r == null) {
++                // noop
++            }
++        }
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000L;
++        System.out.println("PojoUtilsPerformanceTest: iterations=" + iterations + " elapsedMs=" + elapsedMs);
++    }
++}
++

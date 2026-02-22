@@ -1,0 +1,849 @@
+diff --git a/core/src/test/java/org/neo4j/ogm/metadata/LotsOfRelationships.java b/core/src/test/java/org/neo4j/ogm/metadata/LotsOfRelationships.java
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/core/src/test/java/org/neo4j/ogm/metadata/LotsOfRelationships.java
+@@ -0,0 +1,808 @@
++package org.neo4j.ogm.metadata;
++
++import org.neo4j.ogm.annotation.Relationship;
++import java.util.List;
++
++public class LotsOfRelationships {
++    @Relationship
++    private List<Related0> rel0;
++
++    @Relationship
++    private List<Related1> rel1;
++
++    @Relationship
++    private List<Related2> rel2;
++
++    @Relationship
++    private List<Related3> rel3;
++
++    @Relationship
++    private List<Related4> rel4;
++
++    @Relationship
++    private List<Related5> rel5;
++
++    @Relationship
++    private List<Related6> rel6;
++
++    @Relationship
++    private List<Related7> rel7;
++
++    @Relationship
++    private List<Related8> rel8;
++
++    @Relationship
++    private List<Related9> rel9;
++
++    @Relationship
++    private List<Related10> rel10;
++
++    @Relationship
++    private List<Related11> rel11;
++
++    @Relationship
++    private List<Related12> rel12;
++
++    @Relationship
++    private List<Related13> rel13;
++
++    @Relationship
++    private List<Related14> rel14;
++
++    @Relationship
++    private List<Related15> rel15;
++
++    @Relationship
++    private List<Related16> rel16;
++
++    @Relationship
++    private List<Related17> rel17;
++
++    @Relationship
++    private List<Related18> rel18;
++
++    @Relationship
++    private List<Related19> rel19;
++
++    @Relationship
++    private List<Related20> rel20;
++
++    @Relationship
++    private List<Related21> rel21;
++
++    @Relationship
++    private List<Related22> rel22;
++
++    @Relationship
++    private List<Related23> rel23;
++
++    @Relationship
++    private List<Related24> rel24;
++
++    @Relationship
++    private List<Related25> rel25;
++
++    @Relationship
++    private List<Related26> rel26;
++
++    @Relationship
++    private List<Related27> rel27;
++
++    @Relationship
++    private List<Related28> rel28;
++
++    @Relationship
++    private List<Related29> rel29;
++
++    @Relationship
++    private List<Related30> rel30;
++
++    @Relationship
++    private List<Related31> rel31;
++
++    @Relationship
++    private List<Related32> rel32;
++
++    @Relationship
++    private List<Related33> rel33;
++
++    @Relationship
++    private List<Related34> rel34;
++
++    @Relationship
++    private List<Related35> rel35;
++
++    @Relationship
++    private List<Related36> rel36;
++
++    @Relationship
++    private List<Related37> rel37;
++
++    @Relationship
++    private List<Related38> rel38;
++
++    @Relationship
++    private List<Related39> rel39;
++
++    @Relationship
++    private List<Related40> rel40;
++
++    @Relationship
++    private List<Related41> rel41;
++
++    @Relationship
++    private List<Related42> rel42;
++
++    @Relationship
++    private List<Related43> rel43;
++
++    @Relationship
++    private List<Related44> rel44;
++
++    @Relationship
++    private List<Related45> rel45;
++
++    @Relationship
++    private List<Related46> rel46;
++
++    @Relationship
++    private List<Related47> rel47;
++
++    @Relationship
++    private List<Related48> rel48;
++
++    @Relationship
++    private List<Related49> rel49;
++
++    @Relationship
++    private List<Related50> rel50;
++
++    @Relationship
++    private List<Related51> rel51;
++
++    @Relationship
++    private List<Related52> rel52;
++
++    @Relationship
++    private List<Related53> rel53;
++
++    @Relationship
++    private List<Related54> rel54;
++
++    @Relationship
++    private List<Related55> rel55;
++
++    @Relationship
++    private List<Related56> rel56;
++
++    @Relationship
++    private List<Related57> rel57;
++
++    @Relationship
++    private List<Related58> rel58;
++
++    @Relationship
++    private List<Related59> rel59;
++
++    @Relationship
++    private List<Related60> rel60;
++
++    @Relationship
++    private List<Related61> rel61;
++
++    @Relationship
++    private List<Related62> rel62;
++
++    @Relationship
++    private List<Related63> rel63;
++
++    @Relationship
++    private List<Related64> rel64;
++
++    @Relationship
++    private List<Related65> rel65;
++
++    @Relationship
++    private List<Related66> rel66;
++
++    @Relationship
++    private List<Related67> rel67;
++
++    @Relationship
++    private List<Related68> rel68;
++
++    @Relationship
++    private List<Related69> rel69;
++
++    @Relationship
++    private List<Related70> rel70;
++
++    @Relationship
++    private List<Related71> rel71;
++
++    @Relationship
++    private List<Related72> rel72;
++
++    @Relationship
++    private List<Related73> rel73;
++
++    @Relationship
++    private List<Related74> rel74;
++
++    @Relationship
++    private List<Related75> rel75;
++
++    @Relationship
++    private List<Related76> rel76;
++
++    @Relationship
++    private List<Related77> rel77;
++
++    @Relationship
++    private List<Related78> rel78;
++
++    @Relationship
++    private List<Related79> rel79;
++
++    @Relationship
++    private List<Related80> rel80;
++
++    @Relationship
++    private List<Related81> rel81;
++
++    @Relationship
++    private List<Related82> rel82;
++
++    @Relationship
++    private List<Related83> rel83;
++
++    @Relationship
++    private List<Related84> rel84;
++
++    @Relationship
++    private List<Related85> rel85;
++
++    @Relationship
++    private List<Related86> rel86;
++
++    @Relationship
++    private List<Related87> rel87;
++
++    @Relationship
++    private List<Related88> rel88;
++
++    @Relationship
++    private List<Related89> rel89;
++
++    @Relationship
++    private List<Related90> rel90;
++
++    @Relationship
++    private List<Related91> rel91;
++
++    @Relationship
++    private List<Related92> rel92;
++
++    @Relationship
++    private List<Related93> rel93;
++
++    @Relationship
++    private List<Related94> rel94;
++
++    @Relationship
++    private List<Related95> rel95;
++
++    @Relationship
++    private List<Related96> rel96;
++
++    @Relationship
++    private List<Related97> rel97;
++
++    @Relationship
++    private List<Related98> rel98;
++
++    @Relationship
++    private List<Related99> rel99;
++
++    @Relationship
++    private List<Related100> rel100;
++
++    @Relationship
++    private List<Related101> rel101;
++
++    @Relationship
++    private List<Related102> rel102;
++
++    @Relationship
++    private List<Related103> rel103;
++
++    @Relationship
++    private List<Related104> rel104;
++
++    @Relationship
++    private List<Related105> rel105;
++
++    @Relationship
++    private List<Related106> rel106;
++
++    @Relationship
++    private List<Related107> rel107;
++
++    @Relationship
++    private List<Related108> rel108;
++
++    @Relationship
++    private List<Related109> rel109;
++
++    @Relationship
++    private List<Related110> rel110;
++
++    @Relationship
++    private List<Related111> rel111;
++
++    @Relationship
++    private List<Related112> rel112;
++
++    @Relationship
++    private List<Related113> rel113;
++
++    @Relationship
++    private List<Related114> rel114;
++
++    @Relationship
++    private List<Related115> rel115;
++
++    @Relationship
++    private List<Related116> rel116;
++
++    @Relationship
++    private List<Related117> rel117;
++
++    @Relationship
++    private List<Related118> rel118;
++
++    @Relationship
++    private List<Related119> rel119;
++
++    @Relationship
++    private List<Related120> rel120;
++
++    @Relationship
++    private List<Related121> rel121;
++
++    @Relationship
++    private List<Related122> rel122;
++
++    @Relationship
++    private List<Related123> rel123;
++
++    @Relationship
++    private List<Related124> rel124;
++
++    @Relationship
++    private List<Related125> rel125;
++
++    @Relationship
++    private List<Related126> rel126;
++
++    @Relationship
++    private List<Related127> rel127;
++
++    @Relationship
++    private List<Related128> rel128;
++
++    @Relationship
++    private List<Related129> rel129;
++
++    @Relationship
++    private List<Related130> rel130;
++
++    @Relationship
++    private List<Related131> rel131;
++
++    @Relationship
++    private List<Related132> rel132;
++
++    @Relationship
++    private List<Related133> rel133;
++
++    @Relationship
++    private List<Related134> rel134;
++
++    @Relationship
++    private List<Related135> rel135;
++
++    @Relationship
++    private List<Related136> rel136;
++
++    @Relationship
++    private List<Related137> rel137;
++
++    @Relationship
++    private List<Related138> rel138;
++
++    @Relationship
++    private List<Related139> rel139;
++
++    @Relationship
++    private List<Related140> rel140;
++
++    @Relationship
++    private List<Related141> rel141;
++
++    @Relationship
++    private List<Related142> rel142;
++
++    @Relationship
++    private List<Related143> rel143;
++
++    @Relationship
++    private List<Related144> rel144;
++
++    @Relationship
++    private List<Related145> rel145;
++
++    @Relationship
++    private List<Related146> rel146;
++
++    @Relationship
++    private List<Related147> rel147;
++
++    @Relationship
++    private List<Related148> rel148;
++
++    @Relationship
++    private List<Related149> rel149;
++
++    @Relationship
++    private List<Related150> rel150;
++
++    @Relationship
++    private List<Related151> rel151;
++
++    @Relationship
++    private List<Related152> rel152;
++
++    @Relationship
++    private List<Related153> rel153;
++
++    @Relationship
++    private List<Related154> rel154;
++
++    @Relationship
++    private List<Related155> rel155;
++
++    @Relationship
++    private List<Related156> rel156;
++
++    @Relationship
++    private List<Related157> rel157;
++
++    @Relationship
++    private List<Related158> rel158;
++
++    @Relationship
++    private List<Related159> rel159;
++
++    @Relationship
++    private List<Related160> rel160;
++
++    @Relationship
++    private List<Related161> rel161;
++
++    @Relationship
++    private List<Related162> rel162;
++
++    @Relationship
++    private List<Related163> rel163;
++
++    @Relationship
++    private List<Related164> rel164;
++
++    @Relationship
++    private List<Related165> rel165;
++
++    @Relationship
++    private List<Related166> rel166;
++
++    @Relationship
++    private List<Related167> rel167;
++
++    @Relationship
++    private List<Related168> rel168;
++
++    @Relationship
++    private List<Related169> rel169;
++
++    @Relationship
++    private List<Related170> rel170;
++
++    @Relationship
++    private List<Related171> rel171;
++
++    @Relationship
++    private List<Related172> rel172;
++
++    @Relationship
++    private List<Related173> rel173;
++
++    @Relationship
++    private List<Related174> rel174;
++
++    @Relationship
++    private List<Related175> rel175;
++
++    @Relationship
++    private List<Related176> rel176;
++
++    @Relationship
++    private List<Related177> rel177;
++
++    @Relationship
++    private List<Related178> rel178;
++
++    @Relationship
++    private List<Related179> rel179;
++
++    @Relationship
++    private List<Related180> rel180;
++
++    @Relationship
++    private List<Related181> rel181;
++
++    @Relationship
++    private List<Related182> rel182;
++
++    @Relationship
++    private List<Related183> rel183;
++
++    @Relationship
++    private List<Related184> rel184;
++
++    @Relationship
++    private List<Related185> rel185;
++
++    @Relationship
++    private List<Related186> rel186;
++
++    @Relationship
++    private List<Related187> rel187;
++
++    @Relationship
++    private List<Related188> rel188;
++
++    @Relationship
++    private List<Related189> rel189;
++
++    @Relationship
++    private List<Related190> rel190;
++
++    @Relationship
++    private List<Related191> rel191;
++
++    @Relationship
++    private List<Related192> rel192;
++
++    @Relationship
++    private List<Related193> rel193;
++
++    @Relationship
++    private List<Related194> rel194;
++
++    @Relationship
++    private List<Related195> rel195;
++
++    @Relationship
++    private List<Related196> rel196;
++
++    @Relationship
++    private List<Related197> rel197;
++
++    @Relationship
++    private List<Related198> rel198;
++
++    @Relationship
++    private List<Related199> rel199;
++
++    public static class Related0 {}
++    public static class Related1 {}
++    public static class Related2 {}
++    public static class Related3 {}
++    public static class Related4 {}
++    public static class Related5 {}
++    public static class Related6 {}
++    public static class Related7 {}
++    public static class Related8 {}
++    public static class Related9 {}
++    public static class Related10 {}
++    public static class Related11 {}
++    public static class Related12 {}
++    public static class Related13 {}
++    public static class Related14 {}
++    public static class Related15 {}
++    public static class Related16 {}
++    public static class Related17 {}
++    public static class Related18 {}
++    public static class Related19 {}
++    public static class Related20 {}
++    public static class Related21 {}
++    public static class Related22 {}
++    public static class Related23 {}
++    public static class Related24 {}
++    public static class Related25 {}
++    public static class Related26 {}
++    public static class Related27 {}
++    public static class Related28 {}
++    public static class Related29 {}
++    public static class Related30 {}
++    public static class Related31 {}
++    public static class Related32 {}
++    public static class Related33 {}
++    public static class Related34 {}
++    public static class Related35 {}
++    public static class Related36 {}
++    public static class Related37 {}
++    public static class Related38 {}
++    public static class Related39 {}
++    public static class Related40 {}
++    public static class Related41 {}
++    public static class Related42 {}
++    public static class Related43 {}
++    public static class Related44 {}
++    public static class Related45 {}
++    public static class Related46 {}
++    public static class Related47 {}
++    public static class Related48 {}
++    public static class Related49 {}
++    public static class Related50 {}
++    public static class Related51 {}
++    public static class Related52 {}
++    public static class Related53 {}
++    public static class Related54 {}
++    public static class Related55 {}
++    public static class Related56 {}
++    public static class Related57 {}
++    public static class Related58 {}
++    public static class Related59 {}
++    public static class Related60 {}
++    public static class Related61 {}
++    public static class Related62 {}
++    public static class Related63 {}
++    public static class Related64 {}
++    public static class Related65 {}
++    public static class Related66 {}
++    public static class Related67 {}
++    public static class Related68 {}
++    public static class Related69 {}
++    public static class Related70 {}
++    public static class Related71 {}
++    public static class Related72 {}
++    public static class Related73 {}
++    public static class Related74 {}
++    public static class Related75 {}
++    public static class Related76 {}
++    public static class Related77 {}
++    public static class Related78 {}
++    public static class Related79 {}
++    public static class Related80 {}
++    public static class Related81 {}
++    public static class Related82 {}
++    public static class Related83 {}
++    public static class Related84 {}
++    public static class Related85 {}
++    public static class Related86 {}
++    public static class Related87 {}
++    public static class Related88 {}
++    public static class Related89 {}
++    public static class Related90 {}
++    public static class Related91 {}
++    public static class Related92 {}
++    public static class Related93 {}
++    public static class Related94 {}
++    public static class Related95 {}
++    public static class Related96 {}
++    public static class Related97 {}
++    public static class Related98 {}
++    public static class Related99 {}
++    public static class Related100 {}
++    public static class Related101 {}
++    public static class Related102 {}
++    public static class Related103 {}
++    public static class Related104 {}
++    public static class Related105 {}
++    public static class Related106 {}
++    public static class Related107 {}
++    public static class Related108 {}
++    public static class Related109 {}
++    public static class Related110 {}
++    public static class Related111 {}
++    public static class Related112 {}
++    public static class Related113 {}
++    public static class Related114 {}
++    public static class Related115 {}
++    public static class Related116 {}
++    public static class Related117 {}
++    public static class Related118 {}
++    public static class Related119 {}
++    public static class Related120 {}
++    public static class Related121 {}
++    public static class Related122 {}
++    public static class Related123 {}
++    public static class Related124 {}
++    public static class Related125 {}
++    public static class Related126 {}
++    public static class Related127 {}
++    public static class Related128 {}
++    public static class Related129 {}
++    public static class Related130 {}
++    public static class Related131 {}
++    public static class Related132 {}
++    public static class Related133 {}
++    public static class Related134 {}
++    public static class Related135 {}
++    public static class Related136 {}
++    public static class Related137 {}
++    public static class Related138 {}
++    public static class Related139 {}
++    public static class Related140 {}
++    public static class Related141 {}
++    public static class Related142 {}
++    public static class Related143 {}
++    public static class Related144 {}
++    public static class Related145 {}
++    public static class Related146 {}
++    public static class Related147 {}
++    public static class Related148 {}
++    public static class Related149 {}
++    public static class Related150 {}
++    public static class Related151 {}
++    public static class Related152 {}
++    public static class Related153 {}
++    public static class Related154 {}
++    public static class Related155 {}
++    public static class Related156 {}
++    public static class Related157 {}
++    public static class Related158 {}
++    public static class Related159 {}
++    public static class Related160 {}
++    public static class Related161 {}
++    public static class Related162 {}
++    public static class Related163 {}
++    public static class Related164 {}
++    public static class Related165 {}
++    public static class Related166 {}
++    public static class Related167 {}
++    public static class Related168 {}
++    public static class Related169 {}
++    public static class Related170 {}
++    public static class Related171 {}
++    public static class Related172 {}
++    public static class Related173 {}
++    public static class Related174 {}
++    public static class Related175 {}
++    public static class Related176 {}
++    public static class Related177 {}
++    public static class Related178 {}
++    public static class Related179 {}
++    public static class Related180 {}
++    public static class Related181 {}
++    public static class Related182 {}
++    public static class Related183 {}
++    public static class Related184 {}
++    public static class Related185 {}
++    public static class Related186 {}
++    public static class Related187 {}
++    public static class Related188 {}
++    public static class Related189 {}
++    public static class Related190 {}
++    public static class Related191 {}
++    public static class Related192 {}
++    public static class Related193 {}
++    public static class Related194 {}
++    public static class Related195 {}
++    public static class Related196 {}
++    public static class Related197 {}
++    public static class Related198 {}
++    public static class Related199 {}
++}
+
+diff --git a/core/src/test/java/org/neo4j/ogm/metadata/GeneratedTests.java b/core/src/test/java/org/neo4j/ogm/metadata/GeneratedTests.java
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/core/src/test/java/org/neo4j/ogm/metadata/GeneratedTests.java
+@@ -0,0 +1,19 @@
++package org.neo4j.ogm.metadata;
++
++import org.junit.Test;
++
++public class GeneratedTests {
++
++    @Test
++    public void testRelationshipFieldsPerformance() {
++        ClassInfo classInfo = new ClassInfo(LotsOfRelationships.class, org.neo4j.ogm.driver.TypeSystem.NoNativeTypes.INSTANCE);
++        // call relationshipFields many times to simulate repeated mapping
++        long start = System.nanoTime();
++        for (int i = 0; i < 1000; i++) {
++            classInfo.relationshipFields();
++        }
++        long end = System.nanoTime();
++        System.out.println("Time elapsed (ms): " + ((end - start) / 1_000_000.0));
++    }
++}
+
+diff --git a/EXPLANATION.md b/EXPLANATION.md
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/EXPLANATION.md
+@@ -0,0 +1,3 @@
++This test measures the time taken by ClassInfo.relationshipFields when called repeatedly.
++It creates a class with many @Relationship annotated fields to stress metadata scanning and calls relationshipFields() 1000 times, printing elapsed time.
++The patched version of ClassInfo caches relationship fields, so the repeated calls should be much faster.
+

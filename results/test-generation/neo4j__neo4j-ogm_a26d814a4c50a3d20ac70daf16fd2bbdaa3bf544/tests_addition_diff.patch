@@ -1,0 +1,76 @@
+*** Begin Patch
+*** Add File: core/src/test/java/org/neo4j/ogm/metadata/GeneratedPerformanceTest.java
++package org.neo4j.ogm.metadata;
++
++import org.junit.Test;
++import org.neo4j.ogm.annotation.PostLoad;
++import org.neo4j.ogm.driver.TypeSystem;
++
++import java.util.concurrent.CountDownLatch;
++import java.util.concurrent.ExecutorService;
++import java.util.concurrent.Executors;
++import java.util.concurrent.TimeUnit;
++
++import static org.junit.Assert.assertNotNull;
++
++public class GeneratedPerformanceTest {
++
++    private static final int THREADS = 32;
++    private static final int ITERATIONS = 10000; // per thread
++
++    @Test
++    public void postLoadMethodConcurrencyStress() throws Exception {
++        ClassInfo classInfo = new ClassInfo(TestEntity.class, TypeSystem.NoNativeTypes.INSTANCE);
++
++        // force initialization first to ensure we measure the cost of repeated calls
++        MethodInfo initial = classInfo.postLoadMethodOrNull();
++        assertNotNull("PostLoad method should be detected", initial);
++
++        CountDownLatch start = new CountDownLatch(1);
++        CountDownLatch done = new CountDownLatch(THREADS);
++
++        ExecutorService pool = Executors.newFixedThreadPool(THREADS);
++
++        for (int t = 0; t < THREADS; t++) {
++            pool.submit(() -> {
++                try {
++                    start.await();
++                    for (int i = 0; i < ITERATIONS; i++) {
++                        MethodInfo mi = classInfo.postLoadMethodOrNull();
++                        if (mi == null) {
++                            throw new IllegalStateException("Unexpected null MethodInfo");
++                        }
++                    }
++                } catch (InterruptedException e) {
++                    Thread.currentThread().interrupt();
++                } finally {
++                    done.countDown();
++                }
++            });
++        }
++
++        long t0 = System.nanoTime();
++        start.countDown();
++        // wait for threads to finish
++        done.await();
++        long t1 = System.nanoTime();
++
++        pool.shutdownNow();
++        pool.awaitTermination(5, TimeUnit.SECONDS);
++
++        double elapsedSec = (t1 - t0) / 1_000_000_000.0;
++        System.out.printf("GeneratedPerformanceTest: Threads=%d, Iterations=%d, TotalCalls=%d, Time=%.3f s\n",
++            THREADS, ITERATIONS, (long) THREADS * ITERATIONS, elapsedSec);
++    }
++
++    // simple test entity with a single @PostLoad method
++    public static class TestEntity {
++
++        @PostLoad
++        public void onLoad() {
++            // no-op
++        }
++    }
++}
++
+*** End Patch

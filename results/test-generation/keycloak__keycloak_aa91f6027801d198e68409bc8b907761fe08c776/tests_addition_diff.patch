@@ -1,0 +1,126 @@
+*** Begin Patch
+*** Add File: server-spi-private/src/test/java/org/keycloak/performance/DefaultEvaluationPerformanceTest.java
++package org.keycloak.performance;
++
++import org.junit.Test;
++import org.keycloak.authorization.AuthorizationProvider;
++import org.keycloak.authorization.permission.ResourcePermission;
++import org.keycloak.authorization.policy.evaluation.DefaultEvaluation;
++import org.keycloak.authorization.policy.evaluation.EvaluationContext;
++import org.keycloak.authorization.Decision;
++import org.keycloak.models.*;
++
++import java.lang.reflect.InvocationHandler;
++import java.lang.reflect.Method;
++import java.lang.reflect.Proxy;
++import java.util.HashMap;
++import java.util.Map;
++
++import static org.junit.Assert.assertTrue;
++
++public class DefaultEvaluationPerformanceTest {
++
++    @Test
++    public void testRepeatedUserLookups() {
++        // create a dynamic proxy for KeycloakSession that delegates specific calls
++        Map<String, Object> sessionAttributes = new HashMap<>();
++        long delayMs = 3; // simulate expensive lookup
++
++        // realm proxy: implement getClientById
++        Object realmProxy = Proxy.newProxyInstance(RealmModel.class.getClassLoader(), new Class[]{RealmModel.class}, new InvocationHandler() {
++            @Override
++            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                if ("getClientById".equals(method.getName())) {
++                    final String id = (String) args[0];
++                    return Proxy.newProxyInstance(ClientModel.class.getClassLoader(), new Class[]{ClientModel.class}, new InvocationHandler() {
++                        @Override
++                        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                            if ("getId".equals(method.getName()) || "getClientId".equals(method.getName())) {
++                                return id;
++                            }
++                            return defaultReturn(method);
++                        }
++                    });
++                }
++                return defaultReturn(method);
++            }
++        });
++
++        // user provider proxy: sleeps on lookup methods
++        Object userProviderProxy = Proxy.newProxyInstance(UserProvider.class.getClassLoader(), new Class[]{UserProvider.class}, new InvocationHandler() {
++            int calls = 0;
++            @Override
++            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                String m = method.getName();
++                if (m.equals("getUserById") || m.equals("getUserByUsername") || m.equals("getUserByEmail") || m.equals("getServiceAccount")) {
++                    // simulate delay and return null to trigger caching of null
++                    Thread.sleep(delayMs);
++                    calls++;
++                    return null;
++                }
++                return defaultReturn(method);
++            }
++        });
++
++        // keycloak context proxy
++        Object contextProxy = Proxy.newProxyInstance(KeycloakContext.class.getClassLoader(), new Class[]{KeycloakContext.class}, new InvocationHandler() {
++            @Override
++            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                if ("getRealm".equals(method.getName())) return realmProxy;
++                if ("setRealm".equals(method.getName())) { return null; }
++                return defaultReturn(method);
++            }
++        });
++
++        // keycloak session proxy
++        KeycloakSession session = (KeycloakSession) Proxy.newProxyInstance(KeycloakSession.class.getClassLoader(), new Class[]{KeycloakSession.class}, new InvocationHandler() {
++            @Override
++            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                String name = method.getName();
++                if ("getContext".equals(name)) return contextProxy;
++                if ("users".equals(name)) return userProviderProxy;
++                if ("getAttribute".equals(name) && args != null && args.length == 1) return sessionAttributes.get((String) args[0]);
++                if ("setAttribute".equals(name) && args != null && args.length == 2) { sessionAttributes.put((String) args[0], args[1]); return null; }
++                if ("getAttributes".equals(name)) return sessionAttributes;
++                return defaultReturn(method);
++            }
++        });
++
++        AuthorizationProvider authorization = new AuthorizationProvider(session, (RealmModel) realmProxy, null);
++
++        EvaluationContext ctx = new EvaluationContext() {
++            @Override public org.keycloak.authorization.identity.Identity getIdentity() { return null; }
++            @Override public org.keycloak.authorization.attribute.Attributes getAttributes() { return null; }
++        };
++
++        DefaultEvaluation eval = new DefaultEvaluation(new ResourcePermission((org.keycloak.authorization.model.Resource) null, (java.util.Collection<org.keycloak.authorization.model.Scope>) null, (org.keycloak.authorization.model.ResourceServer) null), ctx, (Decision) new Decision() {
++            @Override public void onDecision(org.keycloak.authorization.policy.evaluation.Evaluation evaluation) {}
++        }, authorization);
++
++        String userId = "test-client";
++        int iterations = 120;
++
++        long start = System.nanoTime();
++        for (int i = 0; i < iterations; i++) {
++            eval.getRealm().isUserInRealmRole(userId, "some-role");
++        }
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++
++        System.out.println("DefaultEvaluationPerformanceTest elapsed ms: " + elapsedMs);
++
++        assertTrue(elapsedMs > 0);
++    }
++
++    private static Object defaultReturn(Method method) {
++        Class<?> rt = method.getReturnType();
++        if (!rt.isPrimitive()) return null;
++        if (rt.equals(boolean.class)) return false;
++        if (rt.equals(int.class)) return 0;
++        if (rt.equals(long.class)) return 0L;
++        if (rt.equals(void.class)) return null;
++        if (rt.equals(double.class)) return 0.0d;
++        if (rt.equals(float.class)) return 0.0f;
++        return 0;
++    }
++}
+*** End Patch

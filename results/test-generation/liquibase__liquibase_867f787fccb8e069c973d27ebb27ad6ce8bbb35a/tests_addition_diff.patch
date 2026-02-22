@@ -1,0 +1,89 @@
+*** Begin Patch
+*** Add File: liquibase-standard/src/test/java/liquibase/util/GeneratedPerformanceTest.java
+package liquibase.util;
+
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
+public class GeneratedPerformanceTest {
+
+    @Test
+    public void testRandomIdentifierSpeed() {
+        final int len = 32;
+        final int warmups = 1000;
+        final int iterations = 300000;
+
+        // warmup to allow JIT
+        for (int i = 0; i < warmups; i++) {
+            StringUtil.randomIdentifier(len);
+        }
+
+        long start = System.nanoTime();
+        int checksum = 0;
+        for (int i = 0; i < iterations; i++) {
+            String s = StringUtil.randomIdentifier(len);
+            checksum += s.charAt(0);
+        }
+        long end = System.nanoTime();
+        double elapsedSec = (end - start) / 1_000_000_000.0;
+        System.out.println("GeneratedPerformanceTest: iterations=" + iterations + " elapsed(s)=" + elapsedSec + " checksum=" + checksum);
+
+        // sanity check to keep result used
+        assertEquals(len, StringUtil.randomIdentifier(len).length());
+    }
+}
+
+*** End Patch
+*** Begin Patch
+*** Add File: liquibase-standard/src/test/java/liquibase/util/GeneratedPerformanceConcurrencyTest.java
+package liquibase.util;
+
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+
+import static org.junit.Assert.assertEquals;
+
+public class GeneratedPerformanceConcurrencyTest {
+
+    @Test
+    public void testRandomIdentifierConcurrency() throws Exception {
+        final int len = 32;
+        final int threads = Math.max(2, Runtime.getRuntime().availableProcessors());
+        final int perThread = 200_000;
+
+        ExecutorService es = Executors.newFixedThreadPool(threads);
+        CountDownLatch startLatch = new CountDownLatch(1);
+        List<Future<Integer>> futures = new ArrayList<>();
+
+        for (int t = 0; t < threads; t++) {
+            futures.add(es.submit(() -> {
+                int localSum = 0;
+                startLatch.await();
+                for (int i = 0; i < perThread; i++) {
+                    String s = StringUtil.randomIdentifier(len);
+                    localSum += s.charAt(0);
+                }
+                return localSum;
+            }));
+        }
+
+        long start = System.nanoTime();
+        startLatch.countDown();
+        int total = 0;
+        for (Future<Integer> f : futures) {
+            total += f.get();
+        }
+        long end = System.nanoTime();
+        double elapsed = (end - start) / 1_000_000_000.0;
+        System.out.println("GeneratedPerformanceConcurrencyTest: threads=" + threads + " totalIterations=" + (threads * perThread) + " elapsed(s)=" + elapsed + " total=" + total);
+
+        es.shutdownNow();
+        assertEquals(len, StringUtil.randomIdentifier(len).length());
+    }
+}
+
+*** End Patch

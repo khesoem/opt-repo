@@ -1,0 +1,44 @@
+diff -ru /workspace/original_repo/core/src/test/java/org/neo4j/ogm/session/delegates/GeneratedPerformanceTests.java /workspace/patched_repo/core/src/test/java/org/neo4j/ogm/session/delegates/GeneratedPerformanceTests.java
+--- /workspace/original_repo/core/src/test/java/org/neo4j/ogm/session/delegates/GeneratedPerformanceTests.java	2026-02-19 22:38:31.352238993 +0000
++++ /workspace/patched_repo/core/src/test/java/org/neo4j/ogm/session/delegates/GeneratedPerformanceTests.java	2026-02-19 22:40:10.917212890 +0000
+@@ -20,8 +20,6 @@
+ 
+ import static org.junit.Assert.assertTrue;
+ 
+-import java.lang.invoke.MethodHandle;
+-import java.lang.reflect.Method;
+ 
+ import org.junit.Test;
+ 
+@@ -58,9 +56,13 @@
+         int sink = 0;
+         for (int i = 0; i < warmup; i++) {
+             if (patternCaseInsensitive) {
+-                if (pattern.matcher(cypher).find()) sink++;
++                if (pattern.matcher(cypher).find()) {
++                    sink++;
++                }
+             } else {
+-                if (pattern.matcher(cypher.toUpperCase()).find()) sink++;
++                if (pattern.matcher(cypher.toUpperCase()).find()) {
++                    sink++;
++                }
+             }
+         }
+ 
+@@ -69,9 +71,13 @@
+         long start = System.nanoTime();
+         for (int i = 0; i < iterations; i++) {
+             if (patternCaseInsensitive) {
+-                if (pattern.matcher(cypher).find()) sink++;
++                if (pattern.matcher(cypher).find()) {
++                    sink++;
++                }
+             } else {
+-                if (pattern.matcher(cypher.toUpperCase()).find()) sink++;
++                if (pattern.matcher(cypher.toUpperCase()).find()) {
++                    sink++;
++                }
+             }
+         }
+         long end = System.nanoTime();

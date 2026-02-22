@@ -1,0 +1,63 @@
+diff --git a/core/src/test/java/org/neo4j/ogm/metadata/GeneratedTests.java b/core/src/test/java/org/neo4j/ogm/metadata/GeneratedTests.java
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/core/src/test/java/org/neo4j/ogm/metadata/GeneratedTests.java
+@@ -0,0 +1,120 @@
++/*
++ * Generated performance test for ClassInfo.getEndNodeReader/getStartNodeReader
++ */
++package org.neo4j.ogm.metadata;
++
++import org.junit.Test;
++import org.neo4j.ogm.annotation.EndNode;
++import org.neo4j.ogm.annotation.RelationshipEntity;
++import org.neo4j.ogm.annotation.StartNode;
++import org.neo4j.ogm.driver.TypeSystem;
++
++import static org.junit.Assert.assertNotNull;
++
++public class GeneratedTests {
++
++    @RelationshipEntity(type = "REL")
++    public static class Rel {
++        @StartNode
++        public Object a;
++
++        @EndNode
++        public Object b;
++    }
++
++    @Test
++    public void performance_getStartEndNodeReaders() {
++        ClassInfo ci = new ClassInfo(Rel.class, TypeSystem.NoNativeTypes.INSTANCE);
++
++        // quick sanity check
++        assertNotNull(ci.getStartNodeReader());
++        assertNotNull(ci.getEndNodeReader());
++
++        // warmup
++        for (int i = 0; i < 1000; i++) {
++            ci.getStartNodeReader();
++            ci.getEndNodeReader();
++        }
++
++        final int ITER = 200_000;
++
++        long t0 = System.nanoTime();
++        for (int i = 0; i < ITER; i++) {
++            ci.getEndNodeReader();
++        }
++        long t1 = System.nanoTime();
++
++        for (int i = 0; i < ITER; i++) {
++            ci.getStartNodeReader();
++        }
++        long t2 = System.nanoTime();
++
++        double endNs = (t1 - t0) / 1_000_000.0;
++        double startNs = (t2 - t1) / 1_000_000.0;
++
++        System.out.println("GeneratedTests: getEndNodeReader loop ms=" + endNs + " getStartNodeReader loop ms=" + startNs);
++    }
++}

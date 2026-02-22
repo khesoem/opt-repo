@@ -1,0 +1,3 @@
+Generated performance test
+
+The added test org.neo4j.ogm.session.delegates.GeneratedTests.testPreSaveTraversalPerformance constructs a large cyclic graph of node entities (2000 nodes) and invokes session.save on one node. This stresses the pre-save traversal logic in SaveEventDelegate. The patched version replaces recursive traversal with an iterative stack-based traversal and other optimizations; the test is intended to run in both original and patched repositories and compare the Time elapsed reported by Maven for this single test class. The improvement_tests.txt lists the test class to run.

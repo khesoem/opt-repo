@@ -1,0 +1,87 @@
+*** Begin Patch
+*** Add File: rest/kadai-rest-spring/src/test/java/io/kadai/classification/rest/GeneratedTests.java
++package io.kadai.classification.rest;
++
++import static org.mockito.ArgumentMatchers.any;
++import static org.mockito.Mockito.mock;
++import static org.mockito.Mockito.when;
++
++import com.fasterxml.jackson.databind.ObjectMapper;
++import io.kadai.classification.api.Classification;
++import io.kadai.classification.api.ClassificationService;
++import io.kadai.classification.rest.assembler.ClassificationDefinitionRepresentationModelAssembler;
++import io.kadai.classification.rest.models.ClassificationDefinitionRepresentationModel;
++import io.kadai.classification.rest.models.ClassificationRepresentationModel;
++import java.lang.reflect.Method;
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.HashMap;
++import java.util.List;
++import java.util.Map;
++import java.util.UUID;
++import org.junit.jupiter.api.Test;
++
++class GeneratedTests {
++
++  @Test
++  void measure_mapChildrenToParentKeys_performance() throws Exception {
++    final int N = 3000;
++
++    List<ClassificationDefinitionRepresentationModel> definitions = new ArrayList<>(N);
++    for (int i = 0; i < N; i++) {
++      ClassificationRepresentationModel cl = new ClassificationRepresentationModel();
++      cl.setClassificationId("CID" + i);
++      cl.setKey("K" + i);
++      cl.setDomain("DOMAIN_X");
++      if (i % 3 == 0 && i > 0) {
++        cl.setParentId("CID" + (i - 1));
++        cl.setParentKey("");
++      } else {
++        cl.setParentId("");
++        cl.setParentKey("");
++      }
++      definitions.add(new ClassificationDefinitionRepresentationModel(cl));
++    }
++
++    ClassificationDefinitionRepresentationModelAssembler assembler =
++        mock(ClassificationDefinitionRepresentationModelAssembler.class);
++    when(assembler.toEntityModel(any()))
++        .thenAnswer(
++            inv -> {
++              ClassificationDefinitionRepresentationModel d = inv.getArgument(0);
++              Classification c = mock(Classification.class);
++              when(c.getKey()).thenReturn(d.getClassification().getKey());
++              when(c.getDomain()).thenReturn(d.getClassification().getDomain());
++              when(c.getId()).thenReturn(UUID.randomUUID().toString());
++              return c;
++            });
++
++    ObjectMapper mapper = new ObjectMapper();
++    ClassificationService classificationService = mock(ClassificationService.class);
++
++    ClassificationDefinitionController controller =
++        new ClassificationDefinitionController(mapper, classificationService, assembler);
++
++    Method m =
++        ClassificationDefinitionController.class
++            .getDeclaredMethod(
++                "mapChildrenToParentKeys", Collection.class, Map.class);
++    m.setAccessible(true);
++
++    Map<String, String> systemIds = new HashMap<>();
++
++    long start = System.nanoTime();
++    @SuppressWarnings("unchecked")
++    Map<Classification, String> result =
++        (Map<Classification, String>) m.invoke(controller, definitions, systemIds);
++    long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++
++    System.out.println("[GeneratedTests] mapChildrenToParentKeys elapsed ms: " + elapsedMs);
++
++    if (result == null) {
++      throw new AssertionError("result must not be null");
++    }
++  }
++}
++
+*** End Patch

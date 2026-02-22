@@ -1,0 +1,46 @@
+*** Begin Patch
+*** Add File: presto-spi/src/test/java/io/prestosql/spi/type/GeneratedTests.java
++package io.prestosql.spi.type;
++
++import org.testng.annotations.Test;
++
++import java.util.ArrayList;
++import java.util.HashSet;
++import java.util.List;
++
++public class GeneratedTests {
++
++    @Test
++    public void testTypeSignatureHashCodePerformance() {
++        final int unique = 500;
++        final int repeats = 200_000;
++
++        List<TypeSignature> types = new ArrayList<>(unique);
++        for (int i = 0; i < unique; i++) {
++            // create a type with some parameters to make hashCode non-trivial
++            TypeSignature inner = new TypeSignature("varchar");
++            TypeSignature t = TypeSignature.parametricType("type" + i, inner);
++            types.add(t);
++        }
++
++        HashSet<TypeSignature> set = new HashSet<>(types);
++
++        // warm up
++        for (TypeSignature t : types) {
++            set.contains(t);
++        }
++
++        long start = System.nanoTime();
++        for (int r = 0; r < repeats; r++) {
++            TypeSignature t = types.get(r % unique);
++            // repeated contains calls on the same instances should benefit from cached hashCode
++            set.contains(t);
++        }
++        long elapsed = System.nanoTime() - start;
++
++        double seconds = elapsed / 1_000_000_000.0;
++        System.out.println("GeneratedTests: contains loop time = " + seconds + " s");
++    }
++}
++
+*** End Patch

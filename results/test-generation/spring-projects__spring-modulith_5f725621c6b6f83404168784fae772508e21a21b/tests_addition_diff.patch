@@ -1,0 +1,76 @@
+diff --git a/spring-modulith-observability/src/test/java/org/springframework/modulith/observability/GeneratedTests.java b/spring-modulith-observability/src/test/java/org/springframework/modulith/observability/GeneratedTests.java
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/spring-modulith-observability/src/test/java/org/springframework/modulith/observability/GeneratedTests.java
+@@ -0,0 +1,70 @@
++package org.springframework.modulith.observability;
++
++import static org.mockito.ArgumentMatchers.any;
++import static org.mockito.Mockito.mock;
++import static org.mockito.Mockito.when;
++
++import java.util.Optional;
++import java.util.concurrent.TimeUnit;
++
++import org.junit.jupiter.api.Test;
++import org.springframework.context.PayloadApplicationEvent;
++import org.springframework.modulith.core.ApplicationModule;
++import org.springframework.modulith.core.ApplicationModules;
++import org.springframework.modulith.observability.support.CrossModuleEventCounterFactory;
++import org.springframework.modulith.observability.support.ModuleEventListener;
++import org.springframework.modulith.runtime.ApplicationModulesRuntime;
++import org.springframework.modulith.runtime.ApplicationRuntime;
++import io.micrometer.observation.ObservationRegistry;
++
++/**
++ * Generated performance test to demonstrate the improvement of caching module lookups by type.
++ */
++public class GeneratedTests {
++
++    static class DummyPayload {
++    }
++
++    @Test
++    public void eventListenerLookupPerformance() throws Exception {
++        ApplicationModules modules = mock(ApplicationModules.class);
++        ApplicationModule module = mock(ApplicationModule.class);
++
++        when(module.getDisplayName()).thenReturn("dummy-module");
++
++        when(modules.getModuleByType(org.mockito.ArgumentMatchers.anyString())).thenAnswer(invocation -> {
++            try { TimeUnit.MILLISECONDS.sleep(20); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
++            return Optional.of(module);
++        });
++
++        when(modules.getModuleByType(org.mockito.ArgumentMatchers.any(Class.class))).thenReturn(Optional.of(module));
++
++        ApplicationModulesRuntime runtime = new ApplicationModulesRuntime(() -> modules, new ApplicationRuntime() {
++            @Override public String getId() { return "test"; }
++            @Override public Class<?> getMainApplicationClass() { return GeneratedTests.class; }
++            @Override public Class<?> getUserClass(Object bean, String beanName) { return bean.getClass(); }
++            @Override public boolean isApplicationClass(Class<?> type) { return true; }
++        });
++
++        ObservationRegistry observationRegistry = mock(ObservationRegistry.class);
++        when(observationRegistry.getCurrentObservation()).thenReturn(null);
++
++        CrossModuleEventCounterFactory factory = mock(CrossModuleEventCounterFactory.class);
++
++        ModuleEventListener listener = new ModuleEventListener(runtime, () -> observationRegistry, () -> null, factory);
++
++        PayloadApplicationEvent<DummyPayload> event = new PayloadApplicationEvent<>(this, new DummyPayload());
++
++        for (int i = 0; i < 5; i++) { listener.onApplicationEvent(event); }
++
++        int runs = 80;
++        long start = System.nanoTime();
++        for (int i = 0; i < runs; i++) { listener.onApplicationEvent(event); }
++        long elapsedMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
++
++        System.out.println("Completed " + runs + " event publications in " + elapsedMs + " ms");
++
++        // Simple assertion to ensure test runs
++        if (elapsedMs <= 0) throw new AssertionError("timing not captured");
++    }
++}

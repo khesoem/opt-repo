@@ -1,0 +1,95 @@
+*** Begin Patch
+*** Add File: server-spi-private/src/test/java/org/keycloak/userprofile/GeneratedTests.java
++package org.keycloak.userprofile;
++
++import org.junit.Test;
++
++import java.util.*;
++import java.util.function.Function;
++
++public class GeneratedTests {
++
++    @Test
++    public void performance_noErrorValidation() {
++        final int ATTR_COUNT = 5;
++        final int ITER = 10000;
++        Set<String> names = new HashSet<>();
++        for (int i = 0; i < ATTR_COUNT; i++) names.add("a" + i);
++
++        Attributes attrs = new Attributes() {
++            private final Map<String, List<String>> map = new HashMap<>();
++            {
++                for (String n : names) map.put(n, Collections.emptyList());
++            }
++
++            @Override
++            public List<String> get(String name) {
++                return map.getOrDefault(name, EMPTY_VALUE);
++            }
++
++            @Override
++            public boolean isReadOnly(String name) {
++                return false;
++            }
++
++            @Override
++            public boolean validate(String name, java.util.function.Consumer<org.keycloak.validate.ValidationError>... listeners) {
++                // no validation errors
++                return true;
++            }
++
++            @Override
++            public boolean contains(String name) {
++                return map.containsKey(name);
++            }
++
++            @Override
++            public Set<String> nameSet() {
++                return map.keySet();
++            }
++
++            @Override
++            public Map<String, List<String>> getWritable() {
++                return Collections.unmodifiableMap(map);
++            }
++
++            @Override
++            public AttributeMetadata getMetadata(String name) {
++                return null;
++            }
++
++            @Override
++            public boolean isRequired(String name) {
++                return false;
++            }
++
++            @Override
++            public Map<String, List<String>> getReadable() {
++                return Collections.unmodifiableMap(map);
++            }
++
++            @Override
++            public Map<String, List<String>> toMap() {
++                return Collections.unmodifiableMap(map);
++            }
++
++            @Override
++            public Map<String, List<String>> getUnmanagedAttributes() {
++                return Collections.emptyMap();
++            }
++        };
++
++        DefaultUserProfile profile = new DefaultUserProfile(null, attrs, (a) -> null, null, null);
++
++        // warmup
++        for (int i = 0; i < 100; i++) profile.validate();
++
++        long t0 = System.nanoTime();
++        for (int i = 0; i < ITER; i++) profile.validate();
++        long t1 = System.nanoTime();
++        double s = (t1 - t0) / 1e9;
++        System.out.println("Total time(s):" + s);
++    }
++}
++
+*** End Patch

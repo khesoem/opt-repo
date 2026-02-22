@@ -1,0 +1,97 @@
+diff --git a/model/infinispan/src/test/java/org/keycloak/models/cache/infinispan/bench/GeneratedTests.java b/model/infinispan/src/test/java/org/keycloak/models/cache/infinispan/bench/GeneratedTests.java
+new file mode 100644
+index 0000000..87a5318
+--- /dev/null
++++ b/model/infinispan/src/test/java/org/keycloak/models/cache/infinispan/bench/GeneratedTests.java
+@@ -0,0 +1,91 @@
++package org.keycloak.models.cache.infinispan.bench;
++
++import org.junit.Test;
++import org.keycloak.models.OrganizationModel;
++import org.keycloak.models.RealmModel;
++import org.keycloak.models.cache.infinispan.organization.CachedOrganization;
++
++import java.lang.reflect.InvocationHandler;
++import java.lang.reflect.Method;
++import java.lang.reflect.Proxy;
++import java.util.ArrayList;
++import java.util.Collections;
++import java.util.List;
++import java.util.Map;
++import java.util.stream.Stream;
++
++public class GeneratedTests {
++
++    private RealmModel realmProxy(String id) {
++        InvocationHandler handler = new InvocationHandler() {
++            @Override
++            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                String name = method.getName();
++                if ("getId".equals(name)) return id;
++                if ("toString".equals(name)) return "RealmProxy:" + id;
++                if ("hashCode".equals(name)) return id.hashCode();
++                if ("equals".equals(name)) return proxy == args[0];
++                throw new UnsupportedOperationException("Method not implemented: " + name);
++            }
++        };
++        return (RealmModel) Proxy.newProxyInstance(RealmModel.class.getClassLoader(), new Class[]{RealmModel.class}, handler);
++    }
++
++    private OrganizationModel organizationProxy(String id) {
++        InvocationHandler handler = new InvocationHandler() {
++            @Override
++            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                String name = method.getName();
++                switch (name) {
++                    case "getId": return id;
++                    case "getName": return "org-" + id;
++                    case "getAlias": return "alias-" + id;
++                    case "getDescription": return "desc";
++                    case "isEnabled": return true;
++                    case "getAttributes": return Collections.emptyMap();
++                    case "getDomains": return Stream.empty();
++                    case "getIdentityProviders": return Stream.empty();
++                    case "toString": return "OrganizationProxy:" + id;
++                    case "hashCode": return id.hashCode();
++                    case "equals": return proxy == args[0];
++                    default:
++                        throw new UnsupportedOperationException("Method not implemented: " + name);
++                }
++            }
++        };
++        return (OrganizationModel) Proxy.newProxyInstance(OrganizationModel.class.getClassLoader(), new Class[]{OrganizationModel.class}, handler);
++    }
++
++    @Test
++    public void testCachedOrganizationCreationPerformance() {
++        final int N = 50000; // number of cached objects to create
++        RealmModel realm = realmProxy("realm-1");
++        OrganizationModel org = organizationProxy("org-1");
++
++        // warmup
++        for (int i = 0; i < 100; i++) {
++            new CachedOrganization(1L, realm, org);
++        }
++
++        List<CachedOrganization> list = new ArrayList<>(N);
++        long t0 = System.nanoTime();
++        for (int i = 0; i < N; i++) {
++            list.add(new CachedOrganization(1L, realm, org));
++        }
++        long t1 = System.nanoTime();
++        System.out.println("Created " + N + " CachedOrganization instances in " + ((t1 - t0) / 1_000_000.0) + " ms");
++
++        // access getRealm many times to amplify difference
++        long t2 = System.nanoTime();
++        long calls = 0;
++        for (int i = 0; i < 20; i++) {
++            for (CachedOrganization co : list) {
++                String r = co.getRealm();
++                if (r == null) throw new AssertionError("realm is null");
++                calls++;
++            }
++        }
++        long t3 = System.nanoTime();
++        System.out.println("Called getRealm " + calls + " times in " + ((t3 - t2) / 1_000_000.0) + " ms");
++    }
++}

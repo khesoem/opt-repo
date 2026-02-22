@@ -1,0 +1,142 @@
+diff --git a/spring-cloud-zuul-ratelimit-core/src/test/java/com/marcosbarbero/cloud/autoconfigure/zuul/ratelimit/filters/perf/PolicyPerformanceTest.java b/spring-cloud-zuul-ratelimit-core/src/test/java/com/marcosbarbero/cloud/autoconfigure/zuul/ratelimit/filters/perf/PolicyPerformanceTest.java
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/spring-cloud-zuul-ratelimit-core/src/test/java/com/marcosbarbero/cloud/autoconfigure/zuul/ratelimit/filters/perf/PolicyPerformanceTest.java
+@@ -0,0 +1,136 @@
++package com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.filters.perf;
++
++import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.Rate;
++import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.RateLimiter;
++import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.RateLimitUtils;
++import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties;
++import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties.Policy;
++import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitType;
++import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties.Policy.MatchType;
++import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.filters.RateLimitPreFilter;
++import org.junit.Test;
++import org.springframework.cloud.netflix.zuul.filters.Route;
++import org.springframework.cloud.netflix.zuul.filters.RouteLocator;
++import org.springframework.mock.web.MockHttpServletRequest;
++import org.springframework.mock.web.MockHttpServletResponse;
++import org.springframework.web.util.UrlPathHelper;
++
++import javax.servlet.http.HttpServletRequest;
++import java.util.*;
++import java.util.concurrent.atomic.AtomicInteger;
++
++import static org.junit.Assert.assertTrue;
++
++public class PolicyPerformanceTest {
++
++    static class SlowUtils implements RateLimitUtils {
++        private final int sleepMs;
++        final AtomicInteger userCalls = new AtomicInteger();
++        final AtomicInteger remoteCalls = new AtomicInteger();
++
++        SlowUtils(int sleepMs) {
++            this.sleepMs = sleepMs;
++        }
++
++        private void slow(AtomicInteger ctr) {
++            ctr.incrementAndGet();
++            try {
++                Thread.sleep(sleepMs);
++            } catch (InterruptedException e) {
++                Thread.currentThread().interrupt();
++            }
++        }
++
++        @Override
++        public String getUser(HttpServletRequest request) {
++            slow(userCalls);
++            return "slow-user";
++        }
++
++        @Override
++        public String getRemoteAddress(HttpServletRequest request) {
++            slow(remoteCalls);
++            return "1.2.3.4";
++        }
++
++        @Override
++        public Set<String> getUserRoles() {
++            return Collections.emptySet();
++        }
++    }
++
++    @Test
++    public void perfTestShouldFilterAndRun() throws Exception {
++        int sleepMs = 5; // make RateLimitUtils somewhat expensive
++        SlowUtils utils = new SlowUtils(sleepMs);
++
++        // properties with a single policy that contains multiple types
++        RateLimitProperties properties = new RateLimitProperties();
++        properties.setEnabled(true);
++        Map<String, List<Policy>> policies = new HashMap<>();
++        Policy policy = new Policy();
++        policy.setLimit(100L);
++        policy.setQuota(100L);
++        policy.setRefreshInterval(60L);
++        policy.getType().add(new MatchType(RateLimitType.ORIGIN, null));
++        policy.getType().add(new MatchType(RateLimitType.URL, null));
++        policy.getType().add(new MatchType(RateLimitType.USER, null));
++        policy.getType().add(new MatchType(RateLimitType.HTTPMETHOD, null));
++        policies.put("serviceA", Collections.singletonList(policy));
++        properties.setPolicyList(policies);
++        properties.setBehindProxy(true);
++
++        // simple route locator
++        RouteLocator routeLocator = new RouteLocator() {
++            private final List<Route> routes = Arrays.asList(new Route("serviceA", "", "serviceA", "/serviceA", null, Collections.emptySet()));
++
++            @Override
++            public Collection<Route> getRoutes() {
++                return routes;
++            }
++
++            @Override
++            public Route getMatchingRoute(String path) {
++                for (Route r : routes) {
++                    if (path.startsWith(r.getPath())) return r;
++                }
++                return null;
++            }
++        };
++
++        // stub rate limiter always returns a generous rate
++        RateLimiter limiter = new RateLimiter() {
++            @Override
++            public Rate consume(Policy policy, String key, Long requestTime) {
++                return new Rate(key, 100L, 100L, 1L, null);
++            }
++        };
++
++        UrlPathHelper urlPathHelper = new UrlPathHelper();
++        MockHttpServletRequest request = new MockHttpServletRequest();
++        MockHttpServletResponse response = new MockHttpServletResponse();
++        request.setRequestURI("/serviceA");
++        request.setRemoteAddr("10.0.0.1");
++        request.setMethod("GET");
++
++        RateLimitPreFilter filter = new RateLimitPreFilter(properties, routeLocator, urlPathHelper, limiter, (req, r, p) -> "k", utils);
++
++        // warmup
++        assertTrue(filter.shouldFilter());
++        filter.run();
++
++        int iterations = 200;
++        long start = System.nanoTime();
++        for (int i = 0; i < iterations; i++) {
++            assertTrue(filter.shouldFilter());
++            filter.run();
++        }
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++
++        System.out.println("PolicyPerformanceTest elapsed ms: " + elapsedMs);
++        System.out.println("utils getUser calls: " + utils.userCalls.get() + " getRemoteAddress calls: " + utils.remoteCalls.get());
++
++        // basic assertion that test ran
++        assertTrue(true);
++    }
++}

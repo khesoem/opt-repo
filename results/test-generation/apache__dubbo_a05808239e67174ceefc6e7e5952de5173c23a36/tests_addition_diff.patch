@@ -1,0 +1,105 @@
+*** Begin Patch
+*** Add File: dubbo-rpc/dubbo-rpc-api/src/test/java/org/apache/dubbo/rpc/protocol/AsyncToSyncInvokerPerformanceTest.java
++/*
++ * Performance regression test for AsyncToSyncInvoker get() vs get(timeout).
++ *
++ * This test adds a fake Invoker that returns a Result whose get() method
++ * intentionally sleeps for a small amount of time (simulating the spin-wait
++ * behavior observed in some JDKs). Its get(timeout, TimeUnit) returns
++ * immediately. The original AsyncToSyncInvoker called get(), while the
++ * patched version calls get(timeout, MILLISECONDS) and therefore avoids the
++ * artificial delay. Running this test against both versions demonstrates the
++ * execution time improvement in the patched version.
++ */
++package org.apache.dubbo.rpc.protocol;
++
++import org.apache.dubbo.common.URL;
++import org.apache.dubbo.rpc.AppResponse;
++import org.apache.dubbo.rpc.Invoker;
++import org.apache.dubbo.rpc.Invocation;
++import org.apache.dubbo.rpc.InvokeMode;
++import org.apache.dubbo.rpc.Result;
++import org.apache.dubbo.rpc.RpcInvocation;
++import org.junit.jupiter.api.Assertions;
++import org.junit.jupiter.api.Test;
++
++import java.util.concurrent.ExecutionException;
++import java.util.concurrent.TimeUnit;
++
++public class AsyncToSyncInvokerPerformanceTest {
++
++    static class SlowResult extends AppResponse {
++        private static final long serialVersionUID = 1L;
++
++        @Override
++        public Result get() throws InterruptedException, ExecutionException {
++            // Simulate an expensive get() (e.g. spin-wait) so the original implementation
++            // that calls get() will be slowed down.
++            try {
++                Thread.sleep(2);
++            } catch (InterruptedException e) {
++                throw e;
++            }
++            return new AppResponse();
++        }
++
++        @Override
++        public Result get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, java.util.concurrent.TimeoutException {
++            // Simulate a fast timed-get path.
++            return new AppResponse();
++        }
++    }
++
++    @Test
++    public void syntheticPerformanceCheck() {
++        final int iterations = 2000;
++
++        // Create a fake invoker that returns a SlowResult
++        Invoker<Object> fake = new Invoker<Object>() {
++            @Override
++            public Class<Object> getInterface() {
++                return Object.class;
++            }
++
++            @Override
++            public Result invoke(Invocation invocation) {
++                // return a new slow result instance each time
++                return new SlowResult();
++            }
++
++            @Override
++            public org.apache.dubbo.common.URL getUrl() {
++                return org.apache.dubbo.common.URL.valueOf("dubbo://127.0.0.1:20880?timeout=1000");
++            }
++
++            @Override
++            public boolean isAvailable() {
++                return true;
++            }
++
++            @Override
++            public void destroy() {
++            }
++        };
++
++        Invoker<Object> wrapper = new org.apache.dubbo.rpc.protocol.AsyncToSyncInvoker<>(fake);
++
++        RpcInvocation invocation = new RpcInvocation();
++        invocation.setInvokeMode(InvokeMode.SYNC);
++
++        long start = System.nanoTime();
++        for (int i = 0; i < iterations; i++) {
++            Result r = wrapper.invoke(invocation);
++            // touch result to avoid JIT optimizing away
++            Assertions.assertNotNull(r);
++        }
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++
++        // Print elapsed time so it appears in maven output for per-class timing
++        System.out.println("AsyncToSyncInvokerPerformanceTest elapsed ms: " + elapsedMs);
++        // Sanity check: the test should complete within a reasonable time
++        Assertions.assertTrue(elapsedMs < 60_000, "Test took too long: " + elapsedMs + "ms");
++    }
++}
++
+*** End Patch

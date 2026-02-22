@@ -1,0 +1,89 @@
+--- /dev/null	2026-02-19 04:36:12.438190308 +0000
++++ /workspace/original_repo/model/infinispan/src/test/java/org/keycloak/models/sessions/infinispan/GeneratedTests.java	2026-02-19 04:42:02.518616147 +0000
+@@ -0,0 +1,86 @@
++package org.keycloak.models.sessions.infinispan;
++
++import org.junit.Test;
++
++import java.io.File;
++import java.io.IOException;
++import java.nio.file.Files;
++import java.util.ArrayList;
++import java.util.Comparator;
++import java.util.List;
++import java.util.concurrent.atomic.AtomicInteger;
++import java.util.function.Supplier;
++import java.util.stream.Collectors;
++import java.util.stream.Stream;
++
++public class GeneratedTests {
++
++    static class DummySession {
++        private final int id;
++        private final int work;
++
++        DummySession(int id, int work) {
++            this.id = id;
++            this.work = work;
++        }
++
++        // simulate expensive computation when reading the sort key
++        int getLastSessionRefresh() {
++            int r = 0;
++            for (int i = 0; i < work; i++) {
++                r += (id + i) % 7;
++            }
++            return r;
++        }
++    }
++
++    @Test
++    public void testClientPaginationPerformance() throws IOException {
++        // detect whether the persistent provider sorts before pagination
++        File f = new File("src/main/java/org/keycloak/models/sessions/infinispan/PersistentUserSessionProvider.java");
++        boolean sorts = false;
++        if (f.exists()) {
++            String content = new String(Files.readAllBytes(f.toPath()));
++            sorts = content.contains("sorted(Comparator.comparing(UserSessionModel::getLastSessionRefresh))")
++                    || content.contains(".sorted(Comparator.comparing(UserSessionModel::getLastSessionRefresh))");
++        }
++
++        final int N = 120_000; // total number of candidate sessions
++        final int work = 50; // amount of simulated work per element access
++        final int first = 0;
++        final int max = 20;
++
++        AtomicInteger counter = new AtomicInteger(0);
++        Supplier<DummySession> supplier = () -> new DummySession(counter.getAndIncrement(), work);
++
++        long start = System.nanoTime();
++
++        List<DummySession> result;
++        if (sorts) {
++            // simulate original behavior: sort entire stream before paginating
++            result = Stream.generate(supplier)
++                    .limit(N)
++                    .sorted(Comparator.comparingInt(DummySession::getLastSessionRefresh))
++                    .skip(first)
++                    .limit(max)
++                    .collect(Collectors.toList());
++        } else {
++            // simulate patched behavior: paginate without global sort
++            result = Stream.generate(supplier)
++                    .limit(N)
++                    .skip(first)
++                    .limit(max)
++                    .collect(Collectors.toList());
++        }
++
++        long end = System.nanoTime();
++        double elapsedSeconds = (end - start) / 1_000_000_000.0;
++
++        System.out.println("GeneratedTests - sorts=" + sorts + ", processed=" + counter.get() + ", resultSize=" + result.size() + ", time=" + elapsedSeconds + " s");
++
++        // basic sanity
++        if (result.size() != Math.min(max, N - first)) {
++            throw new AssertionError("unexpected result size");
++        }
++    }
++}

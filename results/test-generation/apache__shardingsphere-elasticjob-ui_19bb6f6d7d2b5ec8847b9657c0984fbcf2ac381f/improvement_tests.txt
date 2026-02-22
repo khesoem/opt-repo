@@ -1,0 +1,2 @@
+org.apache.shardingsphere.elasticjob.cloud.ui.security.GeneratedTests
+org.apache.shardingsphere.elasticjob.lite.ui.security.GeneratedTests

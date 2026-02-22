@@ -1,0 +1,80 @@
+--- /dev/null	2026-02-20 20:26:10.897655690 +0000
++++ /workspace/pulsar-client-messagecrypto-bc/src/test/java/org/apache/pulsar/client/impl/crypto/GeneratedTests.java	2026-02-20 20:33:37.365986098 +0000
+@@ -0,0 +1,77 @@
++package org.apache.pulsar.client.impl.crypto;
++
++import java.lang.reflect.Field;
++import java.nio.ByteBuffer;
++import java.security.KeyPairGenerator;
++import java.util.Collections;
++import java.util.Set;
++import java.util.function.Supplier;
++
++import javax.crypto.KeyGenerator;
++import javax.crypto.SecretKey;
++
++import org.apache.pulsar.client.api.EncryptionKeyInfo;
++import org.apache.pulsar.common.api.proto.MessageMetadata;
++import org.testng.annotations.Test;
++
++/**
++ * Performance test that repeatedly encrypts a 32KB payload using MessageCryptoBc.
++ *
++ * The patched version of MessageCryptoBc prefers SunJCE provider for AES/GCM which
++ * is considerably faster on HotSpot JVMs. This test exercises the encrypt path and
++ * prints the elapsed time. Run this test on both original and patched versions and
++ * compare the reported times to observe the improvement.
++ */
++public class GeneratedTests {
++
++    @Test
++    public void testEncryptPerformance() throws Exception {
++        final int iterations = 8000;
++        final int payloadSize = 32 * 1024; // 32KB
++
++        MessageCryptoBc mc = new MessageCryptoBc("perf-test", true);
++
++        // Ensure dataKey is available (constructor should have created it when keyGenNeeded=true)
++        SecretKey dataKey = mc.getDataKey();
++        if (dataKey == null) {
++            KeyGenerator kg = KeyGenerator.getInstance("AES");
++            kg.init(256);
++            dataKey = kg.generateKey();
++            // set via reflection if necessary
++            Field dkField = MessageCryptoBc.class.getDeclaredField("dataKey");
++            dkField.setAccessible(true);
++            dkField.set(mc, dataKey);
++        }
++
++        // Put a dummy encrypted data key into encryptedDataKeyMap so encrypt() takes the crypto path
++        Field encMapField = MessageCryptoBc.class.getDeclaredField("encryptedDataKeyMap");
++        encMapField.setAccessible(true);
++        @SuppressWarnings("unchecked")
++        java.util.concurrent.ConcurrentHashMap<String, EncryptionKeyInfo> encMap =
++                (java.util.concurrent.ConcurrentHashMap<String, EncryptionKeyInfo>) encMapField.get(mc);
++        encMap.put("key1", new EncryptionKeyInfo(new byte[] { 1 }, null));
++
++        byte[] data = new byte[payloadSize];
++        // fill deterministic data to avoid costs of SecureRandom in benchmark
++        for (int i = 0; i < data.length; i++) {
++            data[i] = (byte) (i & 0xff);
++        }
++
++        Set<String> encKeys = Collections.singleton("key1");
++        Supplier<MessageMetadata> supplier = MessageMetadata::new;
++
++        long start = System.nanoTime();
++        for (int i = 0; i < iterations; i++) {
++            ByteBuffer payload = ByteBuffer.wrap(data);
++            ByteBuffer out = ByteBuffer.allocate(payloadSize + 128);
++            mc.encrypt(encKeys, null, supplier, payload, out);
++            // reset out for next iteration (not strictly needed)
++            out.clear();
++        }
++        long end = System.nanoTime();
++        double seconds = (end - start) / 1_000_000_000.0;
++
++        System.out.println("Performed " + iterations + " AES-GCM encrypt operations on " + payloadSize
++                + "-byte payload in " + seconds + " s");
++    }
++}

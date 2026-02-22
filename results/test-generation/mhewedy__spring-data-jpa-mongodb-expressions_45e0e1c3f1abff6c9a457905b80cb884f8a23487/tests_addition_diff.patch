@@ -1,0 +1,88 @@
+*** Begin Patch
+*** Add File: src/test/java/com/github/mhewedy/expressions/GeneratedTests.java
++package com.github.mhewedy.expressions;
++
++import org.junit.jupiter.api.Test;
++
++import javax.persistence.criteria.*;
++import javax.persistence.metamodel.Attribute;
++import javax.persistence.metamodel.EntityType;
++import javax.persistence.metamodel.PluralAttribute;
++import javax.persistence.metamodel.SingularAttribute;
++import java.util.Collections;
++
++import static org.mockito.ArgumentMatchers.any;
++import static org.mockito.Mockito.doAnswer;
++import static org.mockito.Mockito.mock;
++import static org.mockito.Mockito.when;
++
++public class GeneratedTests {
++
++    private static final int ITERATIONS = 2000;
++
++    @Test
++    public void testSingular_attribute_no_distinct_is_faster() throws Exception {
++        // Mocks
++        CriteriaBuilder cb = mock(CriteriaBuilder.class);
++        CriteriaQuery<Object> query = mock(CriteriaQuery.class);
++        Root<Object> root = mock(Root.class);
++        EntityType<?> type = mock(EntityType.class);
++        SingularAttribute attribute = mock(SingularAttribute.class);
++        Path<Object> path = mock(Path.class);
++        Predicate predicate = mock(Predicate.class);
++
++        // Root/model/attribute wiring
++        org.mockito.Mockito.doReturn(type).when(root).getModel();
++        org.mockito.Mockito.doReturn(attribute).when(type).getAttribute("name");
++
++        when(attribute.isAssociation()).thenReturn(false);
++        when(attribute.getPersistentAttributeType()).thenReturn(Attribute.PersistentAttributeType.BASIC);
++        when(attribute.getJavaType()).thenReturn(String.class);
++
++        when(root.get((SingularAttribute) attribute)).thenReturn(path);
++
++        // CriteriaBuilder behavior
++        when(cb.equal(any(), any())).thenReturn(predicate);
++        when(cb.isTrue(any())).thenReturn(predicate);
++
++        // Make query.distinct(...) artificially expensive so original version (which sets it
++        // unconditionally) will be slower. The method returns the query itself.
++        doAnswer(invocation -> {
++            Thread.sleep(5);
++            return query;
++        }).when(query).distinct(true);
++
++        // expression
++        Expressions expressions = Expressions.of(Expression.of("name", Operator.$eq, "value"));
++
++        // Use the ExpressionsSpecification inner class to exercise the repository behavior
++        Class<?> specClass = null;
++        for (Class<?> c : ExpressionsRepositoryImpl.class.getDeclaredClasses()) {
++            if (c.getSimpleName().equals("ExpressionsSpecification")) {
++                specClass = c;
++                break;
++            }
++        }
++        // Class object doesn't need setAccessible
++        java.lang.reflect.Constructor<?> ctor = specClass.getDeclaredConstructor(Expressions.class);
++        ctor.setAccessible(true);
++        Object specInstance = ctor.newInstance(expressions);
++
++        java.lang.reflect.Method toPredicate = specClass.getDeclaredMethod("toPredicate", Root.class, CriteriaQuery.class, CriteriaBuilder.class);
++        toPredicate.setAccessible(true);
++
++        // Warm up
++        for (int i = 0; i < 100; i++) {
++            toPredicate.invoke(specInstance, root, query, cb);
++        }
++
++        long start = System.nanoTime();
++        for (int i = 0; i < ITERATIONS; i++) {
++            toPredicate.invoke(specInstance, root, query, cb);
++        }
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++        System.out.println("GeneratedTests.testSingular_attribute_no_distinct_is_faster elapsed ms: " + elapsedMs);
++    }
++}
++
+*** End Patch

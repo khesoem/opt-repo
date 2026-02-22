@@ -1,0 +1,3 @@
+This test exercises PojoUtils.realize(Map, Class) when the input map contains a "class" entry whose value is a non-existent class name. The original implementation repeatedly called ClassUtils.forName for each attempt and swallowed ClassNotFoundException, causing heavy overhead when the class can't be found. The patch adds a CLASS_NOT_FOUND_CACHE to avoid repeated ClassUtils.forName calls for class names that were previously not found.
+
+The performance test runs PojoUtils.realize(...) many times with the same non-existent class name and prints the elapsed time. The patched version should be measurably faster because the class-not-found result is cached.

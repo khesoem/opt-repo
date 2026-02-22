@@ -1,0 +1,109 @@
+*** Begin Patch
+*** Add File: model/jpa/src/test/java/org/keycloak/events/jpa/GeneratedTests.java
++package org.keycloak.events.jpa;
++
++import org.junit.AfterClass;
++import org.junit.Assert;
++import org.junit.BeforeClass;
++import org.junit.Test;
++
++import jakarta.persistence.EntityManager;
++import jakarta.persistence.EntityManagerFactory;
++import jakarta.persistence.Persistence;
++
++import java.util.HashMap;
++import java.util.List;
++import java.util.Map;
++import java.util.UUID;
++import java.util.stream.Collectors;
++
++public class GeneratedTests {
++
++    private static EntityManagerFactory emf;
++    private static EntityManager em;
++    private static final int NUM_EVENTS = 3000;
++
++    @BeforeClass
++    public static void setup() {
++        Map<String, Object> props = new HashMap<>();
++        props.put("jakarta.persistence.jdbc.driver", "org.h2.Driver");
++        props.put("jakarta.persistence.jdbc.url", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
++        props.put("jakarta.persistence.jdbc.user", "sa");
++        props.put("jakarta.persistence.jdbc.password", "");
++        props.put("hibernate.hbm2ddl.auto", "create-drop");
++        props.put("hibernate.show_sql", "false");
++        props.put("hibernate.format_sql", "false");
++
++        emf = Persistence.createEntityManagerFactory("keycloak-default", props);
++        em = emf.createEntityManager();
++
++        // Persist a number of EventEntity and AdminEventEntity rows to stress the queries
++        em.getTransaction().begin();
++        for (int i = 0; i < NUM_EVENTS; i++) {
++            EventEntity e = new EventEntity();
++            e.setId(UUID.randomUUID().toString());
++            e.setTime(System.currentTimeMillis());
++            e.setType("LOGIN");
++            e.setRealmId("realm1");
++            e.setClientId("client");
++            e.setUserId("user" + (i % 10));
++            e.setSessionId(UUID.randomUUID().toString());
++            e.setIpAddress("127.0.0.1");
++            e.setError(null);
++            e.setDetailsJson(null);
++            em.persist(e);
++
++            AdminEventEntity ae = new AdminEventEntity();
++            ae.setId(UUID.randomUUID().toString());
++            ae.setTime(System.currentTimeMillis());
++            ae.setRealmId("realm1");
++            ae.setOperationType("CREATE");
++            ae.setResourcePath("/resource/" + (i % 100));
++            ae.setError(null);
++            ae.setRepresentation(null);
++            ae.setDetailsJson(null);
++            ae.setAuthRealmId("realm1");
++            ae.setAuthClientId("client");
++            ae.setAuthUserId("user" + (i % 10));
++            ae.setAuthIpAddress("127.0.0.1");
++            em.persist(ae);
++        }
++        em.getTransaction().commit();
++    }
++
++    @AfterClass
++    public static void teardown() {
++        if (em != null) em.close();
++        if (emf != null) emf.close();
++    }
++
++    @Test
++    public void testEventQueryPerformance() {
++        JpaEventStoreProvider provider = new JpaEventStoreProvider(null, em);
++        // warm up
++        provider.createQuery().maxResults(100).getResultStream().collect(Collectors.toList());
++
++        long t0 = System.nanoTime();
++        List<?> result = provider.createQuery().getResultStream().collect(Collectors.toList());
++        long t1 = System.nanoTime();
++        double elapsed = (t1 - t0) / 1_000_000_000.0;
++        System.out.println("testEventQueryPerformance: fetched " + result.size() + " events in " + elapsed + " s");
++        Assert.assertEquals(NUM_EVENTS, result.size());
++    }
++
++    @Test
++    public void testAdminEventQueryPerformance() {
++        JpaEventStoreProvider provider = new JpaEventStoreProvider(null, em);
++        // warm up
++        provider.createAdminQuery().maxResults(100).getResultStream().collect(Collectors.toList());
++
++        long t0 = System.nanoTime();
++        List<?> result = provider.createAdminQuery().getResultStream().collect(Collectors.toList());
++        long t1 = System.nanoTime();
++        double elapsed = (t1 - t0) / 1_000_000_000.0;
++        System.out.println("testAdminEventQueryPerformance: fetched " + result.size() + " admin events in " + elapsed + " s");
++        Assert.assertEquals(NUM_EVENTS, result.size());
++    }
++}
++
+*** End Patch

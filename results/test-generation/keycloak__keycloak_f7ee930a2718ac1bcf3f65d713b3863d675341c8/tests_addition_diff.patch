@@ -1,0 +1,193 @@
+*** Begin Patch
+*** Add File: model/infinispan/src/test/java/org/keycloak/cluster/infinispan/GeneratedTests.java
++package org.keycloak.cluster.infinispan;
++
++import org.junit.Test;
++
++import java.lang.reflect.*;
++import java.nio.charset.StandardCharsets;
++import java.util.Collections;
++import java.util.concurrent.*;
++
++public class GeneratedTests {
++
++    // Choose a noticeable delay for the remote get in the original implementation
++    private static final int REMOTE_DELAY_MS = 250;
++
++    @Test
++    public void testEventHandlingPerformance() throws Exception {
++        ClassLoader cl = Thread.currentThread().getContextClassLoader();
++
++        Class<?> managerClass = cl.loadClass("org.keycloak.cluster.infinispan.remote.RemoteInfinispanNotificationManager");
++
++        // Create a simple single-threaded executor so async callbacks run predictably
++        ExecutorService executor = Executors.newSingleThreadExecutor(r -> new Thread(r, "test-exec"));
++
++        // Create a RemoteCache proxy that simulates delayed getAsync and exposes a simple "remote cache container"
++        Class<?> remoteCacheClass = cl.loadClass("org.infinispan.client.hotrod.RemoteCache");
++
++        Object remoteCache = Proxy.newProxyInstance(cl, new Class[]{remoteCacheClass}, (proxy, method, args) -> {
++            String name = method.getName();
++            if ("addClientListener".equals(name) || "removeClientListener".equals(name)) {
++                return null;
++            }
++            if ("getName".equals(name)) {
++                return "test-cache";
++            }
++            if ("getAsync".equals(name)) {
++                // Simulate a remote asynchronous get that completes after a delay
++                CompletableFuture<Object> f = new CompletableFuture<>();
++                // We'll deliver the value (a WrapperClusterEvent) after a small delay
++                Executors.newSingleThreadScheduledExecutor().schedule(() -> {
++                    try {
++                        // Build a WrapperClusterEvent instance to mimic the real cache value
++                        Class<?> wrapperClass = cl.loadClass("org.keycloak.cluster.infinispan.WrapperClusterEvent");
++                        // Create a simple delegate ClusterEvent (lambda)
++                        Class<?> clusterEventClass = cl.loadClass("org.keycloak.cluster.ClusterEvent");
++                        Object delegate = Proxy.newProxyInstance(cl, new Class[]{clusterEventClass}, (p,m,a)->{ return null; });
++                        // Use static wrap method to build the wrapper event
++                        Method wrap = wrapperClass.getMethod("wrap", String.class, java.util.Collection.class, String.class, String.class, cl.loadClass("org.keycloak.cluster.ClusterProvider$DCNotify"), boolean.class);
++                        Object wrapper = wrap.invoke(null, "event-key-1", Collections.singletonList(delegate), "node-1", "site-1", Enum.valueOf((Class<Enum>)cl.loadClass("org.keycloak.cluster.ClusterProvider$DCNotify"), "ALL_DCS"), false);
++                        f.complete(wrapper);
++                    } catch (Throwable t) {
++                        f.completeExceptionally(t);
++                    }
++                }, REMOTE_DELAY_MS, TimeUnit.MILLISECONDS);
++                return f;
++            }
++            if ("getRemoteCacheContainer".equals(name)) {
++                // Return a tiny proxy that has isStarted() and getMarshaller()
++                Class<?> rcmClass = cl.loadClass("org.infinispan.client.hotrod.RemoteCacheManager");
++                Object rcm = Proxy.newProxyInstance(cl, new Class[]{rcmClass}, (p,m,a) -> {
++                    if ("isStarted".equals(m.getName())) return true;
++                    if ("getMarshaller".equals(m.getName())) {
++                        // Return a Marshaller compatible object that will be used by the patched implementation
++                        Class<?> marshallerClass = cl.loadClass("org.infinispan.commons.marshall.Marshaller");
++                        Object marshaller = Proxy.newProxyInstance(cl, new Class[]{marshallerClass}, (mp,mm,ma) -> {
++                            if ("objectFromByteBuffer".equals(mm.getName())) {
++                                // objectFromByteBuffer(byte[] buf, int offset, int length)
++                                byte[] buf = (byte[]) ma[0];
++                                int offset = (int) ma[1];
++                                int length = (int) ma[2];
++                                String s = new String(buf, offset, length, StandardCharsets.UTF_8);
++                                // For keys return String; for values return a pre-built WrapperClusterEvent when sentinel encountered
++                                if (s.equals("WRAPPED_VALUE")) {
++                                    // Build and return the WrapperClusterEvent as above
++                                    Class<?> wrapperClass = cl.loadClass("org.keycloak.cluster.infinispan.WrapperClusterEvent");
++                                    Class<?> clusterEventClass = cl.loadClass("org.keycloak.cluster.ClusterEvent");
++                                    Object delegate = Proxy.newProxyInstance(cl, new Class[]{clusterEventClass}, (p2,m2,a2)->{ return null; });
++                                    Method wrap = wrapperClass.getMethod("wrap", String.class, java.util.Collection.class, String.class, String.class, cl.loadClass("org.keycloak.cluster.ClusterProvider$DCNotify"), boolean.class);
++                                    return wrap.invoke(null, "event-key-1", Collections.singletonList(delegate), "node-1", "site-1", Enum.valueOf((Class<Enum>)cl.loadClass("org.keycloak.cluster.ClusterProvider$DCNotify"), "ALL_DCS"), false);
++                                }
++                                return s;
++                            }
++                            return null;
++                        });
++                        return marshaller;
++                    }
++                    return null;
++                });
++                return rcm;
++            }
++            return null;
++        });
++
++        // Create a simple NodeInfo proxy
++        Class<?> nodeInfoClass = cl.loadClass("org.keycloak.connections.infinispan.NodeInfo");
++        Object nodeInfo = Proxy.newProxyInstance(cl, new Class[]{nodeInfoClass}, (p,m,a) -> {
++            if ("nodeName".equals(m.getName())) return "node-1";
++            if ("siteName".equals(m.getName())) return "site-1";
++            return null;
++        });
++
++        // Instantiate the manager: constructor(Executor, RemoteCache<String,Object>, NodeInfo)
++        Constructor<?> ctor = managerClass.getConstructor(Executor.class, remoteCacheClass, nodeInfoClass);
++        Object manager = ctor.newInstance(executor, remoteCache, nodeInfo);
++
++        // We'll register a listener to observe when the event is delivered
++        Method registerListener = managerClass.getMethod("registerListener", String.class, cl.loadClass("org.keycloak.cluster.ClusterListener"));
++
++        final CountDownLatch latch = new CountDownLatch(1);
++        Object clusterListener = Proxy.newProxyInstance(cl, new Class[]{cl.loadClass("org.keycloak.cluster.ClusterListener")}, (p,m,a) -> {
++            if ("eventReceived".equals(m.getName())) {
++                latch.countDown();
++                return null;
++            }
++            return null;
++        });
++
++        // Prepare a WrapperClusterEvent used either as remote value or embedded value
++        Class<?> wrapperClass = cl.loadClass("org.keycloak.cluster.infinispan.WrapperClusterEvent");
++        Class<?> clusterEventClass = cl.loadClass("org.keycloak.cluster.ClusterEvent");
++        Object delegate = Proxy.newProxyInstance(cl, new Class[]{clusterEventClass}, (p,m,a) -> null);
++        Method wrap = wrapperClass.getMethod("wrap", String.class, java.util.Collection.class, String.class, String.class, cl.loadClass("org.keycloak.cluster.ClusterProvider$DCNotify"), boolean.class);
++        Object wrapper = wrap.invoke(null, "event-key-1", Collections.singletonList(delegate), "node-1", "site-1", Enum.valueOf((Class<Enum>)cl.loadClass("org.keycloak.cluster.ClusterProvider$DCNotify"), "ALL_DCS"), false);
++
++        // Register listener for the eventKey present inside wrapper
++        Method getEventKey = wrapperClass.getMethod("getEventKey");
++        String eventKey = (String) getEventKey.invoke(wrapper);
++        registerListener.invoke(manager, eventKey, clusterListener);
++
++        // Decide which event method is available on this version of the manager
++        Method onEntryUpdatedMethod = null;
++        Method updatedMethod = null;
++        for (Method m : managerClass.getDeclaredMethods()) {
++            if (m.getName().equals("onEntryUpdated")) {
++                onEntryUpdatedMethod = m;
++            }
++            if (m.getName().equals("updated")) {
++                updatedMethod = m;
++            }
++        }
++
++        long start = System.currentTimeMillis();
++
++        if (onEntryUpdatedMethod != null) {
++            // Patched flow: build event data [len][key][len][value]
++            byte[] keyBytes = "cache-key-1".getBytes(StandardCharsets.UTF_8);
++            byte[] valueBytes = "WRAPPED_VALUE".getBytes(StandardCharsets.UTF_8);
++            byte[] data = new byte[1 + keyBytes.length + 1 + valueBytes.length];
++            int pos = 0;
++            data[pos++] = (byte) keyBytes.length;
++            System.arraycopy(keyBytes, 0, data, pos, keyBytes.length); pos += keyBytes.length;
++            data[pos++] = (byte) valueBytes.length;
++            System.arraycopy(valueBytes, 0, data, pos, valueBytes.length);
++
++            // Create a ClientCacheEntryCustomEvent<byte[]> proxy
++            Class<?> customEventClass = cl.loadClass("org.infinispan.client.hotrod.event.ClientCacheEntryCustomEvent");
++            Object customEvent = Proxy.newProxyInstance(cl, new Class[]{customEventClass}, (p,m,a) -> {
++                if ("getEventData".equals(m.getName())) return data;
++                return null;
++            });
++
++            onEntryUpdatedMethod.setAccessible(true);
++            onEntryUpdatedMethod.invoke(manager, customEvent);
++
++        } else if (updatedMethod != null) {
++            // Original flow: this will cause a remote getAsync which we simulated with a delay
++            Class<?> modifiedEventClass = cl.loadClass("org.infinispan.client.hotrod.event.ClientCacheEntryModifiedEvent");
++            Object modifiedEvent = Proxy.newProxyInstance(cl, new Class[]{modifiedEventClass}, (p,m,a) -> {
++                if ("getKey".equals(m.getName())) return "event-key-1"; // this is the cache key we used to complete the future
++                return null;
++            });
++
++            updatedMethod.setAccessible(true);
++            updatedMethod.invoke(manager, modifiedEvent);
++        } else {
++            // Fallback: nothing to run
++            executor.shutdownNow();
++            return;
++        }
++
++        // Wait for the listener to be invoked (or timeout)
++        boolean ok = latch.await(5, TimeUnit.SECONDS);
++        long elapsed = System.currentTimeMillis() - start;
++        System.out.println("GeneratedTests: event processing elapsed ms: " + elapsed + ", delivered: " + ok);
++
++        executor.shutdownNow();
++
++        // We don't assert here; the test duration will be visible in the maven logs and should be larger on the original
++    }
++}
++
+*** End Patch

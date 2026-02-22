@@ -1,0 +1,45 @@
+*** Begin Patch
+*** Add File: core/src/test/java/com/alibaba/fastjson2/GeneratedTests.java
++package com.alibaba.fastjson2;
++
++import org.junit.jupiter.api.Test;
++
++import java.nio.charset.StandardCharsets;
++
++import static org.junit.jupiter.api.Assertions.assertEquals;
++
++public class GeneratedTests {
++    @Test
++    public void testReadLongAsciiString() {
++        // build a large ASCII-only string to trigger the fast ASCII scanning path in UTF8 reader
++        int len = 200_000; // 200k chars
++        StringBuilder sb = new StringBuilder(len);
++        for (int i = 0; i < len; i++) {
++            sb.append('a');
++        }
++        String s = sb.toString();
++        String json = "{\"s\":\"" + s + "\"}";
++
++        byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
++
++        // warm up
++        for (int i = 0; i < 5; i++) {
++            Object obj = JSON.parse(bytes);
++            assertEquals(s.length(), ((com.alibaba.fastjson2.JSONObject) obj).getString("s").length());
++        }
++
++        int runs = 200;
++        long start = System.nanoTime();
++        for (int i = 0; i < runs; i++) {
++            Object obj = JSON.parse(bytes);
++            String out = ((com.alibaba.fastjson2.JSONObject) obj).getString("s");
++            if (out.length() != s.length()) {
++                throw new AssertionError("length mismatch");
++            }
++        }
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++        System.out.println("testReadLongAsciiString elapsed ms: " + elapsedMs + " runs=" + runs);
++    }
++}
++
+*** End Patch
