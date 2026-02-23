@@ -1,0 +1,278 @@
+# checked with query: query=f"org.openjdk.jmh repo:{repo_fullname} filename:pom.xml"
+
+spring-projects/spring-modulith True
+spring-projects/spring-data-mongodb True
+openzipkin/brave True
+DataLinkDC/dinky False
+SchniedersLab/forcefieldx False
+mock-server/mockserver False
+apache/shardingsphere False
+spring-cloud/spring-cloud-gateway True
+dockstore/dockstore False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Aralscha%2Fwamp2spring+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.626755s
+ralscha/wamp2spring False
+spring-projects/spring-data-jpa True
+dylibso/chicory True
+mybatis/mybatis-3 False
+cmu-db/benchbase False
+rabbitmq/rabbitmq-perf-test True
+liquibase/liquibase False
+openhab/openhab-addons False
+DominoKit/domino-ui False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Amicrosoft%2Fgctoolkit+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.932525s
+microsoft/gctoolkit False
+spring-projects/spring-data-neo4j False
+apache/maven-mvnd False
+apache/linkis False
+tbsalling/aismessages False
+alibaba/nacos False
+mathieucarbou/license-maven-plugin False
+deegree/deegree3 False
+mhewedy/spring-data-jpa-mongodb-expressions False
+Request GET /search/code?q=org.openjdk.jmh+repo%3AUnleash%2Funleash-java-sdk+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.897174s
+Unleash/unleash-java-sdk True
+apiman/apiman False
+jmxtrans/jmxtrans False
+onthegomap/planetiler False
+atlanmod/NeoEMF True
+DTStack/chunjun False
+RoinujNosde/SimpleClans False
+jgitver/jgitver False
+kadai-io/kadai False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Aspring-projects%2Fspring-vault+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 55.058325s
+spring-projects/spring-vault False
+langgraph4j/langgraph4j False
+flyway/flyway False
+georchestra/georchestra False
+AsyncHttpClient/async-http-client False
+oceanbase/odc False
+apache/uniffle False
+quarkusio/quarkus True
+Netcentric/accesscontroltool False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Asmallrye%2Fsmallrye-mutiny+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.925298s
+smallrye/smallrye-mutiny False
+arthurgregorio/web-budget False
+martinpaljak/apdu4j False
+hyperxpro/Brotli4j False
+spring-projects/spring-guice False
+spring-projects/spring-data-redis False
+eclipse-xtext/xtext False
+elastic/ecs-logging-java False
+greenmail-mail-test/greenmail False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Apatrickfav%2Fbcrypt+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 55.004878s
+patrickfav/bcrypt True
+jruby/jruby-openssl False
+obsidiandynamics/kafdrop False
+iluwatar/java-design-patterns False
+apache/shardingsphere-elasticjob-ui False
+neo4j/neo4j-ogm False
+Blazebit/blaze-persistence False
+fabric8io/docker-maven-plugin False
+spring-cloud/spring-cloud-stream False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Aoracle%2Fopengrok+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.640432s
+oracle/opengrok False
+FasterXML/jackson-databind False
+pgjdbc/r2dbc-postgresql True
+apache/dolphinscheduler True
+marcosbarbero/spring-cloud-zuul-ratelimit False
+mapstruct/mapstruct False
+spring-cloud/spring-cloud-function False
+alibaba/canal False
+orientechnologies/orientdb True
+Request GET /search/code?q=org.openjdk.jmh+repo%3Alangchain4j%2Flangchain4j+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.862519s
+langchain4j/langchain4j False
+ascopes/protobuf-maven-plugin False
+r2dbc/r2dbc-pool False
+gluonhq/scenebuilder False
+spring-projects/spring-data-keyvalue False
+provectus/kafka-ui False
+opencast/opencast False
+alibaba/spring-cloud-alibaba False
+spring-projects/spring-data-commons True
+Request GET /search/code?q=org.openjdk.jmh+repo%3Acloudsimplus%2Fcloudsimplus+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.786576s
+cloudsimplus/cloudsimplus False
+spring-projects-experimental/spring-boot-thin-launcher False
+zowe/zowe-client-java-sdk False
+distkv-project/distkv True
+spring-cloud/spring-cloud-sleuth True
+streamthoughts/kafka-connect-file-pulse False
+urlaubsverwaltung/urlaubsverwaltung False
+McFoggy/cssfx False
+mediathekview/MediathekView False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Aspring-cloud%2Fspring-cloud-circuitbreaker+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 55.307988s
+spring-cloud/spring-cloud-circuitbreaker False
+Graylog2/gelfclient False
+marcelmay/hfsa True
+sofastack/sofa-rpc True
+classgraph/classgraph True
+mojohaus/wagon-maven-plugin False
+spring-io/spring-javaformat False
+diennea/carapaceproxy False
+jchambers/pushy True
+Request GET /search/code?q=org.openjdk.jmh+repo%3Aeclipse-lemminx%2Flemminx+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 41.994663s
+eclipse-lemminx/lemminx False
+OpenLiberty/ci.maven False
+apache/ignite True
+apolloconfig/apollo False
+r2dbc/r2dbc-mssql True
+microsoft/java-debug False
+junit-team/junit4 False
+dcm4che/dcm4che False
+Pi4J/pi4j True
+Request GET /search/code?q=org.openjdk.jmh+repo%3Atrinodb%2Ftrino+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.86939s
+trinodb/trino True
+timols/java-gitlab-api False
+swagger-api/swagger-core False
+Altinity/ice False
+GoogleCloudPlatform/cloud-opensource-java False
+apache/shiro False
+apache/incubator-baremaps True
+apache/streampark False
+keycloak/keycloak-benchmark False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Akubernetes-client%2Fjava+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.890063s
+kubernetes-client/java False
+eclipse-aspectj/aspectj False
+apache/incubator-kie-kogito-runtimes False
+mybatis/hazelcast-cache False
+apache/curator False
+apache/dubbo False
+confluence-publisher/confluence-publisher False
+beehive-lab/TornadoVM True
+apache/royale-compiler False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Aapache%2Fincubator-seata+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.969574s
+apache/incubator-seata False
+pinpoint-apm/pinpoint False
+sofastack/sofa-bolt False
+spring-projects/spring-data-couchbase False
+casid/jte True
+salesforce/bazel-eclipse False
+groovy/GMavenPlus False
+jruby/joni False
+openlookeng/hetu-core True
+Request GET /search/code?q=org.openjdk.jmh+repo%3Arworsnop%2Fvertx-beans+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.351532s
+rworsnop/vertx-beans False
+microsoft/semantic-kernel-java False
+spring-projects/spring-retry False
+hapifhir/hapi-fhir False
+keycloak/keycloak False
+apache/shardingsphere-elasticjob False
+spring-projects/spring-batch False
+camunda/camunda True
+arquillian/arquillian-cube False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Asubclipse%2Fsubclipse+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.651117s
+subclipse/subclipse False
+apache/skywalking True
+spring-cloud/spring-cloud-kubernetes False
+OpenAPITools/openapi-generator False
+gdela/socomo False
+spacious-team/investbook False
+dcm4che/dcm4chee-arc-light False
+chrisvest/stormpot True
+arey/java-object-mapper-benchmark True
+Request GET /search/code?q=org.openjdk.jmh+repo%3Apaulcwarren%2Fspring-content+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 55.029865s
+paulcwarren/spring-content False
+mybatis/ehcache-cache False
+eclipse-jdtls/eclipse.jdt.ls False
+arthurgregorio/library False
+cryostatio/cryostat-legacy False
+netty/netty True
+microsoft/lsif-java False
+prestodb/presto True
+Judge-Girl/Judge-Girl False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Arabbitmq%2Frabbitmq-stream-java-client+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 55.076487s
+rabbitmq/rabbitmq-stream-java-client True
+apache/mina-sshd True
+VoxelGamesLib/VoxelGamesLibv2 False
+FasterXML/jackson-dataformats-binary False
+google/guava False
+spring-projects/spring-data-elasticsearch False
+openzipkin/zipkin True
+microsoft/spring-cloud-playground False
+eclipse-xpanse/xpanse False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Amicrosoft%2Fazure-tools-for-java+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.628474s
+microsoft/azure-tools-for-java False
+logfellow/logstash-logback-encoder False
+spring-projects/spring-ai False
+warmuuh/milkman False
+camunda-community-hub/spring-zeebe False
+spring-projects/spring-data-cassandra False
+datastax/jvector True
+networknt/light-4j False
+assertj/assertj False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Aapache%2Fpulsar+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 55.467802s
+apache/pulsar True
+fabric8io/kubernetes-client True
+tcheeric/nostr-java False
+apache/doris-flink-connector False
+gluonhq/rich-text-area False
+FasterXML/jackson-core False
+rakam-io/rakam-api False
+dotCMS/core True
+smallrye/smallrye-graphql False
+Request GET /search/code?q=org.openjdk.jmh+repo%3Aphilterd%2Fphileas+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
+Setting next backoff to 54.222307s
+philterd/phileas False
+openhab/org.openhab.binding.zigbee False
+alibaba/fastjson2 True
+julianhyde/sqlline False
+OpenAS2/OpenAs2App False
+
+
+
+
+camunda-community-hub/spring-zeebe False
+kadai-io/kadai False
+apache/dubbo False
+mock-server/mockserver False
+spring-cloud/spring-cloud-function False
+spring-projects/spring-modulith True
+mathieucarbou/license-maven-plugin False
+obsidiandynamics/kafdrop False
+mhewedy/spring-data-jpa-mongodb-expressions False
+Setting next backoff to 53.743546s
+apache/pulsar True
+GoogleCloudPlatform/cloud-opensource-java False
+alibaba/canal False
+mybatis/mybatis-3 False
+alibaba/fastjson2 True
+quarkusio/quarkus True
+liquibase/liquibase False
+trinodb/trino True
+OpenAPITools/openapi-generator False
+neo4j/neo4j-ogm False
+rabbitmq/rabbitmq-perf-test True
+netty/netty True
+spring-cloud/spring-cloud-circuitbreaker False
+spring-cloud/spring-cloud-sleuth True
+keycloak/keycloak False
+pgjdbc/r2dbc-postgresql True
+spring-projects/spring-data-elasticsearch False
+apache/shardingsphere False
+apache/shardingsphere-elasticjob-ui False
+apache/incubator-seata False
+marcosbarbero/spring-cloud-zuul-ratelimit False
+onthegomap/planetiler False
+gluonhq/rich-text-area False
+streamthoughts/kafka-connect-file-pulse False
+Altinity/ice False
+apiman/apiman False
