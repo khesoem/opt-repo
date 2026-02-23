@@ -13,7 +13,7 @@
 # API keys and configuration for core services
 
 # Base path for the workspace
-workspace_base = "/workspace/project"
+workspace_base = "{workspace}"
 
 # Cache directory path
 #cache_dir = "/tmp/cache"

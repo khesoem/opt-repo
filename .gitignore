@@ -26,8 +26,8 @@ tmp*.py
 tmp_**
 tmp*.txt
 tmp*.log
-err*.err
-log*.log
+err*.err*
+log*.log*
 collected_commits/tmp_commits.csv
 results/dataset_bak.csv
 results/dataset_bak*.csv

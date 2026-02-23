@@ -1,20 +1,30 @@
-You are at '/workspace', which is the root of the keycloak/keycloak repository. In this repository, the git HEAD is on commit 47288a9, which is the faster version, compared to commit 3cb9e0b, which is a slower version. The project uses the Maven wrapper ./mvnw. The faster version (commit 47288a9) has changed the 'services' module compared to the slower version (commit 3cb9e0b,). The tests of this module live under services/src/test/java.
-You can run JUnit tests for this module with:
-  ./mvnw -pl services -am test -Dtest=packagename.GeneratedTests -Dsurefire.runOrder=alphabetical -DfailIfNoTests=false -DskipITs
+You have to generate tests that demonstrate the execution time improvement made by a patch on the '{repo-name}' project.
+
+Two versions of this project are given: the root of the original version is located at '/workspace/original_repo' and the reoot of the patched version is located at '/workspace/patched_repo'. The diff of these two versions, computed with git diff, is also given at '/workspace/diff.patch'. The diff modifies the '{buggy-module}' module(s).
+The patched version of the project is faster than the original version and fixes the following issue:
+###ISSUE DESCRIPTION BEGINS###
+ISSUE TITLE: {issue-title}
+ISSUE DESCRIPTION:
+{issue-description}
+###ISSUE DESCRIPTION ENDS###
+
+The '{repo-name}' project uses Maven wrapper ./mvnw.
+You can run JUnit tests for this modified modules with:
+  ./mvnw -pl {buggy-module} -am test -Dtest=packagename.GeneratedTests -Dsurefire.runOrder=alphabetical -DfailIfNoTests=false -DskipITs
 where packagename.GeneratedTests is the fully qualified name of the test class you want to execute.
 
 Note that when running JUnit tests the time spent by a test class, for example with the name packagename.TestClass1, is given in the maven log in a line similar to what follows:
 [INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 s -- in packagename.TestClass1
 
-Your task is to generate tests whose execution time on the faster version (commit 47288a9) is lower than their execution time on the slower version (commit 3cb9e0b). Make sure you save your generated tests.
+Your task is to generate tests whose execution time on the faster version (/workspace/patched_repo) is lower than their execution time on the slower version (/workspace/original_repo).
+At the end, you should produce a patch file '/workspace/tests_addition_diff.patch' and a list file '/workspace/improvement_tests.txt'. I should be able to apply the patch on the original and patched versions with git apply, and then run the test class(es) in the list file. The list file should contain the fully qualified name of a test class at each line.
 
-Note that running the test with the './mvnw -pl services -am test -Dsurefire.runOrder=alphabetical -DfailIfNoTests=false -DskipITs -DtrimStackTrace=false -q' command above should usually take less than 300 seconds, including compiling, building, and executing the tests.
+Note that running the test with the './mvnw -pl {buggy-module} -am test -Dsurefire.runOrder=alphabetical -DfailIfNoTests=false -DskipITs -DtrimStackTrace=false -q' command above should usually take less than 300 seconds, including compiling, building, and executing the tests.
 
 Follow this loop:
 1) Plan: make a plan of the steps you will take.
-2) Implement: identify which classes and methods changed, and focus on those for testing. Maybe you can use 'git diff 3cb9e0b..47288a9 -- services' for this.
-3) Design and implement JUnit performance tests that stress the changed methods in the services module. Prefer JUnit over JMH. If you decide to use JMH, also update the relevant pom.xml files so the project still builds and the benchmarks can be run via Maven. The execution time of the generated tests on the faster version should be lower compared to their execution time on the faster version.
-4) Verify: after you generate new tests, run the generated tests. If the build or tests fail, fix the issues and re-run until they pass.
-5) Summarize: create or update PERFORMANCE_REPORT.md in the repo root. Describe the optimization at a high level, the tests you added, sample timing results comparing the fast and slow versions, and any limitations or caveats.
+2) Design and implement execution time tests that stress the changed code in the {buggy-module} module(s). Prefer JUnit over JMH. If you decide to use JMH, also update the relevant pom.xml files so the project still builds and the benchmarks can be run via Maven. The execution time of the generated tests on the patched version should be lower than their execution time on the faster version.
+3) Verify: after you generate new tests, run the generated tests. If the build or tests fail, fix the issues and re-run until they pass.
+4) Produce: the '/workspace/tests_addition_diff.patch' and '/workspace/improvement_tests.txt' files.
 
-If possible, also run the same tests on the slower commit 3cb9e0b (for example, by checking out that commit and reusing the new tests) so you can show the timing difference clearly in PERFORMANCE_REPORT.md.
+Also, explain the generated tests in a file at '/workspace/EXPLANATION.md', if you think explanation is needed.

@@ -9,4 +9,4 @@ docker run \
 	--add-host host.docker.internal:host-gateway \
 	--name openhands-cli-$(date +%Y%m%d%H%M%S) \
 	docker.openhands.dev/openhands/openhands:1.2.1 \
-	python -m openhands.core.main -f /openhands-files/task-patch-generation.txt --config-file /openhands-files/config.toml
+	python -m openhands.core.main -f /openhands-files/task-{task-type}-generation.txt --config-file /openhands-files/config.toml

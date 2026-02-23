@@ -106,6 +106,17 @@ class RepoAnalyzer:
         )  
 
         return self.diff_to_java_src_files(diff_output)
+    
+    def get_changed_java_src_files_between_commits(self, before_commit: str, after_commit: str) -> Set[str]:
+        # Use diff-tree to get paths changed by exactly this commit.
+        # -r: recurse, --no-commit-id: don’t show commit id,
+        # -M/-C: detect renames/copies, -m: handle merges (per-parent); we’ll dedupe.
+        diff_output = run_cmd(
+            cmd=["git", "diff-tree", "-r", "--no-commit-id", "--name-status", "-M", "-C", "-m", before_commit, after_commit],
+            path=str(self.repo_path)
+        )  
+
+        return self.diff_to_java_src_files(diff_output)
 
     def get_commit_line_changes(self, commit: str) -> Dict[str, Dict[str, list[int]]]:
         """

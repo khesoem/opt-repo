@@ -59,5 +59,5 @@ openhands = {
     'openhands-files-dir': 'auxiliary/openhands-files',
     'llm-api-key': os.environ['OPENAI_API_KEY'],
     'llm-timeout': 3000,
-    'max-iterations': 40,
+    'max-iterations': 100,
 }
