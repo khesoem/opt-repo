@@ -9,8 +9,6 @@ mock-server/mockserver False
 apache/shardingsphere False
 spring-cloud/spring-cloud-gateway True
 dockstore/dockstore False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Aralscha%2Fwamp2spring+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.626755s
 ralscha/wamp2spring False
 spring-projects/spring-data-jpa True
 dylibso/chicory True
@@ -20,8 +18,6 @@ rabbitmq/rabbitmq-perf-test True
 liquibase/liquibase False
 openhab/openhab-addons False
 DominoKit/domino-ui False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Amicrosoft%2Fgctoolkit+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.932525s
 microsoft/gctoolkit False
 spring-projects/spring-data-neo4j False
 apache/maven-mvnd False
@@ -31,8 +27,6 @@ alibaba/nacos False
 mathieucarbou/license-maven-plugin False
 deegree/deegree3 False
 mhewedy/spring-data-jpa-mongodb-expressions False
-Request GET /search/code?q=org.openjdk.jmh+repo%3AUnleash%2Funleash-java-sdk+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.897174s
 Unleash/unleash-java-sdk True
 apiman/apiman False
 jmxtrans/jmxtrans False
@@ -42,8 +36,6 @@ DTStack/chunjun False
 RoinujNosde/SimpleClans False
 jgitver/jgitver False
 kadai-io/kadai False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Aspring-projects%2Fspring-vault+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 55.058325s
 spring-projects/spring-vault False
 langgraph4j/langgraph4j False
 flyway/flyway False
@@ -53,8 +45,6 @@ oceanbase/odc False
 apache/uniffle False
 quarkusio/quarkus True
 Netcentric/accesscontroltool False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Asmallrye%2Fsmallrye-mutiny+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.925298s
 smallrye/smallrye-mutiny False
 arthurgregorio/web-budget False
 martinpaljak/apdu4j False
@@ -64,8 +54,6 @@ spring-projects/spring-data-redis False
 eclipse-xtext/xtext False
 elastic/ecs-logging-java False
 greenmail-mail-test/greenmail False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Apatrickfav%2Fbcrypt+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 55.004878s
 patrickfav/bcrypt True
 jruby/jruby-openssl False
 obsidiandynamics/kafdrop False
@@ -75,8 +63,6 @@ neo4j/neo4j-ogm False
 Blazebit/blaze-persistence False
 fabric8io/docker-maven-plugin False
 spring-cloud/spring-cloud-stream False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Aoracle%2Fopengrok+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.640432s
 oracle/opengrok False
 FasterXML/jackson-databind False
 pgjdbc/r2dbc-postgresql True
@@ -86,8 +72,6 @@ mapstruct/mapstruct False
 spring-cloud/spring-cloud-function False
 alibaba/canal False
 orientechnologies/orientdb True
-Request GET /search/code?q=org.openjdk.jmh+repo%3Alangchain4j%2Flangchain4j+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.862519s
 langchain4j/langchain4j False
 ascopes/protobuf-maven-plugin False
 r2dbc/r2dbc-pool False
@@ -97,8 +81,6 @@ provectus/kafka-ui False
 opencast/opencast False
 alibaba/spring-cloud-alibaba False
 spring-projects/spring-data-commons True
-Request GET /search/code?q=org.openjdk.jmh+repo%3Acloudsimplus%2Fcloudsimplus+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.786576s
 cloudsimplus/cloudsimplus False
 spring-projects-experimental/spring-boot-thin-launcher False
 zowe/zowe-client-java-sdk False
@@ -108,8 +90,6 @@ streamthoughts/kafka-connect-file-pulse False
 urlaubsverwaltung/urlaubsverwaltung False
 McFoggy/cssfx False
 mediathekview/MediathekView False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Aspring-cloud%2Fspring-cloud-circuitbreaker+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 55.307988s
 spring-cloud/spring-cloud-circuitbreaker False
 Graylog2/gelfclient False
 marcelmay/hfsa True
@@ -119,8 +99,6 @@ mojohaus/wagon-maven-plugin False
 spring-io/spring-javaformat False
 diennea/carapaceproxy False
 jchambers/pushy True
-Request GET /search/code?q=org.openjdk.jmh+repo%3Aeclipse-lemminx%2Flemminx+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 41.994663s
 eclipse-lemminx/lemminx False
 OpenLiberty/ci.maven False
 apache/ignite True
@@ -130,8 +108,6 @@ microsoft/java-debug False
 junit-team/junit4 False
 dcm4che/dcm4che False
 Pi4J/pi4j True
-Request GET /search/code?q=org.openjdk.jmh+repo%3Atrinodb%2Ftrino+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.86939s
 trinodb/trino True
 timols/java-gitlab-api False
 swagger-api/swagger-core False
@@ -141,8 +117,6 @@ apache/shiro False
 apache/incubator-baremaps True
 apache/streampark False
 keycloak/keycloak-benchmark False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Akubernetes-client%2Fjava+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.890063s
 kubernetes-client/java False
 eclipse-aspectj/aspectj False
 apache/incubator-kie-kogito-runtimes False
@@ -152,8 +126,6 @@ apache/dubbo False
 confluence-publisher/confluence-publisher False
 beehive-lab/TornadoVM True
 apache/royale-compiler False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Aapache%2Fincubator-seata+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.969574s
 apache/incubator-seata False
 pinpoint-apm/pinpoint False
 sofastack/sofa-bolt False
@@ -163,8 +135,6 @@ salesforce/bazel-eclipse False
 groovy/GMavenPlus False
 jruby/joni False
 openlookeng/hetu-core True
-Request GET /search/code?q=org.openjdk.jmh+repo%3Arworsnop%2Fvertx-beans+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.351532s
 rworsnop/vertx-beans False
 microsoft/semantic-kernel-java False
 spring-projects/spring-retry False
@@ -174,8 +144,6 @@ apache/shardingsphere-elasticjob False
 spring-projects/spring-batch False
 camunda/camunda True
 arquillian/arquillian-cube False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Asubclipse%2Fsubclipse+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.651117s
 subclipse/subclipse False
 apache/skywalking True
 spring-cloud/spring-cloud-kubernetes False
@@ -185,8 +153,6 @@ spacious-team/investbook False
 dcm4che/dcm4chee-arc-light False
 chrisvest/stormpot True
 arey/java-object-mapper-benchmark True
-Request GET /search/code?q=org.openjdk.jmh+repo%3Apaulcwarren%2Fspring-content+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 55.029865s
 paulcwarren/spring-content False
 mybatis/ehcache-cache False
 eclipse-jdtls/eclipse.jdt.ls False
@@ -196,8 +162,6 @@ netty/netty True
 microsoft/lsif-java False
 prestodb/presto True
 Judge-Girl/Judge-Girl False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Arabbitmq%2Frabbitmq-stream-java-client+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 55.076487s
 rabbitmq/rabbitmq-stream-java-client True
 apache/mina-sshd True
 VoxelGamesLib/VoxelGamesLibv2 False
@@ -207,8 +171,6 @@ spring-projects/spring-data-elasticsearch False
 openzipkin/zipkin True
 microsoft/spring-cloud-playground False
 eclipse-xpanse/xpanse False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Amicrosoft%2Fazure-tools-for-java+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.628474s
 microsoft/azure-tools-for-java False
 logfellow/logstash-logback-encoder False
 spring-projects/spring-ai False
@@ -218,8 +180,6 @@ spring-projects/spring-data-cassandra False
 datastax/jvector True
 networknt/light-4j False
 assertj/assertj False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Aapache%2Fpulsar+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 55.467802s
 apache/pulsar True
 fabric8io/kubernetes-client True
 tcheeric/nostr-java False
@@ -229,8 +189,6 @@ FasterXML/jackson-core False
 rakam-io/rakam-api False
 dotCMS/core True
 smallrye/smallrye-graphql False
-Request GET /search/code?q=org.openjdk.jmh+repo%3Aphilterd%2Fphileas+filename%3Apom.xml&per_page=1 failed with 403: Forbidden
-Setting next backoff to 54.222307s
 philterd/phileas False
 openhab/org.openhab.binding.zigbee False
 alibaba/fastjson2 True
@@ -249,7 +207,6 @@ spring-projects/spring-modulith True
 mathieucarbou/license-maven-plugin False
 obsidiandynamics/kafdrop False
 mhewedy/spring-data-jpa-mongodb-expressions False
-Setting next backoff to 53.743546s
 apache/pulsar True
 GoogleCloudPlatform/cloud-opensource-java False
 alibaba/canal False
@@ -276,3 +233,24 @@ gluonhq/rich-text-area False
 streamthoughts/kafka-connect-file-pulse False
 Altinity/ice False
 apiman/apiman False
+
+manually_checked_improvement=True with jmh
+https://github.com/netty/netty/commit/15b8bbf864680ec2250c72d52b35ed46bfaf3a6f
+https://github.com/netty/netty/commit/48687be377c1e0b94acddca4ae54eff996c1ee2a
+https://github.com/rabbitmq/rabbitmq-perf-test/commit/43f4a009a609a161208a842dd833ef8ef9dfd914
+https://github.com/pgjdbc/r2dbc-postgresql/commit/9078212d0723467dd6dbfcf1f62511fc4733fa0d
+https://github.com/spring-projects/spring-modulith/commit/01d7a35d2dc2b340462ab38b4f2a6e1031d991b6
+https://github.com/spring-projects/spring-modulith/commit/711c8449fa8f0494650d95ff6d23d8c3e474a8df
+https://github.com/spring-projects/spring-modulith/commit/5f725621c6b6f83404168784fae772508e21a21b
+https://github.com/spring-projects/spring-modulith/commit/4cf9b5c7072e9e88f1c0897f9f7d8bf703c0fdae
+https://github.com/spring-projects/spring-modulith/commit/083ce7beae11f7872e5f143dd860dc39a0eb9f7f
+https://github.com/spring-projects/spring-modulith/commit/0de48790d7e98785d82f7e0668f1a75036f9c152
+https://github.com/spring-cloud/spring-cloud-sleuth/commit/382f4a0da786bea63159fa4e9593906b729c7b88
+https://github.com/quarkusio/quarkus/commit/3133199cbb457886e53e8a11131ef35561da01ce
+https://github.com/quarkusio/quarkus/commit/82db6e06e60546d73d18b2bdd7cfc3b5791da8ac
+https://github.com/quarkusio/quarkus/pull/27736/changes
+https://github.com/quarkusio/quarkus/pull/27633/changes
+https://github.com/apache/pulsar/pull/23251/changes
+https://github.com/apache/pulsar/pull/23122/changes
+https://github.com/trinodb/trino/pull/5885/changes
+https://github.com/alibaba/fastjson2/pull/3350/changes

@@ -1,1 +1,1 @@
-io.camunda.zeebe.spring.client.performance.VariableMappingPerformanceTest
+io.camunda.zeebe.spring.client.performance.GeneratedTests

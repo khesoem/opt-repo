@@ -1,103 +1,234 @@
 *** Begin Patch
-*** Add File: spring-client-zeebe/src/test/java/io/camunda/zeebe/spring/client/performance/VariableMappingPerformanceTest.java
-package io.camunda.zeebe.spring.client.performance;
-
-import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * Micro-benchmark to exercise variable-mapping like behaviors.
- *
- * This test intentionally performs a large number of iterations so the
- * elapsed time reported by Maven / Surefire is dominated by the work done here
- * (and therefore measurable when comparing two versions of the codebase).
- */
-public class VariableMappingPerformanceTest {
-
-  private static final int OUTER = 200;
-  private static final int INNER = 2000;
-
-  static class DummyJob {
-    private final Map<String, Object> vars = new HashMap<>();
-
-    DummyJob() {
-      // populate with some data
-      for (int i = 0; i < 50; i++) {
-        vars.put("var" + i, i);
-      }
-    }
-
-    public Map<String, Object> getVariablesAsMap() {
-      return vars;
-    }
-
-    public Object getVariable(String name) {
-      // mimic a faster direct-access path (as introduced by optimized implementations)
-      return vars.get(name);
-    }
-  }
-
-  // Simulate an old-style resolver that uses reflection / map lookup each invocation
-  private Object resolveOld(DummyJob job, String variableName, Class<?> variableType) {
-    Object variableValue = job.getVariablesAsMap().get(variableName);
-    if (variableValue != null && !variableType.isInstance(variableValue)) {
-      // simulate JSON mapping cost
-      return simulateJsonMap(variableValue, variableType);
-    }
-    return variableType.cast(variableValue);
-  }
-
-  // Simulate a new-style resolver that uses direct access (job.getVariable)
-  private Object resolveNew(DummyJob job, String variableName, Class<?> variableType) {
-    Object variableValue = job.getVariable(variableName);
-    if (variableValue != null && !variableType.isInstance(variableValue)) {
-      return simulateJsonMap(variableValue, variableType);
-    }
-    return variableType.cast(variableValue);
-  }
-
-  private Object simulateJsonMap(Object from, Class<?> to) {
-    // small simulated cost to represent JSON (de)serialization
-    // perform some trivial string operations to consume time
-    String s = String.valueOf(from);
-    StringBuilder b = new StringBuilder(s.length());
-    for (int i = s.length() - 1; i >= 0; i--) {
-      b.append(s.charAt(i));
-    }
-    // don't actually convert back to complex types in this micro-benchmark
-    return Integer.valueOf(s);
-  }
-
-  @Test
-  public void measureVariableResolution_oldStyle() {
-    DummyJob job = new DummyJob();
-    long start = System.nanoTime();
-    for (int o = 0; o < OUTER; o++) {
-      for (int i = 0; i < INNER; i++) {
-        // repeatedly resolve many different variables
-        resolveOld(job, "var" + (i % 50), Integer.class);
-      }
-    }
-    long elapsed = System.nanoTime() - start;
-    System.out.println("Old-style resolver elapsed ms: " + (elapsed / 1_000_000));
-  }
-
-  @Test
-  public void measureVariableResolution_newStyle() {
-    DummyJob job = new DummyJob();
-    long start = System.nanoTime();
-    for (int o = 0; o < OUTER; o++) {
-      for (int i = 0; i < INNER; i++) {
-        resolveNew(job, "var" + (i % 50), Integer.class);
-      }
-    }
-    long elapsed = System.nanoTime() - start;
-    System.out.println("New-style resolver elapsed ms: " + (elapsed / 1_000_000));
-  }
-}
-
+*** Add File: spring-client-zeebe/src/test/java/io/camunda/zeebe/spring/client/performance/GeneratedTests.java
++package io.camunda.zeebe.spring.client.performance;
++
++import static org.junit.jupiter.api.Assertions.assertNotNull;
++
++import io.camunda.zeebe.client.api.response.ActivatedJob;
++import io.camunda.zeebe.client.api.worker.JobClient;
++import io.camunda.zeebe.spring.client.annotation.CustomHeaders;
++import io.camunda.zeebe.spring.client.annotation.Variable;
++import io.camunda.zeebe.spring.client.annotation.VariablesAsType;
++import io.camunda.zeebe.spring.client.annotation.value.ZeebeWorkerValue;
++import io.camunda.zeebe.spring.client.bean.ClassInfo;
++import io.camunda.zeebe.spring.client.bean.MethodInfo;
++import io.camunda.zeebe.spring.client.jobhandling.CommandExceptionHandlingStrategy;
++import io.camunda.zeebe.spring.client.metrics.MetricsRecorder;
++import java.lang.reflect.Method;
++import java.lang.reflect.Proxy;
++import java.util.HashMap;
++import java.util.Map;
++import org.junit.jupiter.api.Test;
++
++/**
++ * Performance oriented test that invokes the job handler many times to expose the parameter mapping
++ * overhead. This test intentionally does not assert on timing so it will pass on both original and
++ * patched versions; the Maven test log shows the Time elapsed which can be compared between
++ * versions. The patched version (with precomputed parameter resolvers) should run noticeably
++ * faster.
++ */
++public class GeneratedTests {
++
++  private static final int ITERATIONS = 5000;
++
++  public static class WorkerBean {
++    public void doWork(
++        JobClient client,
++        ActivatedJob job,
++        @Variable("name") String name,
++        @CustomHeaders Map<String, Object> headers,
++        @VariablesAsType Map<String, Object> vars) {
++      // trivial work
++      assertNotNull(name);
++    }
++  }
++
++  @Test
++  public void parameterMappingPerformanceTest() throws Exception {
++    // prepare MethodInfo for the worker method
++    Method m =
++        WorkerBean.class.getMethod(
++            "doWork", JobClient.class, ActivatedJob.class, String.class, Map.class, Map.class);
++    ClassInfo classInfo = ClassInfo.builder().bean(new WorkerBean()).beanName("worker").build();
++    MethodInfo methodInfo = MethodInfo.builder().classInfo(classInfo).method(m).build();
++
++    ZeebeWorkerValue workerValue = new ZeebeWorkerValue();
++    workerValue.setMethodInfo(methodInfo);
++    workerValue.setAutoComplete(false);
++
++    // dummy metrics recorder
++    MetricsRecorder metrics =
++        new MetricsRecorder() {
++          @Override
++          public void increase(String metricName, String action, String type, int count) {}
++
++          @Override
++          public void executeWithTimer(
++              String metricName, String jobType, Runnable methodToExecute) {
++            methodToExecute.run();
++          }
++        };
++
++    // dummy command exception handling
++    CommandExceptionHandlingStrategy ces = (cmd, t) -> {};
++
++    // prepare simple activated job proxy
++    Map<String, Object> variables = new HashMap<>();
++    variables.put("name", "john");
++    Map<String, Object> headers = new HashMap<>();
++    headers.put("h", "v");
++
++    ActivatedJob job =
++        (ActivatedJob)
++            Proxy.newProxyInstance(
++                ActivatedJob.class.getClassLoader(),
++                new Class[] {ActivatedJob.class},
++                (proxy, method, args) -> {
++                  String methodName = method.getName();
++                  if ("getType".equals(methodName)) return "t";
++                  if ("getVariablesAsMap".equals(methodName)) return variables;
++                  if ("getVariable".equals(methodName) && args != null && args.length == 1)
++                    return variables.get(args[0]);
++                  if ("getCustomHeaders".equals(methodName)) return headers;
++                  if ("getVariablesAsType".equals(methodName) && args != null && args.length == 1) {
++                    // return the underlying map for any requested type
++                    return variables;
++                  }
++                  if ("getKey".equals(methodName)) return 123L;
++                  return null;
++                });
++
++    JobClient jobClient =
++        (JobClient)
++            Proxy.newProxyInstance(
++                JobClient.class.getClassLoader(),
++                new Class[] {JobClient.class},
++                (p, mth, a) -> null);
++
++    // create handler reflectively to support both original and patched module shapes
++    Class<?> handlerClass =
++        Class.forName("io.camunda.zeebe.spring.client.jobhandling.JobHandlerInvokingSpringBeans");
++
++    Object handler = null;
++    for (java.lang.reflect.Constructor<?> c : handlerClass.getConstructors()) {
++      Class<?>[] params = c.getParameterTypes();
++      if (params.length == 4
++          && params[0].getName().contains("ZeebeWorkerValue")
++          && params[1].getName().contains("CommandExceptionHandlingStrategy")) {
++        // Found candidate constructor. Two variants exist across versions:
++        // (ZeebeWorkerValue, CommandExceptionHandlingStrategy, JsonMapper, MetricsRecorder)
++        // or (ZeebeWorkerValue, CommandExceptionHandlingStrategy, MetricsRecorder,
++        // ParameterResolverStrategy)
++        if (params[2].getName().contains("JsonMapper")) {
++          // original version: pass null for JsonMapper (we use variable types that don't require
++          // conversion)
++          handler = c.newInstance(workerValue, ces, null, metrics);
++        } else if (params[2].getName().contains("MetricsRecorder")) {
++          // patched variant: the third parameter is MetricsRecorder, fourth is
++          // ParameterResolverStrategy
++          // create a simple ParameterResolverStrategy implementation via dynamic proxy
++          Class<?> prs =
++              Class.forName(
++                  "io.camunda.zeebe.spring.client.jobhandling.parameter.ParameterResolverStrategy");
++          Class<?> pr =
++              Class.forName(
++                  "io.camunda.zeebe.spring.client.jobhandling.parameter.ParameterResolver");
++
++          Object strategy =
++              Proxy.newProxyInstance(
++                  prs.getClassLoader(),
++                  new Class[] {prs},
++                  (proxy, method, args) -> {
++                    if ("createResolver".equals(method.getName())) {
++                      Object parameterInfo = args[0];
++                      // return a ParameterResolver proxy that understands the minimal annotations
++                      // we use
++                      return Proxy.newProxyInstance(
++                          pr.getClassLoader(),
++                          new Class[] {pr},
++                          (p2, m2, a2) -> {
++                            if ("resolve".equals(m2.getName())) {
++                              Object jc = a2[0];
++                              Object aj = a2[1];
++                              // inspect parameterInfo to decide what to return
++                              Method getParamName =
++                                  parameterInfo.getClass().getMethod("getParameterName");
++                              String paramName = (String) getParamName.invoke(parameterInfo);
++                              // try get parameter type and annotations via getParameterInfo()
++                              Method getParameterInfo =
++                                  parameterInfo.getClass().getMethod("getParameterInfo");
++                              Object parameter = getParameterInfo.invoke(parameterInfo);
++                              Method isAnnotationPresent =
++                                  parameter.getClass().getMethod("isAnnotationPresent", Class.class);
++                              boolean isVar =
++                                  (Boolean)
++                                      isAnnotationPresent.invoke(
++                                          parameter,
++                                          Class.forName(
++                                              "io.camunda.zeebe.spring.client.annotation.Variable"));
++                              boolean isVarsAsType =
++                                  (Boolean)
++                                      isAnnotationPresent.invoke(
++                                          parameter,
++                                          Class.forName(
++                                              "io.camunda.zeebe.spring.client.annotation.VariablesAsType"));
++                              boolean isCustomHeaders =
++                                  (Boolean)
++                                      isAnnotationPresent.invoke(
++                                          parameter,
++                                          Class.forName(
++                                              "io.camunda.zeebe.spring.client.annotation.CustomHeaders"));
++                              if (isVar) {
++                                // attempt to call getVariable or getVariablesAsMap
++                                try {
++                                  Method getVariable = aj.getClass().getMethod("getVariable", String.class);
++                                  return getVariable.invoke(aj, paramName);
++                                } catch (NoSuchMethodException ex) {
++                                  Method getVars = aj.getClass().getMethod("getVariablesAsMap");
++                                  Map<?, ?> map = (Map<?, ?>) getVars.invoke(aj);
++                                  return map.get(paramName);
++                                }
++                              } else if (isVarsAsType) {
++                                Method getVarsAsType = aj.getClass().getMethod("getVariablesAsType", Class.class);
++                                // attempt to resolve to a Map
++                                return getVarsAsType.invoke(aj, Map.class);
++                              } else if (isCustomHeaders) {
++                                Method getHeaders = aj.getClass().getMethod("getCustomHeaders");
++                                return getHeaders.invoke(aj);
++                              }
++                              return null;
++                            }
++                            return null;
++                          });
++                    }
++                    return null;
++                  });
++
++          handler = c.newInstance(workerValue, ces, metrics, strategy);
++        }
++        break;
++      }
++    }
++
++    if (handler == null) throw new IllegalStateException("Could not create handler");
++
++    // warm up
++    for (int i = 0; i < 100; i++) {
++      java.lang.reflect.Method handle =
++          handler.getClass().getMethod("handle", JobClient.class, ActivatedJob.class);
++      handle.invoke(handler, jobClient, job);
++    }
++
++    long start = System.nanoTime();
++    for (int i = 0; i < ITERATIONS; i++) {
++      java.lang.reflect.Method handle =
++          handler.getClass().getMethod("handle", JobClient.class, ActivatedJob.class);
++      handle.invoke(handler, jobClient, job);
++    }
++    long end = System.nanoTime();
++    double seconds = (end - start) / 1_000_000_000.0;
++    System.out.println(
++        "GeneratedTests: executed " + ITERATIONS + " iterations in " + seconds + " s");
++  }
++}
 *** End Patch

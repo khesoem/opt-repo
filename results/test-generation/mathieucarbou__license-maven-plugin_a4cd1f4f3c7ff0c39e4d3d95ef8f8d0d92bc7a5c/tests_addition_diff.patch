@@ -1,92 +1,72 @@
 *** Begin Patch
-*** Add File: license-maven-plugin-git/src/test/java/com/mycila/maven/plugin/license/git/GeneratedPerformanceTest.java
-/*
- * Copyright (C) 2008-2024 Mycila (mathieu.carbou@gmail.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License").
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.mycila.maven.plugin.license.git;
-
-import com.mycila.maven.plugin.license.LicenseCheckMojo;
-import com.mycila.maven.plugin.license.document.Document;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * Generated performance test to demonstrate the execution-time improvement from the patch.
- * The test repeatedly requests only the creation author name property which in the original
- * implementation forces eager retrieval of multiple git-provided properties per invocation.
- * The patched implementation lazily computes and memoizes property values, so repeated access
- * to a single property is much faster.
- */
-class GeneratedPerformanceTest {
-
-  private static Path gitRepoRoot;
-
-  @TempDir
-  static File tempFolder;
-
-  @BeforeAll
-  static void beforeClass() throws IOException {
-    URL url = GeneratedPerformanceTest.class.getResource("git-test-repo.zip");
-    gitRepoRoot = Paths.get(tempFolder.toPath() + File.separator + "git-test-repo");
-    GitLookupTest.unzip(url, tempFolder.toPath());
-  }
-
-  @Test
-  void authorProviderPerformance() throws Exception {
-    Map<String, String> props = new HashMap<>();
-    final LicenseCheckMojo mojo = new LicenseCheckMojo();
-    mojo.defaultBasedir = gitRepoRoot.toFile();
-
-    try (CopyrightAuthorProvider provider = new CopyrightAuthorProvider()) {
-      provider.init(mojo, props);
-
-      String path = "dir1/file1.txt";
-      Document document = newDocument(path);
-
-      final int iterations = 100;
-      long start = System.nanoTime();
-      for (int i = 0; i < iterations; i++) {
-        Map<String, String> actual = provider.adjustProperties(mojo, props, document);
-        // Access only the name property to trigger the (lazy) resolution of a single property.
-        String name = actual.get(CopyrightAuthorProvider.COPYRIGHT_CREATION_AUTHOR_NAME_KEY);
-        if (!"Peter Palaga".equals(name)) {
-          Assertions.fail("unexpected name: " + name);
-        }
-      }
-      long elapsedMs = (System.nanoTime() - start) / 1_000_000L;
-      System.out.println("Elapsed ms for " + iterations + " iterations: " + elapsedMs);
-    }
-  }
-
-  private static Document newDocument(String relativePath) {
-    Path path = Paths.get(gitRepoRoot + File.separator
-        + relativePath.replace('/', File.separatorChar));
-    return new Document(path.toFile(), null, StandardCharsets.UTF_8, new String[0], null);
-  }
-
-}
-
+*** Add File: license-maven-plugin-git/src/test/java/com/mycila/maven/plugin/license/perf/GeneratedTests.java
++package com.mycila.maven.plugin.license.perf;
++
++import com.mycila.maven.plugin.license.document.Document;
++import com.mycila.maven.plugin.license.document.DocumentPropertiesLoader;
++import com.mycila.maven.plugin.license.git.CopyrightRangeProvider;
++import com.mycila.maven.plugin.license.AbstractLicenseMojo;
++import org.eclipse.jgit.api.Git;
++import org.junit.jupiter.api.Assertions;
++import org.junit.jupiter.api.Test;
++
++import java.io.File;
++import java.nio.charset.Charset;
++import java.nio.file.Files;
++import java.util.Collections;
++import java.util.HashMap;
++import java.util.Map;
++
++/**
++ * Performance test to demonstrate lazy property resolution improvements.
++ */
++public class GeneratedTests {
++
++  private static final int COMMITS = 120;
++  private static final int ITERATIONS = 10;
++
++  @Test
++  public void measureRangeProviderSinglePropertyAccess() throws Exception {
++    File repo = Files.createTempDirectory("testgit").toFile();
++    try (Git git = Git.init().setDirectory(repo).call()) {
++      File f = new File(repo, "a.txt");
++      for (int i = 0; i < COMMITS; i++) {
++        Files.writeString(f.toPath(), "line " + i + "\n");
++        git.add().addFilepattern("a.txt").call();
++        git.commit().setMessage("commit " + i).call();
++      }
++
++      final AbstractLicenseMojo mojo = new AbstractLicenseMojo(){};
++      mojo.defaultBasedir = repo;
++      mojo.warnIfShallow = false;
++
++      Map<String, String> props = new HashMap<>();
++      props.put("project.inceptionYear", "2000");
++      props.put("license.git.maxCommitsLookup", Integer.toString(1000));
++
++      CopyrightRangeProvider rangeProvider = new CopyrightRangeProvider();
++      rangeProvider.init(mojo, props);
++
++      DocumentPropertiesLoader loader = (Document d) -> Collections.emptyMap();
++      Document doc = new Document(f, null, Charset.defaultCharset(), new String[]{"copyright"}, loader);
++
++      long totalNanos = 0L;
++      for (int i = 0; i < ITERATIONS; i++) {
++        long start = System.nanoTime();
++        Map<String, String> adjusted = rangeProvider.adjustProperties(mojo, props, doc);
++        // only access creation year to simulate typical usage where not all provided props are needed
++        String creation = adjusted.get(CopyrightRangeProvider.COPYRIGHT_CREATION_YEAR_KEY);
++        long elapsed = System.nanoTime() - start;
++        totalNanos += elapsed;
++      }
++
++      double seconds = totalNanos / 1_000_000_000.0;
++      System.out.println("Total time for " + ITERATIONS + " iterations: " + seconds + " s");
++      // sanity check: a value must be present
++      Assertions.assertNotNull(rangeProvider.adjustProperties(mojo, props, doc).get(CopyrightRangeProvider.COPYRIGHT_CREATION_YEAR_KEY));
++
++    }
++  }
++}
++
 *** End Patch

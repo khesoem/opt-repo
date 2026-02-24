@@ -1,0 +1,83 @@
+diff --git a/services/src/test/java/org/keycloak/organization/utils/GeneratedTests.java b/services/src/test/java/org/keycloak/organization/utils/GeneratedTests.java
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/services/src/test/java/org/keycloak/organization/utils/GeneratedTests.java
+@@ -0,0 +1,77 @@
++package org.keycloak.organization.utils;
++
++import org.junit.Test;
++import org.keycloak.models.KeycloakContext;
++import org.keycloak.models.KeycloakSession;
++import org.keycloak.models.RealmModel;
++import org.keycloak.organization.OrganizationProvider;
++
++import java.lang.reflect.InvocationHandler;
++import java.lang.reflect.Method;
++import java.lang.reflect.Proxy;
++
++import static org.junit.Assert.assertNull;
++
++public class GeneratedTests {
++
++    @Test
++    public void testResolveOrganizationDoesNotInvokeProviderWhenFeatureDisabled() {
++        // create a dynamic proxy for RealmModel that returns isOrganizationsEnabled=false
++        Object realmProxy = Proxy.newProxyInstance(
++                RealmModel.class.getClassLoader(),
++                new Class[]{RealmModel.class},
++                new InvocationHandler() {
++                    @Override
++                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                        String name = method.getName();
++                        if ("isOrganizationsEnabled".equals(name)) return false;
++                        if ("toString".equals(name)) return "realmProxy";
++                        if ("hashCode".equals(name)) return 0;
++                        if ("equals".equals(name)) return proxy == args[0];
++                        return null;
++                    }
++                }
++        );
++
++        // create KeycloakContext proxy that returns the realm proxy and no organization
++        Object ctx = Proxy.newProxyInstance(
++                KeycloakContext.class.getClassLoader(),
++                new Class[]{KeycloakContext.class},
++                new InvocationHandler() {
++                    @Override
++                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                        if ("getRealm".equals(method.getName())) return realmProxy;
++                        if ("getOrganization".equals(method.getName())) return null;
++                        return null;
++                    }
++                }
++        );
++
++
++        InvocationHandler handler = new InvocationHandler() {
++            @Override
++            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
++                if ("getContext".equals(method.getName())) return ctx;
++                if ("getProvider".equals(method.getName()) && args != null && args.length >= 1 && args[0] == OrganizationProvider.class) {
++                    // Simulate slow provider lookup to demonstrate performance regression in original code path
++                    try { Thread.sleep(500); } catch (InterruptedException ignored) {}
++                    return null;
++                }
++                return null;
++            }
++        };
++
++        KeycloakSession session = (KeycloakSession) Proxy.newProxyInstance(
++                KeycloakSession.class.getClassLoader(),
++                new Class[]{KeycloakSession.class},
++                handler);
++
++        long start = System.nanoTime();
++        org.keycloak.models.OrganizationModel resolved = Organizations.resolveOrganization(session);
++        long elapsedMs = (System.nanoTime() - start) / 1_000_000;
++
++        System.out.println("GeneratedTests: resolveOrganization elapsed ms = " + elapsedMs);
++
++        assertNull(resolved);
++    }
++}

@@ -1,1 +1,1 @@
-com.mycila.maven.plugin.license.git.GeneratedPerformanceTest
+com.mycila.maven.plugin.license.perf.GeneratedTests

@@ -1,0 +1,89 @@
+*** Begin Patch
+*** Add File: sharding-core/sharding-core-common/src/test/java/org/apache/shardingsphere/core/metadata/GeneratedTests.java
++package org.apache.shardingsphere.core.metadata;
++
++import org.apache.shardingsphere.api.config.sharding.ShardingRuleConfiguration;
++import org.apache.shardingsphere.api.config.sharding.TableRuleConfiguration;
++import org.apache.shardingsphere.underlying.common.database.type.dialect.H2DatabaseType;
++import org.apache.shardingsphere.core.rule.ShardingRule;
++import org.h2.jdbcx.JdbcDataSource;
++import org.junit.Test;
++
++import javax.sql.DataSource;
++import java.sql.Connection;
++import java.sql.SQLException;
++import java.util.ArrayList;
++import java.util.HashMap;
++import java.util.List;
++import java.util.Map;
++
++import static org.junit.Assert.assertNotNull;
++
++public final class GeneratedTests {
++
++    @Test
++    public void testLoadMetaDataWithManyDataSources() throws Exception {
++        final int dataSourceCount = 8;
++        final int sleepMillis = 300;
++        Map<String, DataSource> dataSourceMap = new HashMap<>();
++        List<String> dataSourceNames = new ArrayList<>();
++        for (int i = 0; i < dataSourceCount; i++) {
++            String name = "ds_" + i;
++            dataSourceNames.add(name);
++            JdbcDataSource real = new JdbcDataSource();
++            real.setURL("jdbc:h2:mem:ds_" + i + ";DB_CLOSE_DELAY=-1");
++            dataSourceMap.put(name, new SleepingDataSource(real, sleepMillis));
++        }
++        String actualDataNodes = "ds_${0.." + (dataSourceCount - 1) + "}.t_order";
++        TableRuleConfiguration tableRuleConfig = new TableRuleConfiguration("t_order", actualDataNodes);
++        ShardingRuleConfiguration shardingRuleConfig = new ShardingRuleConfiguration();
++        shardingRuleConfig.getTableRuleConfigs().add(tableRuleConfig);
++        ShardingRule shardingRule = new ShardingRule(shardingRuleConfig, dataSourceNames);
++
++        ShardingMetaDataLoader loader = new ShardingMetaDataLoader(dataSourceMap, shardingRule, 1, true);
++        long start = System.currentTimeMillis();
++        assertNotNull(loader.load("t_order", new H2DatabaseType()));
++        long elapsed = System.currentTimeMillis() - start;
++        System.out.println("Elapsed ms: " + elapsed);
++    }
++
++    private static final class SleepingDataSource implements DataSource {
++        private final DataSource delegate;
++        private final int sleepMillis;
++
++        SleepingDataSource(final DataSource delegate, final int sleepMillis) {
++            this.delegate = delegate;
++            this.sleepMillis = sleepMillis;
++        }
++
++        private Connection sleepAndGet() throws SQLException {
++            try {
++                Thread.sleep(sleepMillis);
++            } catch (InterruptedException ignored) {
++                Thread.currentThread().interrupt();
++            }
++            return delegate.getConnection();
++        }
++
++        @Override
++        public Connection getConnection() throws SQLException {
++            return sleepAndGet();
++        }
++
++        @Override
++        public Connection getConnection(String username, String password) throws SQLException {
++            return sleepAndGet();
++        }
++
++        // Other DataSource methods delegate or return simple defaults
++        @Override public <T> T unwrap(Class<T> iface) throws SQLException { return delegate.unwrap(iface); }
++        @Override public boolean isWrapperFor(Class<?> iface) throws SQLException { return delegate.isWrapperFor(iface); }
++        @Override public java.io.PrintWriter getLogWriter() throws SQLException { return delegate.getLogWriter(); }
++        @Override public void setLogWriter(java.io.PrintWriter out) throws SQLException { delegate.setLogWriter(out); }
++        @Override public void setLoginTimeout(int seconds) throws SQLException { delegate.setLoginTimeout(seconds); }
++        @Override public int getLoginTimeout() throws SQLException { return delegate.getLoginTimeout(); }
++        @Override public java.util.logging.Logger getParentLogger() { try { return delegate.getParentLogger(); } catch (java.sql.SQLFeatureNotSupportedException e) { return java.util.logging.Logger.getGlobal(); } }
++    }
++}
++
+*** End Patch

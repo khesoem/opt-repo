@@ -1,0 +1,140 @@
+*** Begin Patch
+*** Add File: src/test/java/kafdrop/service/GeneratedTests.java
+package kafdrop.service;
+
+import kafdrop.config.KafkaConfiguration;
+import kafdrop.model.TopicVO;
+import kafdrop.model.TopicPartitionVO;
+import org.apache.kafka.clients.admin.Config;
+import org.apache.kafka.common.PartitionInfo;
+import org.junit.jupiter.api.Test;
+
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+/**
+ * Performance-oriented test that exercises topic metadata collection paths.
+ * The test provides a TestKafkaHighLevelConsumer which implements both the
+ * original (per-topic) and patched (batched) APIs. Depending on which
+ * methods KafkaMonitorImpl calls (different between original and patched
+ * versions), the test will observe different execution times.
+ */
+public class GeneratedTests {
+  private static final long PER_TOPIC_DELAY_MS = 80; // simulated slow per-topic cost
+  private static final long PER_PARTITION_DELAY_MS = 20; // simulated slow per-partition cost
+  private static final int TOPIC_COUNT = 20;
+
+  static final class TestKafkaHighLevelConsumer extends KafkaHighLevelConsumer {
+    TestKafkaHighLevelConsumer() {
+      super(new KafkaConfiguration());
+    }
+
+    // Original API - slow per-topic info retrieval
+    @Override
+    synchronized Map<String, TopicVO> getTopicInfos(String[] topics) {
+      // simulate per-topic overhead
+      try { Thread.sleep(PER_TOPIC_DELAY_MS * Math.max(1, topics.length)); } catch (InterruptedException ignored) {}
+      final var result = new HashMap<String, TopicVO>();
+      for (String t : topics) {
+        final var vo = new TopicVO(t);
+        final var partitions = new TreeMap<Integer, TopicPartitionVO>();
+        for (int p = 0; p < 3; p++) {
+          final var tp = new TopicPartitionVO(p);
+          tp.setFirstOffset(0);
+          tp.setSize(1000);
+          partitions.put(p, tp);
+        }
+        vo.setPartitions(partitions);
+        result.put(t, vo);
+      }
+      return result;
+    }
+
+    // Original API - slow per-topic partition size retrieval
+    @Override
+    synchronized Map<Integer, TopicPartitionVO> getPartitionSize(String topic) {
+      try { Thread.sleep(PER_PARTITION_DELAY_MS); } catch (InterruptedException ignored) {}
+      final var map = new TreeMap<Integer, TopicPartitionVO>();
+      for (int p = 0; p < 3; p++) {
+        final var tp = new TopicPartitionVO(p);
+        tp.setFirstOffset(0);
+        tp.setSize(1000);
+        map.put(p, tp);
+      }
+      return map;
+    }
+
+    // Patched API - batched retrieval of all topics (fast)
+    // This method may only be invoked by the patched version of KafkaMonitorImpl.
+    Map<String, List<PartitionInfo>> getAllTopics() {
+      try { Thread.sleep(PER_TOPIC_DELAY_MS); } catch (InterruptedException ignored) {}
+      final var map = new HashMap<String, List<PartitionInfo>>();
+      for (int i = 0; i < TOPIC_COUNT; i++) {
+        map.put("topic" + i, Collections.emptyList());
+      }
+      return map;
+    }
+
+    // Patched API - fast batch topic info retrieval
+    Map<String, TopicVO> getTopicInfos(Map<String, List<PartitionInfo>> allTopicsMap, String[] topics) {
+      final var result = new HashMap<String, TopicVO>();
+      for (String t : topics) {
+        final var vo = new TopicVO(t);
+        final var partitions = new TreeMap<Integer, TopicPartitionVO>();
+        for (int p = 0; p < 3; p++) {
+          final var tp = new TopicPartitionVO(p);
+          tp.setFirstOffset(0);
+          tp.setSize(1000);
+          partitions.put(p, tp);
+        }
+        vo.setPartitions(partitions);
+        result.put(t, vo);
+      }
+      return result;
+    }
+
+    // Patched API - fast batch partition sizes setter
+    synchronized void setTopicPartitionSizes(List<TopicVO> topics) {
+      try { Thread.sleep(PER_PARTITION_DELAY_MS); } catch (InterruptedException ignored) {}
+      for (TopicVO vo : topics) {
+        final var partitions = new TreeMap<Integer, TopicPartitionVO>();
+        for (int p = 0; p < 3; p++) {
+          final var tp = new TopicPartitionVO(p);
+          tp.setFirstOffset(0);
+          tp.setSize(1000);
+          partitions.put(p, tp);
+        }
+        vo.setPartitions(partitions);
+      }
+    }
+  }
+
+  static final class TestKafkaHighLevelAdminClient extends KafkaHighLevelAdminClient {
+    TestKafkaHighLevelAdminClient() { super(new KafkaConfiguration()); }
+
+    @Override
+    Map<String, Config> describeTopicConfigs(Set<String> topicNames) {
+      return Collections.emptyMap();
+    }
+  }
+
+  @Test
+  void testGetTopicsPerformance() {
+    final var consumer = new TestKafkaHighLevelConsumer();
+    final var admin = new TestKafkaHighLevelAdminClient();
+    final var monitor = new KafkaMonitorImpl(consumer, admin);
+
+    // Warm up
+    monitor.getTopics();
+
+    final long start = System.nanoTime();
+    final var topics = monitor.getTopics();
+    final long timeMs = (System.nanoTime() - start) / 1_000_000;
+    System.out.println("GeneratedTests: getTopics() returned " + topics.size() + " topics in " + timeMs + " ms");
+
+    assertEquals(TOPIC_COUNT, topics.size());
+  }
+}
+
+*** End Patch

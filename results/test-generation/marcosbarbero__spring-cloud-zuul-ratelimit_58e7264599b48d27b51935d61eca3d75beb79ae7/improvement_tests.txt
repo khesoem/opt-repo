@@ -1,1 +1,1 @@
-com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.filters.perf.PolicyPerformanceTest
+com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.GeneratedTests
