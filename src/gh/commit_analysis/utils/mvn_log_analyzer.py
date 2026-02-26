@@ -6,21 +6,51 @@ from scipy.stats import mannwhitneyu
 from scipy.stats import binomtest
 import src.config as conf
 
+def has_compilation_error(log_path: str) -> bool:
+    with open(log_path, 'r', encoding='utf-8', errors='ignore') as f:
+        log_content = f.read()
+
+    # Maven/Javac signatures for compile-time failures.
+    # Keep these scoped to compile/testCompile stages to avoid matching non-compilation failures.
+    compilation_error_patterns = (
+        # Maven compiler plugin goal failures.
+        r"(?im)^\[ERROR\]\s+Failed to execute goal .*maven-compiler-plugin.*:(compile|testCompile)\b",
+        r"(?im)^\[ERROR\]\s+COMPILATION ERROR\s*:?",
+        r"(?im)^\[ERROR\]\s+Compilation failure\b",
+        r"(?im)^\[ERROR\]\s+Fatal error compiling\b",
+        r"(?im)^\[ERROR\]\s+No compiler is provided in this environment\b",
+    )
+
+    if any(re.search(pattern, log_content) for pattern in compilation_error_patterns):
+        return True
+
+    # Fallback for multiline Maven messages where "Compilation failure" appears near the
+    # compiler goal failure but may not be at line start.
+    compiler_goal_failed = re.search(
+        r"(?is)Failed to execute goal .*maven-compiler-plugin.*:(compile|testCompile)\b",
+        log_content,
+    )
+    if compiler_goal_failed and re.search(r"(?i)\bCompilation failure\b", log_content):
+        return True
+
+    return False
+
+def is_exec_successful(log_path: str) -> bool:
+    with open(log_path, 'r', encoding='utf-8', errors='ignore') as f:
+        log_content = f.read()
+        return not("BUILD FAILURE" in log_content or "BUILD ERROR" in log_content or not "BUILD SUCCESS" in log_content)
+
 class MvnwExecResults:
-    def __init__(self, original_mvnw_log_paths: list[str], patched_mvnw_log_paths: list[str], expected_exec_times: int):
+    def __init__(self, original_mvnw_log_paths: list[str], patched_mvnw_log_paths: list[str], expected_exec_times: int, min_p_value: float | None = None, min_exec_time_improvement: float | None = None):
         self.original_mvnw_log_paths = original_mvnw_log_paths
         self.patched_mvnw_log_paths = patched_mvnw_log_paths
         self.expected_exec_times = expected_exec_times
-        self.min_exec_time_improvement = conf.perf_commit['min-exec-time-improvement']
+        self.min_p_value = min_p_value if min_p_value is not None else conf.perf_commit['min-p-value']
+        self.min_exec_time_improvement = min_exec_time_improvement if min_exec_time_improvement is not None else conf.perf_commit['min-exec-time-improvement']
     
     def is_successful(self) -> bool:
-        return all(self._is_exec_successful(log_path) for log_path in self.original_mvnw_log_paths) and all(self._is_exec_successful(log_path) for log_path in self.patched_mvnw_log_paths)
+        return all(is_exec_successful(log_path) for log_path in self.original_mvnw_log_paths) and all(is_exec_successful(log_path) for log_path in self.patched_mvnw_log_paths)
     
-    def _is_exec_successful(self, log_path: str) -> bool:
-        with open(log_path, 'r', encoding='utf-8', errors='ignore') as f:
-            log_content = f.read()
-            return not("BUILD FAILURE" in log_content or "BUILD ERROR" in log_content or not "BUILD SUCCESS" in log_content)
-
     def _get_per_test_execution_times(self, log_path: str) -> dict[str, float]:
         """
         Get the execution times of the tests in the log file.
@@ -63,7 +93,7 @@ class MvnwExecResults:
         self
     ) -> bool:
         original_times, patched_times = self.get_valid_total_execution_times()
-        return self.get_improvement_p_value(original_times, patched_times) < conf.perf_commit['min-p-value']
+        return self.get_improvement_p_value(original_times, patched_times) < self.min_p_value
     
     def _get_total_execution_time(self, log_path: str) -> float:
         return sum(self._get_per_test_execution_times(log_path).values())
@@ -107,7 +137,7 @@ class MvnwExecResults:
         v1_arr = np.asarray(v1, dtype=float)
         v2_arr = np.asarray(v2, dtype=float)
 
-        c = 1.0 - conf.perf_commit['min-exec-time-improvement']  # we test μ2 < c * μ1
+        c = 1.0 - self.min_exec_time_improvement  # we test μ2 < c * μ1
         v1_scaled = c * v1_arr
 
         diff = v2_arr - v1_scaled
@@ -146,23 +176,9 @@ class MvnwExecResults:
                 if any(time < 0.01 for time in all_original_test_times[test_class]) or any(time < 0.01 for time in all_patched_test_times[test_class]):
                     continue
 
-                if self.get_improvement_p_value(all_original_test_times[test_class], all_patched_test_times[test_class]) < conf.perf_commit['min-p-value']:
+                if self.get_improvement_p_value(all_original_test_times[test_class], all_patched_test_times[test_class]) < self.min_p_value:
                     significant_test_time_changes['patched_outperforms_original'].append(test_class)
-                elif self.get_improvement_p_value(all_patched_test_times[test_class], all_original_test_times[test_class]) < conf.perf_commit['min-p-value']:
+                elif self.get_improvement_p_value(all_patched_test_times[test_class], all_original_test_times[test_class]) < self.min_p_value:
                     significant_test_time_changes['original_outperforms_patched'].append(test_class)
-
-                # original_faster, patched_faster = True, True
-
-                # for original_time in all_original_test_times[test_class]:
-                #     for patched_time in all_patched_test_times[test_class]:
-                #         if original_time > patched_time * (1- self.min_exec_time_improvement):
-                #             original_faster = False
-                #         if patched_time > original_time * (1- self.min_exec_time_improvement):
-                #             patched_faster = False
-                
-                # if original_faster:
-                #     significant_test_time_changes['original_outperforms_patched'].append(test_class)
-                # if patched_faster:
-                #     significant_test_time_changes['patched_outperforms_original'].append(test_class)
                     
         return significant_test_time_changes

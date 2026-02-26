@@ -1,6 +1,6 @@
 import os
 from src.gh.commit_analysis.commit_static_analyzer import RepoAnalyzer
-from src.utils import run_cmd
+from src.utils import run_cmd, pull_image_install_git, create_tmp_container
 from src import config
 from github import Github, Auth, Repository
 import logging
@@ -11,98 +11,10 @@ TASK_TYPE_TO_PATHS = {
 }
 class OpenHandsRunner:
     def __init__(self, working_dir: str):
-        self.working_dir = config.openhands['working-dir']
+        self.working_dir = config.utils['working-dir']
         self.gh_token = config.github['access-token']
         auth = Auth.Token(self.gh_token)
         self.g = Github(auth=auth)
-    
-    def _prepare_new_img_dockerfile(self, base_image: str) -> str:
-        dockerfile_template = open(os.path.join(config.openhands['openhands-files-dir'], 'Dockerfile')).read()
-        dockerfile_content = dockerfile_template.replace('{base-image}', base_image)
-        dockerfile_path = os.path.join(self.working_dir, 'Dockerfile')
-        with open(dockerfile_path, 'w') as f:
-            f.write(dockerfile_content)
-        return dockerfile_path
-
-    def _pull_image_install_git(self, repo: str, commit: str) -> str:
-        image_name = f'ghcr.io/khesoem/{repo.split("/")[-1]}-{commit}:latest'
-        
-        cmd = [
-            "docker",
-            "pull",
-            image_name,
-        ]
-        run_cmd(cmd, self.working_dir)
-
-        new_img_name = f'new-img'
-
-        # Check if new-img exists and remove it if it does
-        cmd = [
-            "docker",
-            "images",
-            "--format",
-            "{{.ID}}\t{{.Repository}}:{{.Tag}}",
-        ]
-        result = run_cmd(cmd, self.working_dir)
-        image_ids = set()
-        for line in result.strip().split('\n'):
-            if line.strip():
-                parts = line.strip().split('\t')
-                if len(parts) == 2:
-                    image_id, image_ref = parts
-                    if new_img_name in image_ref:
-                        image_ids.add(image_id)
-        for image_id in image_ids:
-            cmd = [
-                    "docker",
-                    "rmi",
-                    "-f",
-                    image_id,
-                ]
-            run_cmd(cmd, self.working_dir)
-
-        self._prepare_new_img_dockerfile(image_name)
-
-        cmd = [
-            "docker",
-            "build",
-            "-t",
-            new_img_name,
-            self.working_dir,
-        ]
-        run_cmd(cmd, self.working_dir, capture_output=True)
-
-        return new_img_name
-    
-    def _create_tmp_container(self, image_name: str) -> str:
-        cmd = [
-            "docker",
-            "ps",
-            "-a",
-            "--filter",
-            "name=tmp-cont",
-            "--format",
-            "{{.Names}}",
-        ]
-        result = run_cmd(cmd, self.working_dir)
-        if "tmp-cont" in result:
-            cmd = [
-                "docker",
-                "rm",
-                "tmp-cont",
-            ]
-            run_cmd(cmd, self.working_dir)
-        
-        cmd = [
-            "docker",
-            "run",
-            "-d",
-            "--name",
-            "tmp-cont",
-            image_name,
-        ]
-        run_cmd(cmd, self.working_dir)
-        return "tmp-cont"
 
     def _prepare_workspace(self, container_name: str, before_commit: str | None, after_commit: str, task_type: str, pr_number: int | None = None) -> str:
         workspace_path = os.path.join(self.working_dir, 'workspace')
@@ -313,8 +225,8 @@ class OpenHandsRunner:
             run_cmd(cmd, self.working_dir)
 
     def run_patch_generation(self, repo: str, before_commit: str | None, after_commit: str, issue_id: int, pr_number: int | None = None) -> None:
-        image_name = self._pull_image_install_git(repo, after_commit)
-        container_name = self._create_tmp_container(image_name)
+        image_name = pull_image_install_git(repo, after_commit, self.working_dir)
+        container_name = create_tmp_container(image_name, self.working_dir)
         workspace_path = self._prepare_workspace(container_name, before_commit, after_commit, 'patch', pr_number)
 
         repo = self.g.get_repo(repo)
@@ -330,10 +242,10 @@ class OpenHandsRunner:
     
     def run_test_generation(self, repo: str, before_commit: str | None, after_commit: str, issue_id: int, pr_number: int | None) -> None:
         logging.info(f"Running test generation for {repo} {before_commit} {after_commit} {issue_id} {pr_number}")
-        image_name = self._pull_image_install_git(repo, after_commit)
+        image_name = pull_image_install_git(repo, after_commit, self.working_dir)
         logging.info(f"Pulled image {image_name}")
         
-        container_name = self._create_tmp_container(image_name)
+        container_name = create_tmp_container(image_name, self.working_dir)
         logging.info(f"Created temporary container {container_name}")
 
         workspace_path = self._prepare_workspace(container_name, before_commit, after_commit, 'test', pr_number)

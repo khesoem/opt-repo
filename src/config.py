@@ -54,6 +54,11 @@ data = {
     'dataset-path': 'results/dataset.csv',
 }
 
+utils = {
+    'working-dir': os.environ['workingdir'],
+    'git-extension-dockerfile': 'auxiliary/docker/git_installation_Dockerfile',
+}
+
 openhands = {
     'working-dir': os.environ['workingdir'],
     'openhands-files-dir': 'auxiliary/openhands-files',
