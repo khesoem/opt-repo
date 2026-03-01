@@ -225,7 +225,6 @@ spring-projects/spring-modulith,0de48790d7e98785d82f7e0668f1a75036f9c152,261.0,m
 oracle/opengrok,d8315b1e292013fdce691e71635adbea2e89e39d,4307.0,clone_and_checkout_repo,,,{},,,False
 oracle/opengrok,09c2f120983a847a7dcb1edd0e13e6eac530db40,3509.0,clone_and_checkout_repo,,,{},,,False
 oracle/opengrok,aab14584fe1a150b7bf5fd332f8d534482c494d1,3383.0,clone_and_checkout_repo,,,{},,,False
-oracle/opengrok,e0761810f7a51fa6f918f02124f4dc1ac9a80923,3509.0,clone_and_checkout_repo,,,{},,,False
 gluonhq/rich-text-area,4bfda0aeee99e29af06d711c60f465daa3044261,3.0,maven_execution_successful,0.6629661258183888,9.313225746154783e-10,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": [\""com.gluonhq.richtext.model.PieceTableTests\""]}""",,,True
 cloudsimplus/cloudsimplus,b6c496afded81a59fc31d93fd9caa471a41a9a58,325.0,clone_and_checkout_repo,,,{},,,False
 cloudsimplus/cloudsimplus,08a626a00a068def645f9b49e29beb1932a4ec9f,323.0,clone_and_checkout_repo,,,{},,,False
@@ -235,9 +234,7 @@ cloudsimplus/cloudsimplus,10a421d239fa8fefd1e66c39b550c74373b9d380,236.0,clone_a
 paulcwarren/spring-content,e85bde20b432b1939cf2b6de5ce84fe95929b6b0,1.0,docker_image_built,,,{},,,False
 streamthoughts/kafka-connect-file-pulse,ce329c0713fad5bcf6ee07ca0a182276b3583b07,490.0,maven_execution_successful,0.0062528198991701,1.0,"""{\""original_outperforms_patched\"": [\""io.streamthoughts.kafka.connect.filepulse.fs.clean.AmazonS3MoveCleanupPolicyTest\""], \""patched_outperforms_original\"": []}""",,,True
 DominoKit/domino-ui,71e252ef792b27d3ab6a39462e1857e2158e52ec,630.0,clone_and_checkout_repo,,,{},,,False
-DominoKit/domino-ui,40e59e900bb8792b23c66af7eaad2af185f735b0,630.0,clone_and_checkout_repo,,,{},,,False
 DominoKit/domino-ui,d9e8c0e23c9ff3078eea391ed1d184df2463b853,456.0,clone_and_checkout_repo,,,{},,,False
-DominoKit/domino-ui,0bbab446a24df4c02859a5996d1632db00439223,456.0,clone_and_checkout_repo,,,{},,,False
 warmuuh/milkman,ef687963b85cafd263cc18ac61b8733782aa8ce1,72.0,clone_and_checkout_repo,,,{},,,False
 spring-projects/spring-retry,8b87e8a646712b8c33e82d7765978d4299214020,212.0,clone_and_checkout_repo,,,{},,,False
 apache/curator,39ed945af4147289d98cd2089e39954d09448577,585.0,clone_and_checkout_repo,,,{},,,False
@@ -298,7 +295,6 @@ prestodb/presto,136facf5cf97e36080110e10b2face7cadedfe76,6129.0,clone_and_checko
 prestodb/presto,acfe352844e9937e9b90e636032330614e349c20,1734.0,clone_and_checkout_repo,,,{},,,False
 quarkusio/quarkus,b0503d2f057cab8b12d57f40d71e200bc968cb3c,50889.0,clone_and_checkout_repo,,,{},,,False
 quarkusio/quarkus,5bfddf322fdce4d59b5d950e74bc3b81694c9e86,27281.0,clone_and_checkout_repo,,,{},,,False
-quarkusio/quarkus,35f5a09b0fe6c25cc89266685e851e872d430a67,27281.0,clone_and_checkout_repo,,,{},,,False
 quarkusio/quarkus,3133199cbb457886e53e8a11131ef35561da01ce,24712.0,maven_execution_successful,-0.0304878048780488,0.991937599144876,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 quarkusio/quarkus,8c5c16818e338832f2875b6ef881a173360da193,23822.0,clone_and_checkout_repo,,,{},,,False
 quarkusio/quarkus,2321d0c782a50ea368e04d29d6c6345c532e0f16,14720.0,clone_and_checkout_repo,,,{},,,False
@@ -308,7 +304,6 @@ quarkusio/quarkus,db9b91eb72511a84e05fa045cca9e4b5d98f5c6c,6950.0,clone_and_chec
 quarkusio/quarkus,82db6e06e60546d73d18b2bdd7cfc3b5791da8ac,4490.0,maven_execution_successful,-6.131959774353795e-05,0.9506314266473056,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 quarkusio/quarkus,69c306de21e9bbb5d9723e7b59519edb0b1d1918,4294.0,clone_and_checkout_repo,,,{},,,False
 quarkusio/quarkus,d336a579a0f74a58de573e18c811c77de0dbff74,884.0,clone_and_checkout_repo,,,{},,,False
-quarkusio/quarkus,f2cb19fc4675d75e41fa1efe2593499fa90c4445,884.0,clone_and_checkout_repo,,,{},,,False
 quarkusio/quarkus,109db6ea37dc2e65165019988a2ebee946887ab4,188.0,clone_and_checkout_repo,,,{},,,False
 quarkusio/quarkus,97c344ff2ca0886a808ff1251368ae4d23b6855f,214.0,docker_image_built,,,{},,,False
 apache/pulsar,f9e69f08c21a57980ef6f6fbb9b8c974621d9bab,11100.0,clone_and_checkout_repo,,,{},,,False
@@ -321,15 +316,12 @@ apache/dolphinscheduler,e4edf3e4d07a7a1acdf63cf8806ecbbe84e8e517,1522.0,clone_an
 apache/dolphinscheduler,3e4c221463c62961a80a51111a6a04e050f2af23,1522.0,clone_and_checkout_repo,,,{},,,False
 apache/dolphinscheduler,26d98931cf90daf5620eb88b3ef6167fc38922ba,1522.0,clone_and_checkout_repo,,,{},,,False
 apache/dolphinscheduler,67cde18cc314004f8f9fdba6a271850d1be84ca6,1515.0,clone_and_checkout_repo,,,{},,,False
-apache/dolphinscheduler,947d8044d7101ace1f95f08b511088737eb4ba1e,1515.0,clone_and_checkout_repo,,,{},,,False
 pinpoint-apm/pinpoint,101c228a6ddaf37c96ee4b01f6ffb2fa3a605cc0,1469.0,clone_and_checkout_repo,,,{},,,False
 pinpoint-apm/pinpoint,d0837db07b005a193d8c7818f3f84eea54a4884f,1432.0,clone_and_checkout_repo,,,{},,,False
 pinpoint-apm/pinpoint,c51234b638084d5f64f87a9a31dc25d110d23aa2,1362.0,clone_and_checkout_repo,,,{},,,False
 apache/ignite,96fa3002904fcad50dafc1f19655c2d44eaece40,10469.0,clone_and_checkout_repo,,,{},,,False
 oracle/opengrok,72e022e05706525d645cfe4db9ca6ad26da2815a,3442.0,clone_and_checkout_repo,,,{},,,False
-oracle/opengrok,8b49f667690a6fc9bc15da0b12b2b293c31bc408,3442.0,clone_and_checkout_repo,,,{},,,False
 oracle/opengrok,cfa7dbbb2eb40be6d1d88b403c8a19bbcc58a615,2118.0,docker_image_built,,,{},,,False
-oracle/opengrok,eb07e699672f7a70d96f508a228bbc450a8b2bbb,2118.0,docker_image_built,,,{},,,False
 oracle/opengrok,400829b39b0862ba2926dfe3ed26d668f56e5091,1716.0,docker_image_built,,,{},,,False
 oracle/opengrok,b2324f467f7f2ed87c47233ce46d724b196970bb,1353.0,docker_image_built,,,{},,,False
 oracle/opengrok,a04de4b09ef6a455ea16df94e6db7a73240e6bb6,1095.0,clone_and_checkout_repo,,,{},,,False
@@ -337,11 +329,8 @@ oracle/opengrok,97aa476a20321c91809d32ad58a72e0d19c040bf,827.0,clone_and_checkou
 oracle/opengrok,09d9d6dfb55727efcc29f5a78546004854c1ff66,880.0,clone_and_checkout_repo,,,{},,,False
 apache/maven-mvnd,06fa4fd227479ff697f4c05e872da34ac6129b0a,527.0,clone_and_checkout_repo,,,{},,,False
 apache/maven-mvnd,692df3eceaffefbf4e24c0e53900e3e08d51e68d,464.0,clone_and_checkout_repo,,,{},,,False
-langgraph4j/langgraph4j,f678778c8fb836fe84f8b1e86c7b0a901c61d159,106.0,clone_and_checkout_repo,,,{},,,False
 smallrye/smallrye-mutiny,4c72ceb7b328af313b483db60eb2b40a924eefde,1080.0,clone_and_checkout_repo,,,{},,,False
-smallrye/smallrye-mutiny,bded473fca558f94bc6f0a3e9601d08d463047b3,1080.0,clone_and_checkout_repo,,,{},,,False
 FasterXML/jackson-dataformats-binary,0723dfa5d9d3964d760cb8f5c6693affaa2a5a24,82.0,clone_and_checkout_repo,,,{},,,False
-smallrye/smallrye-graphql,e4d9e14d831dba0baa4eedb4adae2e1d734670e0,728.0,clone_and_checkout_repo,,,{},,,False
 elastic/ecs-logging-java,2f541954cc8884a30e8ea2eb0d148b8e9c20615c,149.0,clone_and_checkout_repo,,,{},,,False
 gluonhq/rich-text-area,ec8e1f1fce0e2489cdfccac0d233e2b4650a21f3,414.0,clone_and_checkout_repo,,,{},,,False
 rabbitmq/rabbitmq-stream-java-client,e1b0fea4d327f2d97f1d7a3f8727202b567ab201,17.0,clone_and_checkout_repo,,,{},,,False
@@ -368,12 +357,10 @@ AsyncHttpClient/async-http-client,53206a18e813fffeec42299460ae1763e674891c,821.0
 AsyncHttpClient/async-http-client,a8f500d9aaf970ae6a369678e524449a74a4570a,796.0,clone_and_checkout_repo,,,{},,,False
 AsyncHttpClient/async-http-client,c517098e2099ef026239d990534e3809cadb46d9,795.0,clone_and_checkout_repo,,,{},,,False
 alibaba/fastjson2,d83b205d3899f5dce575ad5fe8992447e1b3e9a3,146.0,maven_execution_successful,0.0130833183915747,0.9506314266473056,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,False
-alibaba/fastjson2,0edd7e567985dcc26098691bd108a82e92f40f53,146.0,maven_execution_successful,-0.0259509821619049,0.9999999711290002,"""{\""original_outperforms_patched\"": [\""com.alibaba.fastjson2.JSONTest\"", \""com.alibaba.fastjson2.annotation.JSONFieldTest4\""], \""patched_outperforms_original\"": []}""",,,False
 spring-projects/spring-data-mongodb,8a9e6bf178b2deea387aff6fd9663295a703d5fc,4983.0,clone_and_checkout_repo,,,{},,,False
 spring-projects/spring-data-mongodb,09b2afa79d42b45f2cf02a7360ad50602f3f73de,3941.0,clone_and_checkout_repo,,,{},,,False
 spring-projects/spring-data-mongodb,c31872d979fa238170da4ef055feee1de3275f98,3918.0,clone_and_checkout_repo,,,{},,,False
 spring-projects/spring-data-mongodb,70145a4c8656ebd4323cf776ea51b95e8e108872,3613.0,clone_and_checkout_repo,,,{},,,False
-spring-projects/spring-data-mongodb,95c47079029d3aa9d1a8b9e7500cb6b7e5c91eb1,2523.0,clone_and_checkout_repo,,,{},,,False
 spring-projects/spring-data-mongodb,e67bacf66c8c3b81efeec9e768ea255ceb463f24,2352.0,clone_and_checkout_repo,,,{},,,False
 spring-projects/spring-data-mongodb,617dbdac3fc6c9a48806bdc198d65560c7eea64a,2352.0,clone_and_checkout_repo,,,{},,,False
 spring-projects/spring-data-mongodb,78fc2e04568b6076f11b76e646bad99db24827c7,2225.0,clone_and_checkout_repo,,,{},,,False
@@ -413,7 +400,6 @@ neo4j/neo4j-ogm,283be6de03a43e0247ccecb02c1cf9f89e6dae30,849.0,clone_and_checkou
 neo4j/neo4j-ogm,82711997160294c2ab90852a7f38ff652cd56ad5,849.0,clone_and_checkout_repo,,,{},,,False
 spring-cloud/spring-cloud-circuitbreaker,7a9b097e0be96c8954924f4b6aa550e6ac3862fe,96.0,maven_execution_successful,0.0004979968167613,0.9999957848340272,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,True
 tbsalling/aismessages,642ca0d490c21f0d35399bca6ee1458c7649f8b6,16.0,clone_and_checkout_repo,,,{},,,False
-tbsalling/aismessages,aeed1e519b243d3e4e0ef5523d388d016b47b20b,16.0,clone_and_checkout_repo,,,{},,,False
 mojohaus/wagon-maven-plugin,a898fa5f4ebe5b502777cf0e4dee3d7f81bda535,17.0,clone_and_checkout_repo,,,{},,,False
 mybatis/hazelcast-cache,c367b1e81f31a8db20d648574dcd23eb5972cfa6,21.0,clone_and_checkout_repo,,,{},,,False
 dockstore/dockstore,2d8c85885e52cc0d88d3939b398254874120e902,2482.0,clone_and_checkout_repo,,,{},,,False
@@ -432,7 +418,6 @@ spring-cloud/spring-cloud-sleuth,867a49bac8a40f9897b8c193228d051799cbf89a,701.0,
 mediathekview/MediathekView,fec5afa14d2f0268c9afe4c544cde1ed4adbae03,332.0,clone_and_checkout_repo,,,{},,,False
 logfellow/logstash-logback-encoder,e1df48ce7e704624a28e6683337ee73433f7c215,353.0,clone_and_checkout_repo,,,{},,,False
 groovy/GMavenPlus,701f0fe0946ac11268df23bdbf543aefe183e288,162.0,clone_and_checkout_repo,,,{},,,False
-groovy/GMavenPlus,2ed87c3522487d8b292fc1a7555ad54f28a09138,162.0,clone_and_checkout_repo,,,{},,,False
 DataLinkDC/dinky,a67ac9abb442eabcc1061cea9d8313eccaafb75b,3909.0,clone_and_checkout_repo,,,{},,,False
 DataLinkDC/dinky,f112ccd893e20423182fece1b73346a150271937,1279.0,clone_and_checkout_repo,,,{},,,False
 DataLinkDC/dinky,86ffb5a525b81f190de2b2429ce020a5ef6977f9,1210.0,clone_and_checkout_repo,,,{},,,False
@@ -440,7 +425,6 @@ DataLinkDC/dinky,3ea213033854a00f318f4e0ada18cbd98108f432,564.0,clone_and_checko
 DataLinkDC/dinky,b91d42b72f0fede6f23e5989aff5ec387bcb1e4a,397.0,clone_and_checkout_repo,,,{},,,False
 alibaba/spring-cloud-alibaba,cc4379a27146fb75b09a506ce850c37e2b6c6ae0,11.0,maven_execution_successful,-0.0343441561341611,0.9786130273714662,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",,,False
 apache/royale-compiler,522cd0ef61a11474cf80578f7f317cc9354b9be1,83.0,clone_and_checkout_repo,,,{},,,False
-apache/royale-compiler,e75745a10fa02f5e2506b3cb0da0e28b8f996cba,83.0,clone_and_checkout_repo,,,{},,,False
 apache/royale-compiler,dbbcee56ac0edaf8d077bb06d159c7a9b2ae057d,36.0,clone_and_checkout_repo,,,{},,,False
 spacious-team/investbook,1a3206c638e5870a01c5a993d9140b76908d7a7f,294.0,clone_and_checkout_repo,,,{},,,False
 iluwatar/java-design-patterns,ccb257d5250f15061499dbb63aeba1057bafc963,883.0,clone_and_checkout_repo,,,{},,,False
@@ -529,7 +513,6 @@ casid/jte,5db53df8e193e27fcf7510a4dd0c715e56091440,78.0,docker_image_built,,,{},
 urlaubsverwaltung/urlaubsverwaltung,15fbfd085328a9e813536d6a6b2947ade02f411c,1522.0,clone_and_checkout_repo,,,{},29ae5daaf6664bd9e737a88da547d7cf3044ba02,1523.0,False
 keycloak/keycloak-benchmark,839609cf7250ce31c2541e31f834abbd3694e610,38.0,clone_and_checkout_repo,,,{},339e33e3055be53e393bf5c9c55e3742a54e4208,39.0,False
 obsidiandynamics/kafdrop,d5e9f0b73f856196fdece06502d626d1ef05ba23,233.0,maven_execution_successful,0.0556348074179742,0.8997557889670134,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",60d9db216bcd7792b85abd21d880b9303dde4848,277.0,True
-orientechnologies/orientdb,d6eebba5da18c18df5ef0847cb0d1cc108e4b32b,9603.0,clone_and_checkout_repo,,,{},968d8b6342e5b91f34ddf6320400ba939cc50ec2,9621.0,False
 eclipse-xtext/xtext,4f5f3d6ff0828eda167e3e90ea6e3998cb7ba5e1,3119.0,clone_and_checkout_repo,,,{},47f282fe6e5e4610c8eb29212c1a26c339b67e62,3120.0,False
 opencast/opencast,e190fa88e14071b722e8cd6e0fc931c411077793,4748.0,clone_and_checkout_repo,,,{},1cee4cc2a18c90d84cc27050169be9f3ba9b2676,4843.0,False
 eclipse-lemminx/lemminx,77a19a8c4f70940993817173488dcf9f7a5adbcb,1368.0,clone_and_checkout_repo,,,{},b11ed6b6fa20e141ef7bbe28b883b5b51986be13,1372.0,False
@@ -582,7 +565,6 @@ prestodb/presto,9da85e9c80c32311ba25c34ff50d80d8a755b872,14433.0,clone_and_check
 apache/dubbo,18d0e8b59fe6b6695a494ca313be17e204666ea8,2578.0,clone_and_checkout_repo,,,{},46f95bfc5462a8d3bde36ed77370c0cd3d4e8219,2697.0,False
 apache/dubbo,52f8cade8c1e2fd877de46852ffa2a3ad453c48c,1659.0,clone_and_checkout_repo,,,{},0d002c348ed9307ae60ebe1e0808fb10874c4312,1705.0,False
 alibaba/nacos,9bb12bdddfcd11cff0b6087c076bbd9604e63ffa,10159.0,clone_and_checkout_repo,,,{},d291f24d8868c11587bc93e8aa1a2a8841889da5,10162.0,False
-alibaba/nacos,ebb5cddd84730e7ff33a58187b2fd1ce9837696d,150.0,clone_and_checkout_repo,,,{},077c4cdb6f0761559c5831d72ac7b1071962fea5,184.0,False
 keycloak/keycloak,1d90e3d17adedaf41c3620a0c6c00febe1fe65ae,17711.0,clone_and_checkout_repo,,,{},10f7ea01d4b429b05763c839db34e3f3c9c1e49c,8047.0,False
 apache/shardingsphere,10b42b09350a601493daea13792d99812ad5c859,1688.0,clone_and_checkout_repo,,,{},fadb1343fec7dfb8e0c5218b05f145febffb7df6,1692.0,False
 apache/shardingsphere,563d5bf3a00a7196d756aa3041dee6d660db20ef,1615.0,clone_and_checkout_repo,,,{},2360a735ec1e2049cbad35d5bae76c3efcae3d5c,1618.0,False
@@ -641,8 +623,6 @@ apache/dolphinscheduler,9188df2ef08ede4664262a195be60fb80228004c,6112.0,clone_an
 apache/dolphinscheduler,1868c56764a380a7dca80429c90b8faf58e2b51f,1522.0,clone_and_checkout_repo,,,{},0567b5829c9ce13d64a13480403ccf6d46cc783a,1523.0,False
 pinpoint-apm/pinpoint,d1bb8e32c37da7c8623da5aab191ffa2f2f1ab17,12961.0,clone_and_checkout_repo,,,{},ac1dd7fce4125e70cd9ba43837f2f48ac3b07ae1,12965.0,False
 pinpoint-apm/pinpoint,3013001ec950e7002e227fd9df60bcb8cb543188,2394.0,clone_and_checkout_repo,,,{},b19d39339b665b6424b6cd4de7e7ba28471ff476,2395.0,False
-pinpoint-apm/pinpoint,e1116667384112d251e734c6f3870e455a939c4a,1469.0,clone_and_checkout_repo,,,{},daeb0bd398f7dc8ea98a486694fd5c531b91ead9,1471.0,False
-pinpoint-apm/pinpoint,be77330f9170eec0524986c50d7b82291f474bf3,1362.0,clone_and_checkout_repo,,,{},d26789c096920fad0907af22caadbd78fdba281f,1406.0,False
 trinodb/trino,9ffe4456b486b0efd59f031d27432d351457ec9d,26391.0,clone_and_checkout_repo,,,{},f522a29bf7b379da45026296cf86daf029e0253b,26397.0,False
 trinodb/trino,da6daf54dfa0e20af12a991106483d6c6437a1c0,25423.0,clone_and_checkout_repo,,,{},af8e88d813dfe37801cb9bb15dd3305ada290bb1,25492.0,False
 trinodb/trino,b78e5f6bd79b4fe3913d99eb381ce3856c86f912,9743.0,clone_and_checkout_repo,,,{},165de23935649749051f8e3a15ae0408830d7506,23625.0,False
@@ -686,7 +666,6 @@ apache/shardingsphere-elasticjob,dcd9385604179455a5d42ffc5ad0a7bde86616a6,1883.0
 apache/shardingsphere-elasticjob,e139da201836b3cd8088c0198702dc96f2dc45ea,1315.0,docker_image_built,,,{},d9009d137e39b961961361ec29f09cee95f86c07,1316.0,False
 apache/shardingsphere-elasticjob,f707182f5f466d988ee332e90fc6b9c65b891b8f,762.0,clone_and_checkout_repo,,,{},fa05eb7436d11727a004e2cc0f9009968e289a08,763.0,False
 marcosbarbero/spring-cloud-zuul-ratelimit,58e7264599b48d27b51935d61eca3d75beb79ae7,77.0,maven_execution_successful,0.0103112188051014,0.9786130273714662,"""{\""original_outperforms_patched\"": [], \""patched_outperforms_original\"": []}""",85e39e424f6f3e0fbb97560d2efb3a7f084062e5,198.0,True
-apache/curator,4b08d44d7f8b0cb35617166b1290b9c57a80f460,530.0,clone_and_checkout_repo,,,{},a3514d87b1036716e5dc9877c9980fdd81440458,315.0,False
 mapstruct/mapstruct,762a4aff372860affdb9b62858ab689190f02d44,1473.0,clone_and_checkout_repo,,,{},b6905d5168ce81089608cfaa244547f74e473ee8,1474.0,False
 mapstruct/mapstruct,e006bd714f00d4b39e0dffc78bd883d2696c1574,1414.0,clone_and_checkout_repo,,,{},beea14125540e5ca22f47541d9a268aa73d3ae23,1424.0,False
 mapstruct/mapstruct,4028b3e91e2f3db8066ed6169a836b07dc36abe6,1378.0,clone_and_checkout_repo,,,{},d5bb33f51df342e830a9710106f0287529605274,1379.0,False
