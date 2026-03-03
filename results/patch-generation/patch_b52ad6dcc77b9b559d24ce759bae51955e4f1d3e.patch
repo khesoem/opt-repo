@@ -1,5 +1,5 @@
---- /workspace/project_original/core/src/main/java/io/seata/core/rpc/netty/MessageCodecHandler.java	2026-01-09 14:54:49.000000000 +0000
-+++ core/src/main/java/io/seata/core/rpc/netty/MessageCodecHandler.java	2026-02-11 21:39:22.415453144 +0000
+--- a/core/src/main/java/io/seata/core/rpc/netty/MessageCodecHandler.java	2026-01-09 14:54:49.000000000 +0000
++++ b/core/src/main/java/io/seata/core/rpc/netty/MessageCodecHandler.java	2026-02-11 21:39:22.415453144 +0000
 @@ -77,9 +77,7 @@
              byteBuffer.putShort((short)0);
              byteBuffer.putLong(msg.getId());

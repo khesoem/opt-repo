@@ -51,7 +51,7 @@ class RepoAnalyzer:
 
     def get_changed_java_test_files(self, commit: str) -> Set[str]:
         out = run_cmd(
-            cmd=["git", "diff-tree", "-r", "--no-commit-id", "--name-status", "-M", "-C", "-m", commit],
+            cmd=["git", "diff", "--name-status", "-M", "-C", commit],
             path=str(self.repo_path)
         )
         
@@ -67,7 +67,7 @@ class RepoAnalyzer:
 
             path = rec.get("old_path")
 
-            # Keep if it is a .java src file
+            # Keep if it is a .java test file
             if not (self.is_java_test_path(path)):
                 continue
 
@@ -101,7 +101,7 @@ class RepoAnalyzer:
         # -r: recurse, --no-commit-id: don’t show commit id,
         # -M/-C: detect renames/copies, -m: handle merges (per-parent); we’ll dedupe.
         diff_output = run_cmd(
-            cmd=["git", "diff-tree", "-r", "--no-commit-id", "--name-status", "-M", "-C", "-m", commit],
+            cmd=["git", "diff", "--name-status", "-M", "-C", f"{commit}~1", commit],
             path=str(self.repo_path)
         )  
 
@@ -112,7 +112,7 @@ class RepoAnalyzer:
         # -r: recurse, --no-commit-id: don’t show commit id,
         # -M/-C: detect renames/copies, -m: handle merges (per-parent); we’ll dedupe.
         diff_output = run_cmd(
-            cmd=["git", "diff-tree", "-r", "--no-commit-id", "--name-status", "-M", "-C", "-m", before_commit, after_commit],
+            cmd=["git", "diff", "--name-status", "-M", "-C", before_commit, after_commit],
             path=str(self.repo_path)
         )  
 

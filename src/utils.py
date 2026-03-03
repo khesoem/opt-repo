@@ -1,7 +1,7 @@
 import subprocess
 import sys
 from typing import List
-
+import os
 from src import config
 
 ## Command execution utils
@@ -57,12 +57,57 @@ def pull_image_install_git(repo: str, commit: str, working_dir: str) -> str:
                 if new_img_name in image_ref:
                     image_ids.add(image_id)
     for image_id in image_ids:
+        # Stop running containers that use this image.
         cmd = [
+            "docker",
+            "ps",
+            "--filter",
+            f"ancestor={image_id}",
+            "--format",
+            "{{.ID}}",
+        ]
+        running_containers = [
+            container_id
+            for container_id in run_cmd(cmd, working_dir).strip().split("\n")
+            if container_id.strip()
+        ]
+        for container_id in running_containers:
+            cmd = [
                 "docker",
-                "rmi",
-                "-f",
-                image_id,
+                "stop",
+                container_id,
             ]
+            run_cmd(cmd, working_dir)
+
+        # Remove all containers (stopped or previously running) that use this image.
+        cmd = [
+            "docker",
+            "ps",
+            "-a",
+            "--filter",
+            f"ancestor={image_id}",
+            "--format",
+            "{{.ID}}",
+        ]
+        containers_to_remove = [
+            container_id
+            for container_id in run_cmd(cmd, working_dir).strip().split("\n")
+            if container_id.strip()
+        ]
+        for container_id in containers_to_remove:
+            cmd = [
+                "docker",
+                "rm",
+                container_id,
+            ]
+            run_cmd(cmd, working_dir)
+
+        cmd = [
+            "docker",
+            "rmi",
+            "-f",
+            image_id,
+        ]
         run_cmd(cmd, working_dir)
 
     _prepare_new_img_dockerfile(image_name, working_dir)
@@ -78,7 +123,7 @@ def pull_image_install_git(repo: str, commit: str, working_dir: str) -> str:
 
     return new_img_name
 
-def create_tmp_container(image_name: str, working_dir: str) -> str:
+def create_tmp_container(image_name: str, working_dir: str, replace_entrypoint: bool = False) -> str:
         cmd = [
             "docker",
             "ps",
@@ -93,6 +138,7 @@ def create_tmp_container(image_name: str, working_dir: str) -> str:
             cmd = [
                 "docker",
                 "rm",
+                "-f",
                 "tmp-cont",
             ]
             run_cmd(cmd, working_dir)
@@ -105,5 +151,7 @@ def create_tmp_container(image_name: str, working_dir: str) -> str:
             "tmp-cont",
             image_name,
         ]
+        if replace_entrypoint:
+            cmd.extend(["tail", "-f", "/dev/null"])
         run_cmd(cmd, working_dir)
         return "tmp-cont"

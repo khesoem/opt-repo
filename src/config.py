@@ -66,3 +66,9 @@ openhands = {
     'llm-timeout': 3000,
     'max-iterations': 100,
 }
+
+evaluation = {
+    'exec-times': 2,
+    'min-exec-time-improvement': 0.05,
+    'min-p-value': 0.1,
+}

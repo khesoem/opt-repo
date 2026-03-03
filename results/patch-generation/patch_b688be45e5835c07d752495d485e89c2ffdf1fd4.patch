@@ -1,5 +1,5 @@
---- /workspace/project_original/core/src/main/java/com/alibaba/fastjson2/JSONReaderUTF8.java	2026-01-10 10:50:18.000000000 +0000
-+++ core/src/main/java/com/alibaba/fastjson2/JSONReaderUTF8.java	2026-02-10 00:58:52.782097905 +0000
+--- a/core/src/main/java/com/alibaba/fastjson2/JSONReaderUTF8.java	2026-01-10 10:50:18.000000000 +0000
++++ b/core/src/main/java/com/alibaba/fastjson2/JSONReaderUTF8.java	2026-02-10 00:58:52.782097905 +0000
 @@ -4712,7 +4712,7 @@
                  int upperBound = offset + ((end - offset) & ~7);
                  while (offset < upperBound) {

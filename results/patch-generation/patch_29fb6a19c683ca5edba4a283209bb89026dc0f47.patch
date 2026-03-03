@@ -1,5 +1,5 @@
---- /workspace/project_original/manager/api/es/src/main/java/io/apiman/manager/api/es/EsStorage.java	2026-01-09 12:54:35.000000000 +0000
-+++ manager/api/es/src/main/java/io/apiman/manager/api/es/EsStorage.java	2026-02-11 15:33:59.149592109 +0000
+--- a/manager/api/es/src/main/java/io/apiman/manager/api/es/EsStorage.java	2026-01-09 12:54:35.000000000 +0000
++++ b/manager/api/es/src/main/java/io/apiman/manager/api/es/EsStorage.java	2026-02-11 15:33:59.149592109 +0000
 @@ -1985,8 +1985,8 @@
              String fullIndexName = getFullIndexName(type);
  
@@ -33,8 +33,8 @@
              getClient().index(indexRequest, RequestOptions.DEFAULT);
          } catch (Exception e) {
              throw new StorageException(e);
---- /workspace/project_original/gateway/engine/es/src/main/java/io/apiman/gateway/engine/es/EsRegistry.java	2026-01-09 12:54:35.000000000 +0000
-+++ gateway/engine/es/src/main/java/io/apiman/gateway/engine/es/EsRegistry.java	2026-02-11 15:34:16.794616954 +0000
+--- a/gateway/engine/es/src/main/java/io/apiman/gateway/engine/es/EsRegistry.java	2026-01-09 12:54:35.000000000 +0000
++++ b/gateway/engine/es/src/main/java/io/apiman/gateway/engine/es/EsRegistry.java	2026-02-11 15:34:16.794616954 +0000
 @@ -95,7 +95,7 @@
              IndexRequest indexRequest = new IndexRequest(getIndexPrefix() + EsConstants.INDEX_APIS)
                      .id(id)

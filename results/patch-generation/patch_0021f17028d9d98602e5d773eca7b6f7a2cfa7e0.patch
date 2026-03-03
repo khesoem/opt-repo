@@ -1,5 +1,5 @@
---- /workspace/project_original/pulsar-client-messagecrypto-bc/src/main/java/org/apache/pulsar/client/impl/crypto/MessageCryptoBc.java	2026-01-10 08:44:03.000000000 +0000
-+++ /workspace/project/pulsar-client-messagecrypto-bc/src/main/java/org/apache/pulsar/client/impl/crypto/MessageCryptoBc.java	2026-02-09 23:48:20.324049740 +0000
+--- a/pulsar-client-messagecrypto-bc/src/main/java/org/apache/pulsar/client/impl/crypto/MessageCryptoBc.java	2026-01-10 08:44:03.000000000 +0000
++++ b/pulsar-client-messagecrypto-bc/src/main/java/org/apache/pulsar/client/impl/crypto/MessageCryptoBc.java	2026-02-09 23:48:20.324049740 +0000
 @@ -145,7 +145,16 @@
  
          try {

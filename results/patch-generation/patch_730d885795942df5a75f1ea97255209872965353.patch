@@ -1,5 +1,5 @@
---- /workspace/project_original/core/src/main/java/org/neo4j/ogm/session/delegates/ExecuteQueriesDelegate.java	2026-01-09 22:14:38.000000000 +0000
-+++ /workspace/project/core/src/main/java/org/neo4j/ogm/session/delegates/ExecuteQueriesDelegate.java	2026-02-12 04:48:38.577711694 +0000
+--- a/core/src/main/java/org/neo4j/ogm/session/delegates/ExecuteQueriesDelegate.java	2026-01-09 22:14:38.000000000 +0000
++++ b/core/src/main/java/org/neo4j/ogm/session/delegates/ExecuteQueriesDelegate.java	2026-02-12 04:48:38.577711694 +0000
 @@ -69,7 +69,7 @@
   */
  public class ExecuteQueriesDelegate extends SessionDelegate {

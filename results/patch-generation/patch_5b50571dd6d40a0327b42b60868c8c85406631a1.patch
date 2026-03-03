@@ -1,5 +1,5 @@
---- /workspace/project_original/dependencies/src/main/java/com/google/cloud/tools/opensource/classpath/ClassPathEntry.java	2026-01-19 04:53:00.000000000 +0000
-+++ /workspace/project/dependencies/src/main/java/com/google/cloud/tools/opensource/classpath/ClassPathEntry.java	2026-02-09 01:10:07.930100358 +0000
+--- a/dependencies/src/main/java/com/google/cloud/tools/opensource/classpath/ClassPathEntry.java	2026-01-19 04:53:00.000000000 +0000
++++ b/dependencies/src/main/java/com/google/cloud/tools/opensource/classpath/ClassPathEntry.java	2026-02-09 01:10:07.930100358 +0000
 @@ -99,16 +99,23 @@
     * framework-specific prefix. Example: {@code BOOT-INF.classes.com.google.Foo}.
     */
