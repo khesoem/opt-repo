@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000..200f89e
 --- /dev/null
 +++ b/services/src/test/java/org/keycloak/broker/saml/mappers/GeneratedTests.java
-@@ -0,0 +1,200 @@
+@@ -0,0 +1,84 @@
 +package org.keycloak.broker.saml.mappers;
 +
 +import org.junit.Test;

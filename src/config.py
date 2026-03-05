@@ -69,6 +69,6 @@ openhands = {
 
 evaluation = {
     'exec-times': 2,
-    'min-exec-time-improvement': 0.05,
+    'min-exec-time-improvement': 0.01,
     'min-p-value': 0.1,
 }

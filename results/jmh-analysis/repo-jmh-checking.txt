@@ -239,18 +239,18 @@ https://github.com/netty/netty/commit/15b8bbf864680ec2250c72d52b35ed46bfaf3a6f
 https://github.com/netty/netty/commit/48687be377c1e0b94acddca4ae54eff996c1ee2a
 https://github.com/rabbitmq/rabbitmq-perf-test/commit/43f4a009a609a161208a842dd833ef8ef9dfd914
 https://github.com/pgjdbc/r2dbc-postgresql/commit/9078212d0723467dd6dbfcf1f62511fc4733fa0d
-https://github.com/spring-projects/spring-modulith/commit/01d7a35d2dc2b340462ab38b4f2a6e1031d991b6
-https://github.com/spring-projects/spring-modulith/commit/711c8449fa8f0494650d95ff6d23d8c3e474a8df
+https://github.com/spring-projects/spring-modulith/commit/01d7a35d2dc2b340462ab38b4f2a6e1031d991b6 # no diff
+https://github.com/spring-projects/spring-modulith/commit/711c8449fa8f0494650d95ff6d23d8c3e474a8df # yes diff
 https://github.com/spring-projects/spring-modulith/commit/5f725621c6b6f83404168784fae772508e21a21b
 https://github.com/spring-projects/spring-modulith/commit/4cf9b5c7072e9e88f1c0897f9f7d8bf703c0fdae
 https://github.com/spring-projects/spring-modulith/commit/083ce7beae11f7872e5f143dd860dc39a0eb9f7f
 https://github.com/spring-projects/spring-modulith/commit/0de48790d7e98785d82f7e0668f1a75036f9c152
-https://github.com/spring-cloud/spring-cloud-sleuth/commit/382f4a0da786bea63159fa4e9593906b729c7b88
-https://github.com/quarkusio/quarkus/commit/3133199cbb457886e53e8a11131ef35561da01ce
-https://github.com/quarkusio/quarkus/commit/82db6e06e60546d73d18b2bdd7cfc3b5791da8ac
-https://github.com/quarkusio/quarkus/pull/27736/changes
-https://github.com/quarkusio/quarkus/pull/27633/changes
-https://github.com/apache/pulsar/pull/23251/changes
-https://github.com/apache/pulsar/pull/23122/changes
-https://github.com/trinodb/trino/pull/5885/changes
-https://github.com/alibaba/fastjson2/pull/3350/changes
+https://github.com/spring-cloud/spring-cloud-sleuth/commit/382f4a0da786bea63159fa4e9593906b729c7b88 # too long
+https://github.com/quarkusio/quarkus/commit/3133199cbb457886e53e8a11131ef35561da01ce # too old
+https://github.com/quarkusio/quarkus/commit/82db6e06e60546d73d18b2bdd7cfc3b5791da8ac # too old
+https://github.com/quarkusio/quarkus/pull/27736/changes # too old
+https://github.com/quarkusio/quarkus/pull/27633/changes # too old
+https://github.com/apache/pulsar/pull/23251/changes # yes diff
+https://github.com/apache/pulsar/pull/23122/changes # yes diff
+https://github.com/trinodb/trino/pull/5885/changes # too many tests, not for the changed module, maybe for others
+https://github.com/alibaba/fastjson2/pull/3350/changes # not run

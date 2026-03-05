@@ -1,4 +1,5 @@
 import json
+import ast
 import os
 import fcntl
 import pandas as pd
@@ -17,6 +18,65 @@ class DatasetAdapter:
         # We'll reload from disk when needed to ensure we have the latest data
         self.df = None
 
+    @staticmethod
+    def _parse_serialized_field(value, expected_type):
+        """Parse values that may be JSON, Python literal, or over-quoted."""
+        if isinstance(value, expected_type):
+            return value
+        if isinstance(value, (dict, list)):
+            return value if isinstance(value, expected_type) else None
+        if value is None or pd.isna(value):
+            return None
+        if not isinstance(value, str):
+            return None
+
+        def _peel_quotes(text: str) -> str:
+            parsed = text.strip()
+            while len(parsed) >= 2 and parsed[0] == parsed[-1] and parsed[0] in ("'", '"'):
+                parsed = parsed[1:-1].strip()
+            return parsed
+
+        raw = value.strip()
+        candidates = [
+            raw,
+            _peel_quotes(raw),
+            _peel_quotes(raw.replace('""', '"')),
+            _peel_quotes(raw.replace('\\"', '"')),
+            _peel_quotes(raw.rstrip('"')),
+        ]
+
+        seen = set()
+        for candidate in candidates:
+            if candidate in seen or candidate == "":
+                continue
+            seen.add(candidate)
+            for parser in (json.loads, ast.literal_eval):
+                try:
+                    parsed = parser(candidate)
+                except (json.JSONDecodeError, ValueError, SyntaxError):
+                    continue
+
+                # Handle values accidentally serialized multiple times.
+                for _ in range(3):
+                    if not isinstance(parsed, str):
+                        break
+                    inner = parsed.strip()
+                    nested_parsed = None
+                    for nested_parser in (json.loads, ast.literal_eval):
+                        try:
+                            nested_parsed = nested_parser(inner)
+                            break
+                        except (json.JSONDecodeError, ValueError, SyntaxError):
+                            continue
+                    if nested_parsed is None:
+                        break
+                    parsed = nested_parsed
+
+                if isinstance(parsed, expected_type):
+                    return parsed
+
+        return None
+
     def _get_file_lock(self):
         """Get a file lock for cross-process synchronization."""
         # Ensure directory exists
@@ -31,14 +91,18 @@ class DatasetAdapter:
         """Load existing dataset or create an empty one."""
         if os.path.exists(DATASET_PATH):
             df = pd.read_csv(DATASET_PATH)
-            if "test_class_improvements" in df.columns:
-                df["test_class_improvements"] = [
-                    json.loads(test_class_improvements) if pd.notna(test_class_improvements) and test_class_improvements is not None else None 
-                    for test_class_improvements in df["test_class_improvements"]
-                ]
-            # convert issue_number and pr_number to int. if not a number, set to None
-            df["issue_number"] = df["issue_number"].apply(lambda x: int(x) if pd.notna(x) and isinstance(x, float) else None)
-            df["pr_number"] = df["pr_number"].apply(lambda x: int(x) if pd.notna(x) and isinstance(x, float) else None)
+            df["test_class_improvements"] = df["test_class_improvements"].apply(
+                lambda value: self._parse_serialized_field(value, dict)
+            )
+            df["modified_modules"] = df["modified_modules"].apply(
+                lambda value: self._parse_serialized_field(value, list)
+            )
+            df["changed_files"] = df["changed_files"].apply(
+                lambda value: self._parse_serialized_field(value, list)
+            )
+            # Convert nullable numeric columns to nullable integer dtype.
+            df["issue_number"] = pd.to_numeric(df["issue_number"], errors="coerce").astype("Int64")
+            df["pr_number"] = pd.to_numeric(df["pr_number"], errors="coerce").astype("Int64")
         else:
             df = pd.DataFrame({
                 "repo": pd.Series(dtype="string"),
@@ -51,6 +115,8 @@ class DatasetAdapter:
                 "before_commit": pd.Series(dtype="string"),
                 "pr_number": pd.Series(dtype="Int64"),
                 "is_improvement_per_manual_analysis": pd.Series(dtype="string"),
+                "modified_modules": pd.Series(dtype="object"),
+                "changed_files": pd.Series(dtype="object"),
             })
             # Create directory if it doesn't exist
             os.makedirs(os.path.dirname(DATASET_PATH), exist_ok=True)
@@ -75,6 +141,8 @@ class DatasetAdapter:
         before_commit: str | None,
         pr_number: int | None,
         is_improvement_per_manual_analysis: bool | None,
+        modified_modules: list[str] | None,
+        changed_files: list[str] | None,
     ):
         """Process-safe add or update of a commit record using file locking."""
         new_row = {
@@ -84,10 +152,12 @@ class DatasetAdapter:
             "exec_status": exec_status,
             "exec_time_improvement": exec_time_improvement,
             "p_value": p_value,
-            "test_class_improvements": json.dumps(test_class_improvements) if test_class_improvements is not None else None,
+            "test_class_improvements": test_class_improvements,
             "before_commit": before_commit,
             "pr_number": pr_number,
             "is_improvement_per_manual_analysis": is_improvement_per_manual_analysis,
+            "modified_modules": modified_modules,
+            "changed_files": changed_files,
         }
 
         # Acquire file lock for cross-process synchronization
@@ -122,11 +192,18 @@ class DatasetAdapter:
         
         # Prepare DataFrame for CSV (convert test_class_improvements back to JSON string)
         df_to_save = df.copy()
-        if "test_class_improvements" in df_to_save.columns:
-            df_to_save["test_class_improvements"] = [
-                json.dumps(val) if val is not None else None 
-                for val in df_to_save["test_class_improvements"]
-            ]
+        df_to_save["test_class_improvements"] = [
+            json.dumps(val) if val is not None else None 
+            for val in df_to_save["test_class_improvements"]
+        ]
+        df_to_save["modified_modules"] = [
+            json.dumps(val) if val is not None else None
+            for val in df_to_save["modified_modules"]
+        ]
+        df_to_save["changed_files"] = [
+            json.dumps(val) if val is not None else None
+            for val in df_to_save["changed_files"]
+        ]
         
         tmp_file = NamedTemporaryFile(delete=False, dir=os.path.dirname(DATASET_PATH), mode="w", suffix=".csv")
         try:

@@ -1,7 +1,7 @@
 from enum import Enum
 import os
 import json
-import math
+import pandas as pd
 import re
 from src.utils import run_cmd
 from src.gh.commit_analysis.commit_static_analyzer import RepoAnalyzer
@@ -47,7 +47,7 @@ class CommitPerfImprovementAnalyzer:
         if not os.path.exists(clone_path):
             run_cmd(["git", "clone", repo_url, repo_dir], self.working_dir)
 
-        if self.pr_number is not None and not math.isnan(self.pr_number):
+        if self.pr_number is not None and not pd.isna(self.pr_number):
             self.pr_number = int(self.pr_number)
             run_cmd(["git", "fetch", "origin", f"pull/{self.pr_number}/head:pr-{self.pr_number}"], clone_path)
 
