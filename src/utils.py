@@ -29,7 +29,7 @@ def _prepare_new_img_dockerfile(base_image: str, working_dir: str) -> str:
         return dockerfile_path
 
 def pull_image_install_git(repo: str, commit: str, working_dir: str) -> str:
-    image_name = f'ghcr.io/khesoem/{repo.split("/")[-1]}-{commit}:latest'
+    image_name = f'ghcr.io/ANONYMOUS/{repo.split("/")[-1]}-{commit}:latest'
     
     cmd = [
         "docker",

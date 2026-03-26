@@ -195,4 +195,4 @@ def add_tia_to_pom(pom_path: str) -> None:
     pretty_write(tree, pom_path, ns)
 
 if __name__ == "__main__":
-    add_tia_to_pom("/home/khesoem/postdoc-eth/projects/optimization-dataset/code/tmp/quarkus/independent-projects/qute/core/pom.xml")
+    add_tia_to_pom("/home/ANONYMOUS/postdoc-eth/projects/optimization-dataset/code/tmp/quarkus/independent-projects/qute/core/pom.xml")

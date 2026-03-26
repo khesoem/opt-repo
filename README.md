@@ -145,7 +145,6 @@ Useful scripts include:
 - `results/charts/executable_etips_stats.py`
 - `results/tables/modified.py`
 
-## Logs and Outputs
+## Anonymous Status
 
-- Runtime logs are written to `logs/`.
-- Several workflows write analysis outputs to paths provided via CLI arguments.
+Note that this repo has been anonymized for double-blind review. Some of the scripts may not work accordingly.

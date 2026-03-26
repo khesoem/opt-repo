@@ -208,7 +208,7 @@ class RepoAnalyzer:
 
 
 def main():
-    RepoAnalyzer("/home/khesoem/postdoc-eth/projects/optimization-dataset/code/tmp/quarkus").get_modules_for_java_files({"independent-projects/qute/core/src/main/java/io/quarkus/qute/JsonEscaper.java", "t"})
+    RepoAnalyzer("/home/ANONYMOUS/postdoc-eth/projects/optimization-dataset/code/tmp/quarkus").get_modules_for_java_files({"independent-projects/qute/core/src/main/java/io/quarkus/qute/JsonEscaper.java", "t"})
 
 if __name__ == "__main__":
     main()

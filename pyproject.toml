@@ -3,7 +3,7 @@ name = "dataset"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "khaes-kth",email = "khaes@kth.se"}
+    {name = "ANONYMOUS",email = "ANONYMOUS@kth.se"}
 ]
 readme = "README.md"
 requires-python = ">=3.11"
