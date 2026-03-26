@@ -41,6 +41,11 @@ Notes:
 - `github_access_token` is needed for GitHub API access.
 - `OPENROUTER_API_KEY` / `OPENAI_API_KEY` are used by configured LLM-related components.
 
+## Configuration and Filters
+
+User-defined filters and analysis configuration for static and dynamic workflows can be set in:
+- `src/config.py`
+
 ## Running the Main Entry Point
 
 The main entry point is `main.py` and supports three modes via `--analysis-type`.
