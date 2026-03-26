@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Subset & $N$ & Generated & Location-or-better & Semantic-or-better & Pass tests \\
+\midrule
+All benchmark instances & 91 & 58 (63.7\%) & 38 (41.8\%) & 13 (14.3\%) & 7 (7.7\%) \\
+Instances with generated patches & 58 & 58 (100.0\%) & 38 (65.5\%) & 13 (22.4\%) & 7 (12.1\%) \\
+\midrule
+Single-file ground truth & 54 & 36 (66.7\%) & 29 (53.7\%) & 10 (18.5\%) & 4 (7.4\%) \\
+Multi-file ground truth & 37 & 22 (59.5\%) & 9 (24.3\%) & 3 (8.1\%) & 3 (8.1\%) \\
+Single-module ground truth & 77 & 48 (62.3\%) & 34 (44.2\%) & 10 (13.0\%) & 6 (7.8\%) \\
+Multi-module ground truth & 14 & 10 (71.4\%) & 4 (28.6\%) & 3 (21.4\%) & 1 (7.1\%) \\
+\bottomrule
+\end{tabular}
+\caption{OpenHands results on optimization benchmark RQ2. Location-or-better includes Exact Match, Semantic Equivalence, and Correct Location. Semantic-or-better includes Exact Match and Semantic Equivalence only. Judgment totals: exact=9, semantic=4, location=25, off=20, N/A=33. Dataset matches missing for 0 items in complexity slices.}
+\label{tab:rq2-openhands-results}
+\end{table}
