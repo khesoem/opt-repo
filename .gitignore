@@ -33,3 +33,4 @@ results/dataset_bak.csv
 results/dataset_bak*.csv
 **/*.lock
 .cursor/
+anonymizer.sh
